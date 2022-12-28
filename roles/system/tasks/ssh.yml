@@ -1,0 +1,10 @@
+---
+- name: Configure SSH Server
+  ansible.builtin.template:
+    src: etc/ssh/sshd_config.j2
+    dest: /etc/ssh/sshd_config
+    backup: true
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Restart SSH

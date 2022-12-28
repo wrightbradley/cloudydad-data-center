@@ -1,0 +1,60 @@
+---
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+repos:
+  ##############################################################################
+  ################################ General Checks ##############################
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: requirements-txt-fixer
+      - id: sort-simple-yaml
+      - id: detect-private-key
+      - id: check-merge-conflict
+      - id: end-of-file-fixer
+      - id: mixed-line-ending
+      - id: trailing-whitespace
+        args: [--markdown-linebreak-ext=md]
+        exclude: .gitignore
+      - id: check-yaml
+        exclude: 'mkdocs.yml'
+      - id: check-added-large-files
+        args: [--maxkb=1500]
+      - id: check-case-conflict
+      - id: check-json
+      - id: debug-statements
+  - repo: https://github.com/sirosen/texthooks
+    rev: 0.6.4
+    hooks:
+      - id: fix-smartquotes
+  ##############################################################################
+  ################################ Security Checks #############################
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.4.0
+    hooks:
+      - id: detect-secrets
+        name: Detect secrets
+        exclude: molecule/
+  ##############################################################################
+  ################################ YAML Checks #################################
+  - repo: https://github.com/google/yamlfmt
+    rev: v0.10.0
+    hooks:
+      - id: yamlfmt
+  - repo: https://github.com/adrienverge/yamllint
+    rev: v1.34.0
+    hooks:
+      - id: yamllint
+        args: [-c=.yamllint]
+  ##############################################################################
+  ################################ Code Checks #################################
+  - repo: https://github.com/ansible-community/ansible-lint.git
+    rev: v6.22.2
+    hooks:
+      - id: ansible-lint
+  - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.9.0.6
+    hooks:
+      - id: shellcheck
+        exclude: roles/system/files/etc/update-motd.d/
+##############################################################################

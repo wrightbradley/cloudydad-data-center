@@ -1,0 +1,64 @@
+---
+- name: Pre tasks
+  hosts: all
+  pre_tasks:
+    - name: Verify Ansible is version 2.11 or above. (If this fails you may need to update Ansible)
+      assert:
+        that: "ansible_version.full is version_compare('2.11', '>=')"
+        msg: >
+          "Ansible is out of date."
+- name: Bootstrap data center
+  hosts: all
+  gather_facts: true
+  environment: '{{ proxy_env | default({}) }}'
+  tags: system
+  roles:
+    - role: system
+      become: true
+
+- name: Prepare k3s nodes
+  hosts: kubernetes
+  gather_facts: true
+  environment: '{{ proxy_env | default({}) }}'
+  roles:
+    - role: prereq
+      become: true
+    - role: download
+      become: true
+    - role: raspberrypi
+      become: true
+    - role: k3s_custom_registries
+      become: true
+      when: custom_registries
+
+- name: Setup Kubernetes control plane
+  hosts: controlplane
+  environment: '{{ proxy_env | default({}) }}'
+  roles:
+    - role: k3s_server
+      become: true
+
+- name: Setup Kubernetes nodes
+  hosts: node
+  environment: '{{ proxy_env | default({}) }}'
+  roles:
+    - role: k3s_agent
+      become: true
+
+- name: Configure Kubernetes control plane
+  hosts: controlplane
+  environment: '{{ proxy_env | default({}) }}'
+  roles:
+    - role: k3s_server_post
+      become: true
+
+- name: Storing kubeconfig in the playbook directory
+  hosts: controlplane
+  environment: '{{ proxy_env | default({}) }}'
+  tasks:
+    - name: Copying kubeconfig from {{ hostvars[groups[group_name_control_plane | default('controlplane')][0]]['ansible_hostname'] }}
+      ansible.builtin.fetch:
+        src: '{{ ansible_user_dir }}/.kube/config'
+        dest: "{{ lookup('env', 'HOME') }}/.kube/config"
+        flat: true
+      when: ansible_hostname == hostvars[groups[group_name_control_plane | default('controlplane')][0]]['ansible_hostname']

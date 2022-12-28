@@ -1,0 +1,81 @@
+---
+- name: Ensure hostname set
+  ansible.builtin.hostname:
+    name: '{{ inventory_hostname }}'
+  when: not inventory_hostname is match('(\d{1,3}\.){3}\d{1,3}')
+  register: hostname
+  tags: hostname
+
+- name: Update Cloud Config Hostname
+  ansible.builtin.lineinfile:
+    path: /etc/cloud/cloud.cfg
+    line: 'preserve_hostname: true'
+
+- name: Set timezone to UTC
+  community.general.timezone:
+    name: '{{ system_timezone }}'
+  when: (system_timezone is defined) and (system_timezone != "UTC")
+# - name: Clean cloud-init
+#   ansible.builtin.command:
+#     cmd: cloud-init clean
+#     creates: /var/lib/cloud/instance/clean_marker
+#   register: cloud_init_clean_result
+#   changed_when: cloud_init_clean_result.rc == 0
+#
+# - name: Create clean marker file
+#   ansible.builtin.file:
+#     path: /var/lib/cloud/instance/clean_marker
+#     state: touch
+#   when: cloud_init_clean_result is changed
+
+# - name: Ensure primary network interface is named eth0
+#   when: ansible_distribution == "Ubuntu"
+#   tags: cloud-init
+#   block:
+#     - name: Gather necessary network facts
+#       setup:
+#         gather_subset:
+#           - network
+#
+#     - name: Identify the default route interface
+#       command: ip route show default
+#       register: default_route
+#
+#     - name: Set fact for the default route interface
+#       set_fact:
+#         default_interface: "{{ default_route.stdout.split()[4] }}"
+#
+#     - name: Print the default route interface
+#       debug:
+#         msg: "Default route interface is {{ default_interface }}"
+#
+#     - name: Set fact for the default route interface MAC address
+#       set_fact:
+#         interface_mac: "{{ ansible_facts[default_interface]['macaddress'] }}"
+#
+#     - name: Print the default route interface MAC address
+#       debug:
+#         msg: "Default route interface MAC address is {{ interface_mac }}"
+#
+#     - name: Ensure cloud-init configuration directory exists
+#       file:
+#         path: /etc/cloud/cloud.cfg.d
+#         state: directory
+#         mode: "0644"
+#
+#     - name: Place the cloud-init configuration file
+#       copy:
+#         dest: /etc/cloud/cloud.cfg.d/99-custom-network-config.yaml
+#         mode: "0644"
+#         content: |
+#           network:
+#               ethernets:
+#                   {{ default_interface }}:
+#                       dhcp4: true
+#                       dhcp6: true
+#                       match:
+#                           macaddress: {{ interface_mac }}
+#                       set-name: eth0
+#               version: 2
+#       notify:
+#         - Clean cloud-init

@@ -1,0 +1,8 @@
+# Manage dev environments https://direnv.net/
+
+# Customize your project layout here
+# https://github.com/direnv/direnv/wiki
+
+layout pyenv 3.12.1
+
+dotenv_if_exists

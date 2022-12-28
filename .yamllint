@@ -1,0 +1,17 @@
+---
+extends: default
+
+rules:
+  line-length:
+    max: 120
+    level: warning
+  document-start: enable
+  truthy:
+    allowed-values: ['true', 'false']
+  comments:
+    require-starting-space: true
+    ignore-shebangs: true
+    min-spaces-from-content: 1
+ignore:
+  - galaxy.yml
+  - '.github/'

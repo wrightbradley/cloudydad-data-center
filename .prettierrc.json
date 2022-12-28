@@ -1,0 +1,15 @@
+{
+  "trailingComma": "all",
+  "singleQuote": true,
+  "arrowParens": "always",
+  "overrides": [
+    {
+      "files": ["*.md", "*.markdown"],
+      "options": {
+        "proseWrap": "always",
+        "htmlWhitespaceSensitivity": "ignore",
+        "printWidth": 80
+      }
+    }
+  ]
+}

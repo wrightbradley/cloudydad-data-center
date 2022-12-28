@@ -1,0 +1,64 @@
+---
+# - name: Install python-apt dependency
+#   ansible.builtin.command: apt-get install -y python3-apt
+#   args:
+#     warn: false
+
+- name: Perform a dist-upgrade.
+  ansible.builtin.apt:
+    upgrade: dist
+    update_cache: true
+
+- name: Check if a reboot is required.
+  ansible.builtin.stat:
+    path: /var/run/reboot-required
+    get_checksum: false
+  register: reboot_required_file
+
+- name: Reboot server (if required).
+  ansible.builtin.reboot:
+    msg: 'Rebooting machine in 5 seconds'
+  when: reboot_required_file.stat.exists
+
+- name: Remove dependencies that are no longer required.
+  ansible.builtin.apt:
+    autoremove: true
+
+- name: Get updates
+  ansible.builtin.apt:
+    update_cache: true
+    autoclean: true
+    autoremove: true
+    cache_valid_time: 86400
+
+- name: Run apt-get upgrade --full
+  ansible.builtin.apt:
+    upgrade: full
+
+- name: Install common packages
+  ansible.builtin.apt:
+    name: '{{ item }}'
+    update_cache: true
+  loop: '{{ common_packages }}'
+
+- name: Configure storage for Kubernetes hosts
+  when: "'kubernetes' in group_names"
+  block:
+    - name: Install storage packages
+      ansible.builtin.apt:
+        name: '{{ item }}'
+        update_cache: true
+      loop:
+        - nfs-common
+        - open-iscsi
+        - multipath-tools
+        - scsitools
+        - lsscsi
+
+    - name: Configure multipath
+      ansible.builtin.copy:
+        src: etc/multipath.conf
+        dest: /etc/multipath.conf
+        owner: root
+        group: root
+        mode: 0644

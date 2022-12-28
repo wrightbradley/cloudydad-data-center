@@ -1,0 +1,3 @@
+---
+# Name of the control plane group
+group_name_control_plane: controlplane

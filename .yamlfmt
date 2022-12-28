@@ -1,0 +1,10 @@
+doublestar: true
+formatter:
+  type: basic
+  include_document_start: true
+  indent: 2
+  line_ending: lf
+  retain_line_breaks: true
+  indentless_arrays: false
+exclude:
+  - '.github/**'

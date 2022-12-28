@@ -1,0 +1,40 @@
+---
+- name: Fetch K3S_TOKEN from Bitwarden
+  set_fact:
+    k3s_token: "{{ lookup('community.general.bitwarden', '0c769bf1-4a82-4cde-876f-b1a3018171e6', search='id', field='K3S_TOKEN') | first }}"
+
+- name: Check for PXE-booted system
+  block:
+    - name: Check if system is PXE-booted
+      ansible.builtin.command:
+        cmd: cat /proc/cmdline
+      register: boot_cmdline
+      changed_when: false
+      check_mode: false
+
+    - name: Set fact for PXE-booted system
+      ansible.builtin.set_fact:
+        is_pxe_booted: "{{ 'root=/dev/nfs' in boot_cmdline.stdout }}"
+      when: boot_cmdline.stdout is defined
+
+    - name: Include http_proxy configuration tasks
+      ansible.builtin.include_tasks: http_proxy.yml
+
+- name: Deploy k3s http_proxy conf
+  include_tasks: http_proxy.yml
+  when: proxy_env is defined
+
+- name: Configure the k3s service
+  ansible.builtin.template:
+    src: 'k3s.service.j2'
+    dest: '{{ systemd_dir }}/k3s-node.service'
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Manage k3s service
+  ansible.builtin.systemd:
+    name: k3s-node
+    daemon_reload: true
+    state: restarted
+    enabled: true

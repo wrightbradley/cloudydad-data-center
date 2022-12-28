@@ -1,0 +1,53 @@
+---
+common_packages:
+  - git
+  - iputils-ping
+  - lsb-release
+  - mosh
+  - neovim
+  - ripgrep
+  - tmux
+
+system_timezone: 'UTC'
+
+ansible_groups:
+  - name: k3s
+    gid: 8833
+    state: present
+    system: false
+
+ansible_users:
+  - name: ubuntu
+    remove: true
+    state: absent
+  - name: bwright
+    authkey_comment: bwright # pragma: allowlist secret
+    authkey_exclusive: true
+    authkey_manage_dir: true
+    authkey_state: present # pragma: allowlist secret
+    authkey_gh_username: wrightbradley # pragma: allowlist secret
+    comment: 'Bradley Wright'
+    create_home: true
+    expires: -1
+    groups:
+      - sudo
+    password:
+    remove: false
+    shell: /bin/bash
+    state: present
+    system: false
+  - name: ansible
+    authkey_exclusive: true
+    authkey_manage_dir: true
+    authkey_state: present # pragma: allowlist secret
+    authkey_gh_username: wrightbradley # pragma: allowlist secret
+    comment: 'Ansible Machine User'
+    create_home: false
+    expires: -1
+    groups:
+      - sudo
+    password:
+    remove: false
+    shell: /bin/bash
+    state: present
+    system: false

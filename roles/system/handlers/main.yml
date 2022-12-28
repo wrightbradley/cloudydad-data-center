@@ -1,0 +1,14 @@
+---
+- name: Reboot
+  ansible.builtin.reboot:
+    reboot_timeout: 3600
+
+- name: Reload sudoers
+  command: sudo -k
+
+- name: Restart SSH Server
+  ansible.builtin.service:
+    name: ssh
+    state: restarted
+# - name: Clean cloud-init
+#   command: cloud-init clean

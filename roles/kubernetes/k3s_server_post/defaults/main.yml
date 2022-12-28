@@ -1,0 +1,6 @@
+---
+# Timeout to wait for MetalLB services to come up
+metal_lb_available_timeout: 240s
+
+# Name of the control plane group
+group_name_control_plane: controlplane
