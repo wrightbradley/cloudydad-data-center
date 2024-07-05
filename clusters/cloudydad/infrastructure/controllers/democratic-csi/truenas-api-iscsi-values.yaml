@@ -1,4 +1,16 @@
 ---
+controller:
+  driver:
+    # image: democraticcsi/democratic-csi:next
+    # imagePullPolicy: Always
+    logLevel: debug
+
+node:
+  driver:
+    # image: democraticcsi/democratic-csi:next
+    # imagePullPolicy: Always
+    logLevel: debug
+
 csiDriver:
   # should be globally unique for a given cluster
   name: 'org.democratic-csi.iscsi'
@@ -116,9 +128,9 @@ driver:
       # MUST ensure uniqueness
       # full iqn limit is 223 bytes, plan accordingly
       # default is "{{ name }}"
-      #nameTemplate: "{{ parameters.[csi.storage.k8s.io/pvc/namespace] }}-{{ parameters.[csi.storage.k8s.io/pvc/name] }}"
-      namePrefix: csi-
-      nameSuffix: '-cloudydad'
+      nameTemplate: '{{ parameters.[csi.storage.k8s.io/pvc/namespace] }}-{{ parameters.[csi.storage.k8s.io/pvc/name] }}'
+      # namePrefix: csi-
+      # nameSuffix: '-cloudydad'
 
       # add as many as needed
       targetGroups:
@@ -135,7 +147,7 @@ driver:
           # only required if using Chap
           targetGroupAuthGroup:
 
-      #extentCommentTemplate: "{{ parameters.[csi.storage.k8s.io/pvc/namespace] }}/{{ parameters.[csi.storage.k8s.io/pvc/name] }}"
+      extentCommentTemplate: '{{ parameters.[csi.storage.k8s.io/pvc/namespace] }}/{{ parameters.[csi.storage.k8s.io/pvc/name] }}'
       extentInsecureTpc: true
       extentXenCompat: false
       extentDisablePhysicalBlocksize: true
