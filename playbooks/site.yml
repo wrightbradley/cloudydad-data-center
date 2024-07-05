@@ -61,4 +61,5 @@
         src: '{{ ansible_user_dir }}/.kube/config'
         dest: "{{ lookup('env', 'HOME') }}/.kube/config"
         flat: true
+        mode: '0600'
       when: ansible_hostname == hostvars[groups[group_name_control_plane | default('controlplane')][0]]['ansible_hostname']
