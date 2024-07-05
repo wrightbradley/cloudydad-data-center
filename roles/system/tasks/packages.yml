@@ -43,6 +43,7 @@
 
 - name: Configure storage for Kubernetes hosts
   when: "'kubernetes' in group_names"
+  tags: storage
   block:
     - name: Install storage packages
       ansible.builtin.apt:
@@ -61,4 +62,26 @@
         dest: /etc/multipath.conf
         owner: root
         group: root
-        mode: 0644
+        mode: '0644'
+
+    - name: Enable and check multipath-tools service
+      systemd:
+        name: multipath-tools
+        daemon_reload: true
+        state: restarted
+        enabled: true
+      register: result
+      retries: 3
+      delay: 10
+      until: result is not failed
+
+    - name: Enable and check open-iscsi service
+      systemd:
+        name: open-iscsi
+        daemon_reload: true
+        state: restarted
+        enabled: true
+      register: result
+      retries: 3
+      delay: 10
+      until: result is not failed
