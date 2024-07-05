@@ -138,7 +138,7 @@ driver:
         # get the correct ID from the "portal" section in the UI
         # https://github.com/democratic-csi/democratic-csi/issues/302
         # NOTE: the ID in the UI does NOT always match the ID in the DB, you must use the DB value
-        - targetGroupPortalGroup: 1
+        - targetGroupPortalGroup: 2
           # get the correct ID from the "initiators" section in the UI
           targetGroupInitiatorGroup: 1
           # None, CHAP, or CHAP Mutual
