@@ -17,6 +17,7 @@ repos:
         args: [--markdown-linebreak-ext=md]
         exclude: .gitignore
       - id: check-yaml
+        args: [--allow-multiple-documents]
         exclude: 'mkdocs.yml'
       - id: check-added-large-files
         args: [--maxkb=1500]
