@@ -5,6 +5,8 @@ namespace: storage
 resources:
   - namespace.yaml
   - sealed-democratic-csi-secrets.yaml
+  - snapshot-controller-helm-repository.yaml
+  - snapshot-controller-helm-release.yaml
   - democratic-csi-helm-repository.yaml
   - democratic-csi-helm-release-iscsi.yaml
   - democratic-csi-helm-release-nfs.yaml
@@ -15,5 +17,8 @@ configMapGenerator:
   - name: democratic-csi-nfs-values
     files:
       - values.yaml=truenas-api-nfs-values.yaml
+  - name: snapshot-controller-values
+    files:
+      - values.yaml=snapshot-controller-values.yaml
 configurations:
   - kustomizeconfig.yaml
