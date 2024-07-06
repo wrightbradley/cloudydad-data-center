@@ -7,7 +7,7 @@ resources:
   - ./traefik-namespace.yaml
   - ./traefik-helm-release.yaml
 configMapGenerator:
-  - name: traefikj-values
+  - name: traefik-values
     files:
       - values.yaml=traefik-values.yaml
 configurations:
