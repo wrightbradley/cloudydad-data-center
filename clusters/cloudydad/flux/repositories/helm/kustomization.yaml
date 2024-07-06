@@ -10,3 +10,4 @@ resources:
   - ./reloader.yaml
   - ./sealed-secrets.yaml
   - ./snapshot-controller.yaml
+  - ./traefik.yaml
