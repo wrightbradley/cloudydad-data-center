@@ -1,0 +1,14 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: traefik
+resources:
+  - ./traefik-namespace.yaml
+  - ./traefik-helm-release.yaml
+configMapGenerator:
+  - name: traefikj-values
+    files:
+      - values.yaml=traefik-values.yaml
+configurations:
+  - kustomizeconfig.yaml
