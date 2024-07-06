@@ -1,0 +1,12 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ./cloudnative-pg.yaml
+  - ./democratic-csi.yaml
+  - ./grafana.yaml
+  - ./podinfo.yaml
+  - ./reloader.yaml
+  - ./sealed-secrets.yaml.yaml
+  - ./snapshot-controller.yaml

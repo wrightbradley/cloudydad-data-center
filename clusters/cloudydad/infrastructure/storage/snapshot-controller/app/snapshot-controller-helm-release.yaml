@@ -1,18 +1,19 @@
 ---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/all.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: snapshot-controller
-  namespace: storage
 spec:
   chart:
     spec:
       chart: snapshot-controller
       sourceRef:
         kind: HelmRepository
-        name: democratic-csi
+        name: snapshot-controller
+        namespace: flux-system
       version: '>=0.2.4-0'
-  interval: 1h0m0s
+  interval: 30m
   releaseName: snapshot-controller
   targetNamespace: storage
   install:
