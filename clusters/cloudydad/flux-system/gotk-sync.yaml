@@ -16,7 +16,7 @@ spec:
     # exclude all
     /*
     # include kubernetes directory
-    !/cluster
+    !/clusters
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/all.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
