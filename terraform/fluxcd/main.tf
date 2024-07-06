@@ -18,6 +18,8 @@ terraform {
 }
 
 resource "flux_bootstrap_git" "this" {
-  embedded_manifests = true
-  path               = "clusters/${var.cluster_name}"
+  # embedded_manifests = true
+  path                 = "clusters/${var.cluster_name}"
+  delete_git_manifests = false
+  network_policy       = false
 }
