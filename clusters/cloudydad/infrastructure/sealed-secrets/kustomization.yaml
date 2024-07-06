@@ -6,7 +6,7 @@ metadata:
   name: sealed-secrets
   namespace: flux-system
 spec:
-  path: ./cluster/infrastructure/sealed-secrets/app
+  path: ./clusters/cloudydad/infrastructure/sealed-secrets/app
   targetNamespace: sealed-secrets
   sourceRef:
     kind: GitRepository

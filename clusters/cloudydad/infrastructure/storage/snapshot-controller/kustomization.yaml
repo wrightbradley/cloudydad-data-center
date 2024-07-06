@@ -6,7 +6,7 @@ metadata:
   name: snapshot-controller
   namespace: flux-system
 spec:
-  path: ./cluster/infrastructure/storage/snapshot-controller/app
+  path: ./clusters/cloudydad/infrastructure/storage/snapshot-controller/app
   targetNamespace: storage
   sourceRef:
     kind: GitRepository
