@@ -8,5 +8,5 @@ resources:
   - ./grafana.yaml
   - ./podinfo.yaml
   - ./reloader.yaml
-  - ./sealed-secrets.yaml.yaml
+  - ./sealed-secrets.yaml
   - ./snapshot-controller.yaml
