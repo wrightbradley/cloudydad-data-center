@@ -1,16 +1,7 @@
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/all.json
-apiVersion: kustomize.toolkit.fluxcd.io/v1
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-metadata:
-  name: sealed-secrets
-  namespace: flux-system
-spec:
-  path: ./clusters/cloudydad/infrastructure/sealed-secrets/app
-  targetNamespace: sealed-secrets
-  sourceRef:
-    kind: GitRepository
-    name: cloudydad-data-center
-  prune: true
-  wait: true
-  interval: 10m
+resources:
+  - ./sealed-secrets-namespace.yaml
+  - ./snapshot-controller-helm-release.yaml
