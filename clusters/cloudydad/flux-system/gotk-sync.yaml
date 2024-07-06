@@ -26,7 +26,7 @@ metadata:
   namespace: flux-system
 spec:
   interval: 10m0s
-  path: ./cluster/cloudydad
+  path: ./clusters/cloudydad
   prune: true
   wait: false
   sourceRef:
