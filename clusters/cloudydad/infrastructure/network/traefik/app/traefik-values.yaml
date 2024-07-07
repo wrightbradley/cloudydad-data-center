@@ -243,7 +243,7 @@ providers:
     # -- Allows to reference ExternalName services in Ingress
     allowExternalNameServices: false
     # -- Allows to return 503 when there is no endpoints available
-    allowEmptyServices: false
+    allowEmptyServices: true
     # -- When ingressClass is set, only Ingresses containing an annotation with the same value are processed. Otherwise, Ingresses missing the annotation, having an empty value, or the value traefik are processed.
     ingressClass:
     # labelSelector: environment=production,method=traefik
@@ -255,7 +255,7 @@ providers:
     disableIngressClassLookup: false
     # IP used for Kubernetes Ingress endpoints
     publishedService:
-      enabled: false
+      enabled: true
       # Published Kubernetes Service to copy status from. Format: namespace/servicename
       # By default this Traefik service
       # pathOverride: ""
@@ -749,7 +749,7 @@ service:
   externalIPs: []
   # - 1.2.3.4
   ## One of SingleStack, PreferDualStack, or RequireDualStack.
-  # ipFamilyPolicy: SingleStack
+  ipFamilyPolicy: PreferDualStack
   ## List of IP families (e.g. IPv4 and/or IPv6).
   ## ref: https://kubernetes.io/docs/concepts/services-networking/dual-stack/#services
   # ipFamilies:
@@ -844,7 +844,13 @@ affinity: {}
 # -- nodeSelector is the simplest recommended form of node selection constraint.
 nodeSelector: {}
 # -- Tolerations allow the scheduler to schedule pods with matching taints.
-tolerations: []
+tolerations:
+  - key: 'node-role.kubernetes.io/control-plane'
+    operator: 'Exists'
+    effect: 'NoSchedule'
+  - key: 'node-role.kubernetes.io/master'
+    operator: 'Exists'
+    effect: 'NoSchedule'
 # -- You can use topology spread constraints to control
 # how Pods are spread across your cluster among failure-domains.
 topologySpreadConstraints: []
@@ -858,7 +864,7 @@ topologySpreadConstraints: []
 #    whenUnsatisfiable: DoNotSchedule
 
 # -- [Pod Priority and Preemption](https://kubernetes.io/docs/concepts/scheduling-eviction/pod-priority-preemption/)
-priorityClassName: ''
+priorityClassName: 'system-cluster-critical'
 
 # -- [SecurityContext](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#security-context-1)
 # @default -- See _values.yaml_
