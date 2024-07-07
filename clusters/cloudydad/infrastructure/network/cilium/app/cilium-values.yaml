@@ -34,11 +34,11 @@ imagePullSecrets:
 
 # -- (string) Kubernetes config path
 # @default -- `"~/.kube/config"`
-kubeConfigPath: ''
+kubeConfigPath: '/etc/rancher/k3s/k3s.yaml'
 # -- (string) Kubernetes service host
-k8sServiceHost: '127.0.0.1'
+k8sServiceHost: '172.18.255.253'
 # -- (string) Kubernetes service port
-k8sServicePort: '6444'
+k8sServicePort: '6443'
 
 # -- Configure the client side rate limit for the agent and operator
 #
