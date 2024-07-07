@@ -21,7 +21,7 @@ env:
   vip_arp: 'true'
   vip_cidr: '32'
   vip_ddns: 'false'
-  vip_interface: ''
+  vip_interface: 'eth0'
   vip_leaderelection: 'true'
   vip_leaseduration: '15'
   vip_renewdeadline: '10'
