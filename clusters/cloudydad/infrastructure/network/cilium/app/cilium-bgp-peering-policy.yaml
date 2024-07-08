@@ -6,9 +6,9 @@ metadata:
 spec:
   virtualRouters:
     - localASN: 64513
-      # serviceSelector:
-      #   matchExpressions:
-      #     - { key: somekey, operator: NotIn, values: ['never-used-value'] }
+      serviceSelector:
+        matchExpressions:
+          - { key: app.kubernetes.io/name, operator: In, values: ['traefik'] }
       podIPPoolSelector:
         matchLabels:
           app.cilium.io/advertise-bgp: 'true'
