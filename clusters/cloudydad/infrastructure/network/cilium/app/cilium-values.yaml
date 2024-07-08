@@ -405,7 +405,7 @@ l2podAnnouncements:
 bgp:
   # -- Enable BGP support inside Cilium; embeds a new ConfigMap for BGP inside
   # cilium-agent and cilium-operator
-  enabled: true
+  enabled: false
   announce:
     # -- Enable allocation and announcement of service LoadBalancer IPs
     loadbalancerIP: true
@@ -416,7 +416,7 @@ bgp:
 # CiliumBGPPeeringPolicy CRDs.
 bgpControlPlane:
   # -- Enables the BGP control plane.
-  enabled: false
+  enabled: true
   # -- SecretsNamespace is the namespace which BGP support will retrieve secrets from.
   secretsNamespace:
     # -- Create secrets namespace for BGP secrets.
