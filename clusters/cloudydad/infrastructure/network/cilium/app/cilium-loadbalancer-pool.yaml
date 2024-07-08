@@ -2,6 +2,9 @@ apiVersion: 'cilium.io/v2alpha1'
 kind: CiliumLoadBalancerIPPool
 metadata:
   name: 'pool'
+  metadata:
+  labels:
+    app.cilium.io/advertise-bgp: 'true'
 spec:
   cidrs:
     - cidr: '172.18.252.0/22'
