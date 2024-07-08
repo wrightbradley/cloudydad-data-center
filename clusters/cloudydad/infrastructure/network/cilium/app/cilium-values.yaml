@@ -139,7 +139,7 @@ agent: true
 name: cilium
 
 # -- Roll out cilium agent pods automatically when configmap is updated.
-rollOutCiliumPods: false
+rollOutCiliumPods: true
 
 # -- Agent container image.
 image:
@@ -386,7 +386,7 @@ highScaleIPcache:
 # -- Configure L2 announcements
 l2announcements:
   # -- Enable L2 announcements
-  enabled: false
+  enabled: true
   # -- If a lease is not renewed for X duration, the current leader is considered dead, a new leader is picked
   # leaseDuration: 15s
   # -- The interval at which the leader will renew the lease
@@ -683,7 +683,7 @@ daemon:
 # masqueraded (to an output device IPv4 address), if the output device runs the
 # program. When not specified, probing will automatically detect devices that have
 # a non-local route. This should be used only when autodetection is not suitable.
-# devices: ""
+devices: 'eth0'
 
 # -- Enables experimental support for the detection of new and removed datapath
 # devices. When devices change the eBPF datapath is reloaded and services updated.
@@ -938,7 +938,7 @@ eni:
 
 externalIPs:
   # -- Enable ExternalIPs service support.
-  enabled: false
+  enabled: true
 
 # fragmentTracking enables IPv4 fragment tracking support in the datapath.
 # fragmentTracking: true
@@ -1231,7 +1231,7 @@ hubble:
     enabled: true
 
     # -- Roll out Hubble Relay pods automatically when configmap is updated.
-    rollOutPods: false
+    rollOutPods: true
 
     # -- Hubble-relay container image.
     image:
@@ -1461,7 +1461,7 @@ hubble:
           #         path: hubble-relay-ca.crt
 
     # -- Roll out Hubble-ui pods automatically when configmap is updated.
-    rollOutPods: false
+    rollOutPods: true
 
     tls:
       # -- base64 encoded PEM values used to connect to hubble-relay
@@ -1698,7 +1698,7 @@ installNoConntrackIptablesRules: false
 ipam:
   # -- Configure IP Address Management mode.
   # ref: https://docs.cilium.io/en/stable/network/concepts/ipam/
-  mode: 'cluster-pool'
+  mode: 'kubernetes'
   # -- Maximum rate at which the CiliumNode custom resource is updated.
   ciliumNodeUpdateRate: '15s'
   operator:
@@ -1808,7 +1808,7 @@ l2NeighDiscovery:
   refreshPeriod: '30s'
 
 # -- Enable Layer 7 network policy.
-l7Proxy: true
+l7Proxy: false
 
 # -- Enable Local Redirect Policy.
 localRedirectPolicy: false
@@ -2131,7 +2131,7 @@ envoy:
     rollingUpdate:
       maxUnavailable: 2
   # -- Roll out cilium envoy pods automatically when configmap is updated.
-  rollOutPods: false
+  rollOutPods: true
 
   # -- Annotations to be added to all top-level cilium-envoy objects (resources under templates/cilium-envoy)
   annotations: {}
@@ -2510,7 +2510,7 @@ operator:
   enabled: true
 
   # -- Roll out cilium-operator pods automatically when configmap is updated.
-  rollOutPods: false
+  rollOutPods: true
 
   # -- cilium-operator image.
   image:
