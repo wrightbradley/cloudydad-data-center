@@ -6,13 +6,16 @@ metadata:
 spec:
   virtualRouters:
     - localASN: 64513
-      serviceSelector:
-        matchExpressions:
-          - { key: somekey, operator: NotIn, values: ['never-used-value'] }
+      # serviceSelector:
+      #   matchExpressions:
+      #     - { key: somekey, operator: NotIn, values: ['never-used-value'] }
+      podIPPoolSelector:
+        matchLabels:
+          app.cilium.io/advertise-bgp: 'true'
       exportPodCIDR: false
       neighbors:
         - peerAddress: '172.18.1.1/32'
-          peerASN: 64513
+          peerASN: 64512
           # authSecretRef: secretname
           eBGPMultihopTTL: 10
           connectRetryTimeSeconds: 120
