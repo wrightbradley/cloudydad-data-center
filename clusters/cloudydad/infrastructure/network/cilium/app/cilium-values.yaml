@@ -34,7 +34,7 @@ imagePullSecrets:
 
 # -- (string) Kubernetes config path
 # @default -- `"~/.kube/config"`
-kubeConfigPath: '/etc/rancher/k3s/k3s.yaml'
+# kubeConfigPath: '/etc/rancher/k3s/k3s.yaml'
 # -- (string) Kubernetes service host
 k8sServiceHost: '172.18.255.253'
 # -- (string) Kubernetes service port
