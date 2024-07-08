@@ -9,10 +9,10 @@ spec:
       serviceSelector:
         matchExpressions:
           - { key: somekey, operator: NotIn, values: ['never-used-value'] }
-      exportPodCIDR: true
+      exportPodCIDR: false
       neighbors:
         - peerAddress: '172.18.1.1/32'
-          peerASN: 64512
+          peerASN: 64513
           # authSecretRef: secretname
           eBGPMultihopTTL: 10
           connectRetryTimeSeconds: 120
