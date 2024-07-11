@@ -386,7 +386,7 @@ highScaleIPcache:
 # -- Configure L2 announcements
 l2announcements:
   # -- Enable L2 announcements
-  enabled: false
+  enabled: true
   # -- If a lease is not renewed for X duration, the current leader is considered dead, a new leader is picked
   # leaseDuration: 15s
   # -- The interval at which the leader will renew the lease
@@ -1883,7 +1883,7 @@ vtep:
 # direct routing and the Kubernetes CIDR is included in the native routing CIDR,
 # the user must configure the routes to reach pods, either manually or by
 # setting the auto-direct-node-routes flag.
-ipv4NativeRoutingCIDR: ''
+ipv4NativeRoutingCIDR: '10.52.0.0/16'
 
 # -- (string) Allows to explicitly specify the IPv6 CIDR for native routing.
 # When specified, Cilium assumes networking for this CIDR is preconfigured and
