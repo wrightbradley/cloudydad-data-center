@@ -9,7 +9,7 @@
 
 debug:
   # -- Enable debug logging
-  enabled: false
+  enabled: true
   # -- Configure verbosity levels for debug logging
   # This option is used to enable debug messages for operations related to such
   # sub-system such as (e.g. kvstore, envoy, datapath or policy), and flow is
@@ -174,7 +174,7 @@ tolerations:
     #   effect: "NoSchedule|PreferNoSchedule|NoExecute(1.6 only)"
 
 # -- The priority class to use for cilium-agent.
-priorityClassName: ''
+priorityClassName: 'system-node-critical'
 
 # -- DNS policy for Cilium agent pods.
 # Ref: https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#pod-s-dns-policy
@@ -386,7 +386,7 @@ highScaleIPcache:
 # -- Configure L2 announcements
 l2announcements:
   # -- Enable L2 announcements
-  enabled: true
+  enabled: false
   # -- If a lease is not renewed for X duration, the current leader is considered dead, a new leader is picked
   # leaseDuration: 15s
   # -- The interval at which the leader will renew the lease
@@ -427,7 +427,7 @@ bgpControlPlane:
 pmtuDiscovery:
   # -- Enable path MTU discovery to send ICMP fragmentation-needed replies to
   # the client.
-  enabled: false
+  enabled: true
 
 bpf:
   autoMount:
@@ -1698,7 +1698,7 @@ installNoConntrackIptablesRules: false
 ipam:
   # -- Configure IP Address Management mode.
   # ref: https://docs.cilium.io/en/stable/network/concepts/ipam/
-  mode: 'kubernetes'
+  mode: 'cilium'
   # -- Maximum rate at which the CiliumNode custom resource is updated.
   ciliumNodeUpdateRate: '15s'
   operator:
@@ -1883,7 +1883,7 @@ vtep:
 # direct routing and the Kubernetes CIDR is included in the native routing CIDR,
 # the user must configure the routes to reach pods, either manually or by
 # setting the auto-direct-node-routes flag.
-ipv4NativeRoutingCIDR: '10.52.0.0/16'
+ipv4NativeRoutingCIDR: ''
 
 # -- (string) Allows to explicitly specify the IPv6 CIDR for native routing.
 # When specified, Cilium assumes networking for this CIDR is preconfigured and
