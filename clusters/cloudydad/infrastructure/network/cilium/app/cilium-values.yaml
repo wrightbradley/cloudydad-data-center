@@ -1698,7 +1698,7 @@ installNoConntrackIptablesRules: false
 ipam:
   # -- Configure IP Address Management mode.
   # ref: https://docs.cilium.io/en/stable/network/concepts/ipam/
-  mode: 'cluster-scope'
+  mode: 'cluster-pool'
   # -- Maximum rate at which the CiliumNode custom resource is updated.
   ciliumNodeUpdateRate: '15s'
   operator:
