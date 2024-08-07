@@ -85,7 +85,7 @@ python-dateutil==2.9.0.post0
     # via ghp-import
 python-slugify==8.0.4
     # via mkdocs-monorepo-plugin
-pyyaml==6.0.1
+pyyaml==6.0.2
     # via
     #   mkdocs
     #   mkdocs-get-deps
