@@ -9,7 +9,7 @@ spec:
   interval: 1m0s
   url: https://github.com/wrightbradley/cloudydad-data-center.git
   ref:
-    branch: main
+    branch: develop
   secretRef:
     name: flux-system
   ignore: |

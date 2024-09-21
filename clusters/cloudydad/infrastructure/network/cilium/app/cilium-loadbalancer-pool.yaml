@@ -1,9 +1,12 @@
 apiVersion: 'cilium.io/v2alpha1'
 kind: CiliumLoadBalancerIPPool
 metadata:
-  name: 'pool'
+  name: 01-lb-pool
   labels:
     app.cilium.io/advertise-bgp: 'true'
 spec:
-  cidrs:
+  blocks:
     - cidr: '172.18.252.0/22'
+  serviceSelector:
+    matchLabels:
+      app.kubernetes.io/name: traefik

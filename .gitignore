@@ -841,3 +841,4 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.toptal.com/developers/gitignore/api/go,git,osx,vim,helm,node,linux,macos,direnv,dotenv,python,eclipse,pycharm,windows,jetbrains,terraform,serverless,terragrunt,jetbrains+all,visualstudiocode
+clusters/cloudydad/infrastructure/network/cilium/app/archive
