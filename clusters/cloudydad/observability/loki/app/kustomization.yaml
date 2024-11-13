@@ -1,0 +1,15 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: loki
+resources:
+  - ./loki-namespace.yaml
+  - ./sealed-minio-credentials.yaml
+  - ./loki-helm-release.yaml
+configMapGenerator:
+  - name: loki-values
+    files:
+      - values.yaml=loki-values.yaml
+configurations:
+  - kustomizeconfig.yaml
