@@ -12,4 +12,5 @@ resources:
   - ./reloader.yaml
   - ./sealed-secrets.yaml
   - ./snapshot-controller.yaml
+  - ./victoria-metrics.yaml
   - ./traefik.yaml
