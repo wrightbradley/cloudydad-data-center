@@ -1,0 +1,14 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: vm-logs
+resources:
+  - ./vm-logs-namespace.yaml
+  - ./vm-logs-helm-release.yaml
+configMapGenerator:
+  - name: vm-logs-values
+    files:
+      - values.yaml=vm-logs-values.yaml
+configurations:
+  - kustomizeconfig.yaml
