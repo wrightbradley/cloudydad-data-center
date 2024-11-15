@@ -6,7 +6,7 @@ resources:
   - ./vm-logs/kustomization.yaml
   - ./vm-metrics/kustomization.yaml
   - ./grafana/kustomization.yaml
-  # - ./k8s-monitoring//kustomization.yaml
+  - ./k8s-monitoring//kustomization.yaml
   # - ./loki/kustomization.yaml
   # - ./mimir/kustomization.yaml
   # - ./oncall//kustomization.yaml

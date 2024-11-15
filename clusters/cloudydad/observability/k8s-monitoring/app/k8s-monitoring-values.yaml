@@ -3,7 +3,7 @@
 cluster:
   # -- The name of this cluster, which will be set in all labels. Required.
   # @section -- Cluster Settings
-  name: ''
+  name: 'cloudydad'
 
   # -- The Kubernetes service. Change this if your cluster DNS is configured differently than the default.
   # @section -- Cluster Settings
@@ -19,7 +19,7 @@ externalServices:
   prometheus:
     # -- Prometheus host where metrics will be sent
     # @section -- External Services (Prometheus)
-    host: ''
+    host: 'vm-metrics-victoria-metrics-single-server.vm-metrics.svc.cluster.local:8428'
     # -- The key for the host property in the secret
     # @section -- External Services (Prometheus)
     hostKey: host
@@ -36,10 +36,10 @@ externalServices:
 
     # -- Prometheus metrics query endpoint. Preset for Grafana Cloud Metrics instances.
     # @section -- External Services (Prometheus)
-    queryEndpoint: /api/prom/api/v1/query
+    queryEndpoint: /api/v1/query
     # -- Prometheus metrics write endpoint. Preset for Grafana Cloud Metrics instances.
     # @section -- External Services (Prometheus)
-    writeEndpoint: /api/prom/push
+    writeEndpoint: /prometheus/api/v1/write
 
     # -- Extra headers to be set when sending metrics.
     # All values are treated as strings and automatically quoted.
@@ -270,7 +270,7 @@ externalServices:
   loki:
     # -- Loki host where logs and events will be sent
     # @section -- External Services (Loki)
-    host: ''
+    host: 'vm-logs-victoria-logs-single-server.vm-logs.svc.cluster.local:9428'
     # -- The key for the host property in the secret
     # @section -- External Services (Loki)
     hostKey: host
@@ -287,10 +287,10 @@ externalServices:
 
     # -- Loki logs query endpoint.
     # @section -- External Services (Loki)
-    queryEndpoint: /loki/api/v1/query
+    queryEndpoint: /select/logsql/query
     # -- Loki logs write endpoint.
     # @section -- External Services (Loki)
-    writeEndpoint: /loki/api/v1/push
+    writeEndpoint: /insert/loki/api/v1/push?_stream_fields=instance,job,host,app
 
     # -- Extra headers to be set when sending metrics.
     # All values are treated as strings and automatically quoted.
@@ -1102,7 +1102,7 @@ metrics:
   apiserver:
     # -- Scrape metrics from the API Server
     # @section -- Metrics Job: ApiServer
-    enabled: false
+    enabled: true
 
     # -- How frequently to scrape metrics from the API Server
     # Overrides metrics.scrapeInterval
@@ -1145,7 +1145,7 @@ metrics:
   kubeControllerManager:
     # -- Scrape metrics from the Kube Controller Manager
     # @section -- Metrics Job: Kube Controller Manager
-    enabled: false
+    enabled: true
 
     # -- Port number used by the Kube Controller Manager, set by `--secure-port.`
     # @section -- Metrics Job: Kube Controller Manager
@@ -1239,7 +1239,7 @@ metrics:
   kubeScheduler:
     # -- Scrape metrics from the Kube Scheduler
     # @section -- Metrics Job: Kube Scheduler
-    enabled: false
+    enabled: true
 
     # -- Port number used by the Kube Scheduler, set by `--secure-port`.
     # @section -- Metrics Job: Kube Scheduler
@@ -1286,7 +1286,7 @@ metrics:
   cost:
     # -- Scrape cost metrics from OpenCost
     # @section -- Metrics Job: OpenCost
-    enabled: true
+    enabled: false
 
     # -- How frequently to scrape metrics from OpenCost.
     # Overrides metrics.scrapeInterval
@@ -1754,7 +1754,7 @@ logs:
   journal:
     # -- Scrape Kubernetes Worker Journal Logs event
     # @section -- Logs Scrape: Journal
-    enabled: false
+    enabled: true
 
     # -- The path to the journal logs on the worker node
     # @section -- Logs Scrape: Journal
@@ -2131,7 +2131,7 @@ receivers:
   grafanaCloudMetrics:
     # -- Generate host info metrics from telemetry data, used in Application Observability in Grafana Cloud.
     # @section -- OTEL Receivers (Processors)
-    enabled: true
+    enabled: false
 
   # -- Deploy a service named for Grafana Agent that matches the Alloy service. This is useful for applications that are
   # configured to send telemetry to a service named "grafana-agent" and not yet updated to send to "alloy".
@@ -2410,7 +2410,7 @@ opencost:
   # Set this to false if your cluster already has OpenCost, or if you do
   # not want to scrape metrics from OpenCost.
   # @section -- Deployment: [OpenCost](https://github.com/opencost/opencost-helm-chart)
-  enabled: true
+  enabled: false
 
   opencost:
     # @ignored -- This skips including these values in README.md
