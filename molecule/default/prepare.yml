@@ -1,7 +1,8 @@
 ---
 - name: Apply overrides
   ansible.builtin.import_playbook: >-
-    {{ lookup("ansible.builtin.env", "MOLECULE_SCENARIO_DIRECTORY") }}/overrides.yml #magic___^_^___line
+    {{ lookup("ansible.builtin.env", "MOLECULE_SCENARIO_DIRECTORY") }}/overrides.yml
+
 - name: Network setup
   hosts: all
   tasks:
