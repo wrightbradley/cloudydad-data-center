@@ -5,6 +5,7 @@ kind: Kustomization
 namespace: grafana
 resources:
   - ./grafana-namespace.yaml
+  - ./sealed-grafana-credentials.yaml
   - ./grafana-helm-release.yaml
 configMapGenerator:
   - name: grafana-values
