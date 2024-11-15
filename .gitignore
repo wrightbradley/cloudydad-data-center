@@ -842,3 +842,5 @@ $RECYCLE.BIN/
 
 # End of https://www.toptal.com/developers/gitignore/api/go,git,osx,vim,helm,node,linux,macos,direnv,dotenv,python,eclipse,pycharm,windows,jetbrains,terraform,serverless,terragrunt,jetbrains+all,visualstudiocode
 clusters/cloudydad/infrastructure/network/cilium/app/archive
+k3s-ansible
+playbooks/kubeconfig

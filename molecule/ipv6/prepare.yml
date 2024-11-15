@@ -1,7 +1,8 @@
 ---
 - name: Apply overrides
   ansible.builtin.import_playbook: >-
-    {{ lookup("ansible.builtin.env", "MOLECULE_SCENARIO_DIRECTORY") }}/overrides.yml #magic___^_^___line
+    {{ lookup("ansible.builtin.env", "MOLECULE_SCENARIO_DIRECTORY") }}/overrides.yml
+
 - name: Configure dual-stack networking
   hosts: all
   become: true
@@ -37,7 +38,7 @@
         dest: /etc/netplan/55-flannel-ipv4.yaml
         owner: root
         group: root
-        mode: 0644
+        mode: "0644"
       register: netplan_template
 
     - name: Apply netplan configuration
