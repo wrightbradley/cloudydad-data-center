@@ -19,7 +19,7 @@ externalServices:
   prometheus:
     # -- Prometheus host where metrics will be sent
     # @section -- External Services (Prometheus)
-    host: 'vm-metrics-victoria-metrics-single-server.vm-metrics.svc.cluster.local:8428'
+    host: 'vm-metrics.vm-metrics.svc.cluster.local:8428'
     # -- The key for the host property in the secret
     # @section -- External Services (Prometheus)
     hostKey: host

@@ -1141,13 +1141,13 @@ hubble:
     # grafana can import dashboards based on the label and value
     # ref: https://github.com/grafana/helm-charts/tree/main/charts/grafana#sidecar-for-dashboards
     dashboards:
-      enabled: false
+      enabled: true
       label: grafana_dashboard
       # @schema
       # type: [null, string]
       # @schema
       namespace: ~
-      labelValue: '1'
+      labelValue: 'enabled'
       annotations: {}
   # -- Unix domain socket path to listen to when Hubble is enabled.
   socketPath: /var/run/cilium/hubble.sock
@@ -2116,13 +2116,13 @@ prometheus:
 # grafana can import dashboards based on the label and value
 # ref: https://github.com/grafana/helm-charts/tree/main/charts/grafana#sidecar-for-dashboards
 dashboards:
-  enabled: false
+  enabled: true
   label: grafana_dashboard
   # @schema
   # type: [null, string]
   # @schema
   namespace: ~
-  labelValue: '1'
+  labelValue: 'enabled'
   annotations: {}
 # Configure Cilium Envoy options.
 envoy:
@@ -2638,13 +2638,13 @@ operator:
   # grafana can import dashboards based on the label and value
   # ref: https://github.com/grafana/helm-charts/tree/main/charts/grafana#sidecar-for-dashboards
   dashboards:
-    enabled: false
+    enabled: true
     label: grafana_dashboard
     # @schema
     # type: [null, string]
     # @schema
     namespace: ~
-    labelValue: '1'
+    labelValue: 'enabled'
     annotations: {}
   # -- Skip CRDs creation for cilium-operator
   skipCRDCreation: false

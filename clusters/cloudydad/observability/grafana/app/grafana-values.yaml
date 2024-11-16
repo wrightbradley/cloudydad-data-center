@@ -252,7 +252,7 @@ serviceMonitor:
   ## If true, a ServiceMonitor CR is created for a prometheus operator
   ## https://github.com/coreos/prometheus-operator
   ##
-  enabled: false
+  enabled: true
   path: /metrics
   #  namespace: monitoring  (defaults to use the namespace this chart is deployed to)
   labels: {}
@@ -278,10 +278,10 @@ hostAliases:
   #     - "my.host.com"
 
 ingress:
-  enabled: false
+  enabled: true
   # For Kubernetes >= 1.18 you should specify the ingress-controller via the field ingressClassName
   # See https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/#specifying-the-class-of-an-ingress
-  # ingressClassName: nginx
+  ingressClassName: traefik
   # Values can be templated
   annotations:
     {}
@@ -294,7 +294,7 @@ ingress:
   pathType: Prefix
 
   hosts:
-    - chart-example.local
+    - grafana.cloudydad.world
   ## Extra paths to prepend to every host configuration. This is useful when working with annotation based services.
   extraPaths: []
   # - path: /*
@@ -652,7 +652,12 @@ lifecycleHooks:
 ## Pass the plugins you want installed as a list.
 ##
 plugins:
-  []
+  - https://github.com/VictoriaMetrics/victoriametrics-datasource/releases/download/v0.10.2/victoriametrics-datasource-v0.10.2.zip;victoriametrics-datasource
+  - https://github.com/VictoriaMetrics/victorialogs-datasource/releases/download/v0.7.0/victorialogs-datasource-v0.7.0.zip;victorialogs-datasource
+  - grafana-googlesheets-datasource
+  - grafana-oncall-app
+  # - grafana-synthetic-monitoring-apps
+  # - yesoreyeram-infinity-datasource
   # - digrich-bubblechart-panel
   # - grafana-clock-panel
   ## You can also use other plugin download URL, as long as they are valid zip files,
@@ -662,15 +667,20 @@ plugins:
 ## Configure grafana datasources
 ## ref: http://docs.grafana.org/administration/provisioning/#datasources
 ##
-datasources: {}
-#  datasources.yaml:
-#    apiVersion: 1
-#    datasources:
-#    - name: Prometheus
-#      type: prometheus
-#      url: http://prometheus-prometheus-server
-#      access: proxy
-#      isDefault: true
+datasources:
+  datasources.yaml:
+    apiVersion: 1
+    datasources:
+      - name: VictoriaMetrics
+        type: victoriametrics-datasource
+        access: proxy
+        url: http://vm-metrics.vm-metrics.svc.cluster.local:8428
+        isDefault: true
+      - name: VictoriaLogs
+        type: victorialogs-datasource
+        access: proxy
+        url: http://vm-logs-victoria-logs-single-server.vm-logs.svc.cluster.local:9428
+        isDefault: false
 #    - name: CloudWatch
 #      type: cloudwatch
 #      access: proxy
@@ -850,6 +860,10 @@ grafana.ini:
     url: https://grafana.net
   server:
     domain: "{{ if (and .Values.ingress.enabled .Values.ingress.hosts) }}{{ tpl (.Values.ingress.hosts | first) . }}{{ else }}''{{ end }}"
+  plugins:
+    allow_loading_unsigned_plugins:
+      - victorialogs-datasource
+      - victoriametrics-datasource
 ## grafana Authentication can be enabled with the following values on grafana.ini
 # server:
 # The full public facing url you use in browser, used for redirects and emails
@@ -942,19 +956,19 @@ sidecar:
     # Additional environment variables for the alerts sidecar
     env: {}
     # Do not reprocess already processed unchanged resources on k8s API reconnect.
-    # ignoreAlreadyProcessed: true
+    ignoreAlreadyProcessed: true
     # label that the configmaps with alert are marked with
     label: grafana_alert
     # value of label that the configmaps with alert are set to
-    labelValue: ''
+    labelValue: 'enabled'
     # Log level. Can be one of: DEBUG, INFO, WARN, ERROR, CRITICAL.
     # logLevel: INFO
     # If specified, the sidecar will search for alert config-maps inside this namespace.
     # Otherwise the namespace in which the sidecar is running will be used.
     # It's also possible to specify ALL to search in all namespaces
-    searchNamespace: null
+    searchNamespace: ALL
     # Method to use to detect ConfigMap changes. With WATCH the sidecar will do a WATCH requests, with SLEEP it will list all ConfigMaps, then sleep for 60 seconds.
-    watchMethod: WATCH
+    watchMethod: SLEEP
     # search in configmap, secret or both
     resource: both
     # watchServerTimeout: request to the server, asking it to cleanly close the connection after that.
@@ -974,7 +988,7 @@ sidecar:
     skipReload: false
     # This is needed if skipReload is true, to load any alerts defined at startup time.
     # Deploy the alert sidecar as an initContainer.
-    initAlerts: false
+    initAlerts: true
     # Additional alerts sidecar volume mounts
     extraMounts: []
     # Sets the size limit of the alert sidecar emptyDir volume
@@ -997,12 +1011,12 @@ sidecar:
     #      name: configmap-name
     #      key: value_key
     # Do not reprocess already processed unchanged resources on k8s API reconnect.
-    # ignoreAlreadyProcessed: true
+    ignoreAlreadyProcessed: true
     SCProvider: true
     # label that the configmaps with dashboards are marked with
     label: grafana_dashboard
     # value of label that the configmaps with dashboards are set to
-    labelValue: ''
+    labelValue: 'enabled'
     # Log level. Can be one of: DEBUG, INFO, WARN, ERROR, CRITICAL.
     # logLevel: INFO
     # folder in the pod that should hold the collected dashboards (unless `defaultFolderName` is set)
@@ -1012,9 +1026,9 @@ sidecar:
     # Namespaces list. If specified, the sidecar will search for config-maps/secrets inside these namespaces.
     # Otherwise the namespace in which the sidecar is running will be used.
     # It's also possible to specify ALL to search in all namespaces.
-    searchNamespace: null
+    searchNamespace: ALL
     # Method to use to detect ConfigMap changes. With WATCH the sidecar will do a WATCH requests, with SLEEP it will list all ConfigMaps, then sleep for 60 seconds.
-    watchMethod: WATCH
+    watchMethod: SLEEP
     # search in configmap, secret or both
     resource: both
     # If specified, the sidecar will look for annotation with this name to create folder and put graph here.
@@ -1075,19 +1089,19 @@ sidecar:
     #      name: configmap-name
     #      key: value_key
     # Do not reprocess already processed unchanged resources on k8s API reconnect.
-    # ignoreAlreadyProcessed: true
+    ignoreAlreadyProcessed: true
     # label that the configmaps with datasources are marked with
     label: grafana_datasource
     # value of label that the configmaps with datasources are set to
-    labelValue: ''
+    labelValue: 'enabled'
     # Log level. Can be one of: DEBUG, INFO, WARN, ERROR, CRITICAL.
     # logLevel: INFO
     # If specified, the sidecar will search for datasource config-maps inside this namespace.
     # Otherwise the namespace in which the sidecar is running will be used.
     # It's also possible to specify ALL to search in all namespaces
-    searchNamespace: null
+    searchNamespace: ALL
     # Method to use to detect ConfigMap changes. With WATCH the sidecar will do a WATCH requests, with SLEEP it will list all ConfigMaps, then sleep for 60 seconds.
-    watchMethod: WATCH
+    watchMethod: SLEEP
     # search in configmap, secret or both
     resource: both
     # watchServerTimeout: request to the server, asking it to cleanly close the connection after that.
@@ -1107,7 +1121,7 @@ sidecar:
     skipReload: false
     # This is needed if skipReload is true, to load any datasources defined at startup time.
     # Deploy the datasources sidecar as an initContainer.
-    initDatasources: false
+    initDatasources: true
     # Additional datasources sidecar volume mounts
     extraMounts: []
     # Sets the size limit of the datasource sidecar emptyDir volume
@@ -1117,19 +1131,19 @@ sidecar:
     # Additional environment variables for the plugins sidecar
     env: {}
     # Do not reprocess already processed unchanged resources on k8s API reconnect.
-    # ignoreAlreadyProcessed: true
+    ignoreAlreadyProcessed: true
     # label that the configmaps with plugins are marked with
     label: grafana_plugin
     # value of label that the configmaps with plugins are set to
-    labelValue: ''
+    labelValue: 'enabled'
     # Log level. Can be one of: DEBUG, INFO, WARN, ERROR, CRITICAL.
     # logLevel: INFO
     # If specified, the sidecar will search for plugin config-maps inside this namespace.
     # Otherwise the namespace in which the sidecar is running will be used.
     # It's also possible to specify ALL to search in all namespaces
-    searchNamespace: null
+    searchNamespace: ALL
     # Method to use to detect ConfigMap changes. With WATCH the sidecar will do a WATCH requests, with SLEEP it will list all ConfigMaps, then sleep for 60 seconds.
-    watchMethod: WATCH
+    watchMethod: SLEEP
     # search in configmap, secret or both
     resource: both
     # watchServerTimeout: request to the server, asking it to cleanly close the connection after that.
@@ -1149,7 +1163,7 @@ sidecar:
     skipReload: false
     # Deploy the datasource sidecar as an initContainer in addition to a container.
     # This is needed if skipReload is true, to load any plugins defined at startup time.
-    initPlugins: false
+    initPlugins: true
     # Additional plugins sidecar volume mounts
     extraMounts: []
     # Sets the size limit of the plugin sidecar emptyDir volume
@@ -1159,19 +1173,19 @@ sidecar:
     # Additional environment variables for the notifierssidecar
     env: {}
     # Do not reprocess already processed unchanged resources on k8s API reconnect.
-    # ignoreAlreadyProcessed: true
+    ignoreAlreadyProcessed: true
     # label that the configmaps with notifiers are marked with
     label: grafana_notifier
     # value of label that the configmaps with notifiers are set to
-    labelValue: ''
+    labelValue: 'enabled'
     # Log level. Can be one of: DEBUG, INFO, WARN, ERROR, CRITICAL.
     # logLevel: INFO
     # If specified, the sidecar will search for notifier config-maps inside this namespace.
     # Otherwise the namespace in which the sidecar is running will be used.
     # It's also possible to specify ALL to search in all namespaces
-    searchNamespace: null
+    searchNamespace: ALL
     # Method to use to detect ConfigMap changes. With WATCH the sidecar will do a WATCH requests, with SLEEP it will list all ConfigMaps, then sleep for 60 seconds.
-    watchMethod: WATCH
+    watchMethod: SLEEP
     # search in configmap, secret or both
     resource: both
     # watchServerTimeout: request to the server, asking it to cleanly close the connection after that.
@@ -1191,7 +1205,7 @@ sidecar:
     skipReload: false
     # Deploy the notifier sidecar as an initContainer in addition to a container.
     # This is needed if skipReload is true, to load any notifiers defined at startup time.
-    initNotifiers: false
+    initNotifiers: true
     # Additional notifiers sidecar volume mounts
     extraMounts: []
     # Sets the size limit of the notifier sidecar emptyDir volume
@@ -1287,7 +1301,7 @@ imageRenderer:
     ## If true, a ServiceMonitor CRD is created for a prometheus operator
     ## https://github.com/coreos/prometheus-operator
     ##
-    enabled: false
+    enabled: true
     path: /metrics
     #  namespace: monitoring  (defaults to use the namespace this chart is deployed to)
     labels: {}
