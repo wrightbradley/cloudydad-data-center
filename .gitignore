@@ -844,3 +844,5 @@ $RECYCLE.BIN/
 clusters/cloudydad/infrastructure/network/cilium/app/archive
 k3s-ansible
 playbooks/kubeconfig
+secret.yaml
+clusters/cloudydad/infrastructure/storage/democratic-csi/app/values.yaml

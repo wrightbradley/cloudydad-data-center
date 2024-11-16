@@ -5,13 +5,13 @@ kind: Kustomization
 resources:
   - sealed-democratic-csi-secrets.yaml
   - democratic-csi-helm-release-iscsi.yaml
-  - democratic-csi-helm-release-nfs.yaml
+  # - democratic-csi-helm-release-nfs.yaml
 configMapGenerator:
   - name: democratic-csi-iscsi-values
     files:
       - values.yaml=truenas-api-iscsi-values.yaml
-  - name: democratic-csi-nfs-values
-    files:
-      - values.yaml=truenas-api-nfs-values.yaml
+  # - name: democratic-csi-nfs-values
+  #   files:
+  #     - values.yaml=truenas-api-nfs-values.yaml
 configurations:
   - kustomizeconfig.yaml
