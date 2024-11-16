@@ -279,7 +279,7 @@ server:
   terminationGracePeriodSeconds: 60
   serviceMonitor:
     # -- Enable deployment of Service Monitor for server component. This is Prometheus operator object
-    enabled: false
+    enabled: true
     # -- Service Monitor labels
     extraLabels: {}
     # -- Service Monitor annotations
@@ -355,10 +355,10 @@ extraObjects: []
 
 dashboards:
   # -- Create VictoriaLogs dashboards
-  enabled: false
+  enabled: true
   # -- Dashboard labels
-  labels: {}
-  #  grafana_dashboard: "1"
+  labels:
+    grafana_dashboard: 'enabled'
   # -- Dashboard annotations
   annotations: {}
   grafanaOperator:

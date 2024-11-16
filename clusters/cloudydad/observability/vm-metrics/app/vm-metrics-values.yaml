@@ -351,11 +351,11 @@ server:
     # -- Service labels
     labels: {}
     # -- Service ClusterIP
-    clusterIP: ''
+    # clusterIP: ''
     # -- Service external IPs. Details are [here](https://kubernetes.io/docs/user-guide/services/#external-ips)
-    externalIPs: []
+    # externalIPs: []
     # -- Service load balacner IP
-    loadBalancerIP: ''
+    # loadBalancerIP: ''
     # -- Load balancer source range
     loadBalancerSourceRanges: []
     # -- Service port
@@ -381,7 +381,7 @@ server:
   terminationGracePeriodSeconds: 60
   serviceMonitor:
     # -- Enable deployment of Service Monitor for server component. This is Prometheus operator object
-    enabled: false
+    enabled: true
     # -- Service Monitor labels
     extraLabels: {}
     # -- Service Monitor annotations
