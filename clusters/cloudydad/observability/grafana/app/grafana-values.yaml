@@ -675,22 +675,34 @@ datasources:
         type: victoriametrics-datasource
         access: proxy
         url: http://vm-metrics.cloudydad.world
-        isDefault: true
+        isDefault: false
       - name: VictoriaLogs
         type: victorialogs-datasource
         access: proxy
         url: http://vm-logs.cloudydad.world
         isDefault: false
-#    - name: CloudWatch
-#      type: cloudwatch
-#      access: proxy
-#      uid: cloudwatch
-#      editable: false
-#      jsonData:
-#        authType: default
-#        defaultRegion: us-east-1
-#    deleteDatasources: []
-#    - name: Prometheus
+      - name: Prometheus
+        type: prometheus
+        access: proxy
+        url: http://vm-metrics.cloudydad.world
+        isDefault: true
+        jsonData:
+          httpMethod: POST
+          manageAlerts: false
+          prometheusType: Prometheus
+          prometheusVersion: 2.46.0
+          cacheLevel: 'High'
+          disableRecordingRules: false
+          incrementalQueryOverlapWindow: 10m
+          # exemplarTraceIdDestinations:
+          #   # Field with internal link pointing to data source in Grafana.
+          #   # datasourceUid value can be anything, but it should be unique across all defined data source uids.
+          #   - datasourceUid: my_jaeger_uid
+          #     name: traceID
+          #
+          #   # Field with external link.
+          #   - name: traceID
+          #     url: 'http://localhost:3000/explore?orgId=1&left=%5B%22now-1h%22,%22now%22,%22Jaeger%22,%7B%22query%22:%22$${__value.raw}%22%7D%5D'
 
 ## Configure grafana alerting (can be templated)
 ## ref: http://docs.grafana.org/administration/provisioning/#alerting
@@ -782,18 +794,19 @@ notifiers: {}
 ##
 ## `path` must be /var/lib/grafana/dashboards/<provider_name>
 ##
-dashboardProviders: {}
-#  dashboardproviders.yaml:
-#    apiVersion: 1
-#    providers:
-#    - name: 'default'
-#      orgId: 1
-#      folder: ''
-#      type: file
-#      disableDeletion: false
-#      editable: true
-#      options:
-#        path: /var/lib/grafana/dashboards/default
+dashboardProviders:
+  {}
+  # dashboardproviders.yaml:
+  #   apiVersion: 1
+  #   providers:
+  #     - name: 'grafana-dashboards-kubernetes'
+  #       orgId: 1
+  #       folder: 'Kubernetes'
+  #       type: file
+  #       disableDeletion: true
+  #       editable: true
+  #       options:
+  #         path: /var/lib/grafana/dashboards/grafana-dashboards-kubernetes
 
 ## Configure grafana dashboard to import
 ## NOTE: To use dashboards you must also enable/configure dashboardProviders
@@ -803,6 +816,25 @@ dashboardProviders: {}
 ##
 dashboards:
   {}
+  # grafana-dashboards-kubernetes:
+  #   k8s-system-api-server:
+  #     url: https://raw.githubusercontent.com/dotdc/grafana-dashboards-kubernetes/master/dashboards/k8s-system-api-server.json
+  #     token: ''
+  #   k8s-system-coredns:
+  #     url: https://raw.githubusercontent.com/dotdc/grafana-dashboards-kubernetes/master/dashboards/k8s-system-coredns.json
+  #     token: ''
+  #   k8s-views-global:
+  #     url: https://raw.githubusercontent.com/dotdc/grafana-dashboards-kubernetes/master/dashboards/k8s-views-global.json
+  #     token: ''
+  #   k8s-views-namespaces:
+  #     url: https://raw.githubusercontent.com/dotdc/grafana-dashboards-kubernetes/master/dashboards/k8s-views-namespaces.json
+  #     token: ''
+  #   k8s-views-nodes:
+  #     url: https://raw.githubusercontent.com/dotdc/grafana-dashboards-kubernetes/master/dashboards/k8s-views-nodes.json
+  #     token: ''
+  #   k8s-views-pods:
+  #     url: https://raw.githubusercontent.com/dotdc/grafana-dashboards-kubernetes/master/dashboards/k8s-views-pods.json
+  #     token: ''
   # default:
   #   some-dashboard:
   #     json: |
@@ -994,7 +1026,7 @@ sidecar:
     # Sets the size limit of the alert sidecar emptyDir volume
     sizeLimit: {}
   dashboards:
-    enabled: false
+    enabled: true
     # Additional environment variables for the dashboards sidecar
     env: {}
     ## "valueFrom" environment variable references that will be added to deployment pods. Name is templated.
@@ -1011,7 +1043,7 @@ sidecar:
     #      name: configmap-name
     #      key: value_key
     # Do not reprocess already processed unchanged resources on k8s API reconnect.
-    ignoreAlreadyProcessed: true
+    # ignoreAlreadyProcessed: true
     SCProvider: true
     # label that the configmaps with dashboards are marked with
     label: grafana_dashboard
@@ -1033,7 +1065,7 @@ sidecar:
     resource: both
     # If specified, the sidecar will look for annotation with this name to create folder and put graph here.
     # You can use this parameter together with `provider.foldersFromFilesStructure`to annotate configmaps and create folder structure.
-    folderAnnotation: null
+    folderAnnotation: grafana_folder
     # Endpoint to send request to reload alerts
     reloadURL: 'http://localhost:3000/api/admin/provisioning/dashboards/reload'
     # Absolute path to shell script to execute after a configmap got reloaded
@@ -1066,7 +1098,7 @@ sidecar:
       # allow updating provisioned dashboards from the UI
       allowUiUpdates: false
       # allow Grafana to replicate dashboard structure from filesystem
-      foldersFromFilesStructure: false
+      foldersFromFilesStructure: true
     # Additional dashboards sidecar volume mounts
     extraMounts: []
     # Sets the size limit of the dashboard sidecar emptyDir volume
