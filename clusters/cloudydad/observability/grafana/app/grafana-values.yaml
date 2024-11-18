@@ -674,12 +674,12 @@ datasources:
       - name: VictoriaMetrics
         type: victoriametrics-datasource
         access: proxy
-        url: http://vm-metrics.vm-metrics.svc.cluster.local:8428
+        url: http://vm-metrics.cloudydad.world
         isDefault: true
       - name: VictoriaLogs
         type: victorialogs-datasource
         access: proxy
-        url: http://vm-logs-victoria-logs-single-server.vm-logs.svc.cluster.local:9428
+        url: http://vm-logs.cloudydad.world
         isDefault: false
 #    - name: CloudWatch
 #      type: cloudwatch
