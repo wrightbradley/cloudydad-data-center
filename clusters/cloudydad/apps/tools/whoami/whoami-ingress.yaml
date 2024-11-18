@@ -3,8 +3,10 @@ kind: Ingress
 metadata:
   name: whoami-ingress
 spec:
+  ingressClassName: traefik
   rules:
-    - http:
+    - host: whoami.cloudydad.world
+      http:
         paths:
           - path: /
             pathType: Prefix
