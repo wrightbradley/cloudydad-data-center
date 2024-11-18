@@ -8,8 +8,8 @@ metadata:
 spec:
   path: ./clusters/cloudydad/infrastructure/network/traefik/app
   targetNamespace: traefik
-  dependsOn:
-    - name: cilium
+  # dependsOn:
+  #   - name: cilium
   sourceRef:
     kind: GitRepository
     name: cloudydad-data-center
