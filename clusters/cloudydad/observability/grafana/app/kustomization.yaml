@@ -9,9 +9,37 @@ resources:
   - ./grafana-helm-release.yaml
   - ./datasources/vm-metrics-datasource.yaml
   - ./datasources/vm-logs-datasource.yaml
+generatorOptions:
+  labels:
+    grafana_dashboard: enabled
+    grafana_folder: Kubernetes
 configMapGenerator:
   - name: grafana-values
     files:
       - values.yaml=grafana-values.yaml
+  - name: k8s-addons-prometheus
+    files:
+      - k8s-addons-prometheus.json=dashboards/k8s-addons-prometheus.json
+  - name: k8s-addons-trivy-operator
+    files:
+      - k8s-addons-trivy-operator.json=dashboards/k8s-addons-trivy-operator.json
+  - name: k8s-system-api-server
+    files:
+      - k8s-system-api-server.json=dashboards/k8s-system-api-server.json
+  - name: k8s-system-coredns
+    files:
+      - k8s-system-coredns.json=dashboards/k8s-system-coredns.json
+  - name: k8s-views-global
+    files:
+      - k8s-views-global.json=dashboards/k8s-views-global.json
+  - name: k8s-views-namespaces
+    files:
+      - k8s-views-namespaces.json=dashboards/k8s-views-namespaces.json
+  - name: k8s-views-nodes
+    files:
+      - k8s-views-nodes.json=dashboards/k8s-views-nodes.json
+  - name: k8s-views-pods
+    files:
+      - k8s-views-pods.json=dashboards/k8s-views-pods.json
 configurations:
   - kustomizeconfig.yaml
