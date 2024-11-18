@@ -19,7 +19,7 @@ externalServices:
   prometheus:
     # -- Prometheus host where metrics will be sent
     # @section -- External Services (Prometheus)
-    host: 'vm-metrics.vm-metrics.svc.cluster.local:8428'
+    host: 'http://vm-metrics.cloudydad.world'
     # -- The key for the host property in the secret
     # @section -- External Services (Prometheus)
     hostKey: host
@@ -270,7 +270,7 @@ externalServices:
   loki:
     # -- Loki host where logs and events will be sent
     # @section -- External Services (Loki)
-    host: 'vm-logs-victoria-logs-single-server.vm-logs.svc.cluster.local:9428'
+    host: 'http://vm-logs.cloudydad.world'
     # -- The key for the host property in the secret
     # @section -- External Services (Loki)
     hostKey: host

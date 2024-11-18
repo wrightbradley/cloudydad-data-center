@@ -212,7 +212,7 @@ server:
 
   ingress:
     # -- Enable deployment of ingress for server component
-    enabled: false
+    enabled: true
 
     # -- Ingress annotations
     annotations:
@@ -223,12 +223,11 @@ server:
     extraLabels: {}
 
     # -- Array of host objects
-    hosts: []
-    #   - name: vmselect.local
-    #     path:
-    #       - /select
-    #       - /insert
-    #     port: http
+    hosts:
+      - name: vm-logs.cloudydad.world
+        path:
+          - /
+        port: http
 
     # -- Array of TLS objects
     tls: []
@@ -237,7 +236,7 @@ server:
     #       - vmselect.local
 
     # -- Ingress controller class name
-    ingressClassName: ''
+    ingressClassName: 'traefik'
 
     # -- Ingress path type
     pathType: Prefix
