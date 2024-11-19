@@ -1,0 +1,14 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: goldilocks
+resources:
+  - ./goldilocks-namespace.yaml
+  - ./goldilocks-helm-release.yaml
+configMapGenerator:
+  - name: goldilocks-values
+    files:
+      - values.yaml=goldilocks-values.yaml
+configurations:
+  - kustomizeconfig.yaml
