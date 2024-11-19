@@ -5,6 +5,7 @@ kind: Kustomization
 resources:
   - ./cilium.yaml
   - ./cloudnative-pg.yaml
+  - ./coredns.yaml
   - ./democratic-csi.yaml
   - ./grafana.yaml
   - ./kube-vip.yaml
