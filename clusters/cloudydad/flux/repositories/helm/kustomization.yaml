@@ -7,11 +7,12 @@ resources:
   - ./cloudnative-pg.yaml
   - ./coredns.yaml
   - ./democratic-csi.yaml
+  - ./fairwinds.yaml
   - ./grafana.yaml
   - ./kube-vip.yaml
   - ./podinfo.yaml
   - ./reloader.yaml
   - ./sealed-secrets.yaml
   - ./snapshot-controller.yaml
-  - ./victoria-metrics.yaml
   - ./traefik.yaml
+  - ./victoria-metrics.yaml
