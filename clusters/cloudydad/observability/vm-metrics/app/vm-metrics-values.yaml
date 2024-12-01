@@ -203,13 +203,12 @@ server:
 
   # -- Resource object. Details are [here](http://kubernetes.io/docs/user-guide/compute-resources/)
   resources:
-    {}
-    # limits:
-    #   cpu: 500m
-    #   memory: 512Mi
-    # requests:
-    #   cpu: 500m
-    #   memory: 512Mi
+    requests:
+      cpu: 35m
+      memory: 324M
+    limits:
+      cpu: 35m
+      memory: 324M
 
   # -- Readiness & Liveness probes
   probe:

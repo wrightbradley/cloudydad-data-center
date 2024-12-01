@@ -7,6 +7,8 @@ vpa:
   updater:
     enabled: false
 
+  # TODO: adjust resources for vpa
+
 metrics-server:
   # metrics-server.enabled -- If true, the metrics-server will be installed as a sub-chart
   enabled: false
@@ -60,10 +62,12 @@ controller:
   topologySpreadConstraints: []
   # controller.resources -- The resources block for the controller pods
   resources:
-    limits: {}
     requests:
-      cpu: 25m
-      memory: 256Mi
+      cpu: 15m
+      memory: 105M
+    limits:
+      cpu: 15m
+      memory: 105M
   # controller.podSecurityContext -- Defines the podSecurityContext for the controller pod
   podSecurityContext:
     seccompProfile:
@@ -160,10 +164,12 @@ dashboard:
 
   # dashboard.resources -- A resources block for the dashboard.
   resources:
-    limits: {}
     requests:
-      cpu: 25m
-      memory: 256Mi
+      cpu: 15m
+      memory: 105M
+    limits:
+      cpu: 15m
+      memory: 105M
   # dashboard.podSecurityContext -- Defines the podSecurityContext for the dashboard pod
   podSecurityContext:
     seccompProfile:

@@ -351,13 +351,13 @@ route:
     ## Additional custom rules that can be added to the route
     additionalRules: []
 
-resources: {}
-#  limits:
-#    cpu: 100m
-#    memory: 128Mi
-#  requests:
-#    cpu: 100m
-#    memory: 128Mi
+resources:
+  requests:
+    cpu: 23m
+    memory: 145M
+  # limits:
+  #   cpu: 23m
+  #   memory: 145M
 
 ## Node labels for pod assignment
 ## ref: https://kubernetes.io/docs/user-guide/node-selection/
@@ -962,13 +962,13 @@ sidecar:
     tag: 1.28.0
     sha: ''
   imagePullPolicy: IfNotPresent
-  resources: {}
-  #   limits:
-  #     cpu: 100m
-  #     memory: 100Mi
-  #   requests:
-  #     cpu: 50m
-  #     memory: 50Mi
+  resources:
+    requests:
+      cpu: 11m
+      memory: 110M
+    # limits:
+    #   cpu: 11m
+    #   memory: 110M
   securityContext:
     allowPrivilegeEscalation: false
     capabilities:
