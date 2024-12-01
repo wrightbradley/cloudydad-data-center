@@ -653,7 +653,7 @@ lifecycleHooks:
 ##
 plugins:
   - https://github.com/VictoriaMetrics/victoriametrics-datasource/releases/download/v0.10.2/victoriametrics-datasource-v0.10.2.zip;victoriametrics-datasource
-  - https://github.com/VictoriaMetrics/victorialogs-datasource/releases/download/v0.7.0/victorialogs-datasource-v0.7.0.zip;victorialogs-datasource
+  - https://github.com/VictoriaMetrics/victorialogs-datasource/releases/download/v0.8.0/victorialogs-datasource-v0.8.0.zip;victorialogs-datasource
   - grafana-googlesheets-datasource
   - grafana-oncall-app
   # - grafana-synthetic-monitoring-apps
@@ -676,16 +676,19 @@ datasources:
         access: proxy
         url: http://vm-metrics.cloudydad.world
         isDefault: false
+        editable: true
       - name: VictoriaLogs
         type: victorialogs-datasource
         access: proxy
         url: http://vm-logs.cloudydad.world
         isDefault: false
+        editable: true
       - name: Prometheus
         type: prometheus
         access: proxy
         url: http://vm-metrics.cloudydad.world
         isDefault: true
+        editable: true
         jsonData:
           httpMethod: POST
           manageAlerts: false

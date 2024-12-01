@@ -7,8 +7,6 @@ resources:
   - ./grafana-namespace.yaml
   - ./sealed-grafana-credentials.yaml
   - ./grafana-helm-release.yaml
-  - ./datasources/vm-metrics-datasource.yaml
-  - ./datasources/vm-logs-datasource.yaml
 generatorOptions:
   labels:
     grafana_dashboard: enabled
