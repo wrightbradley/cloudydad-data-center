@@ -1192,7 +1192,7 @@ metrics:
   kubeProxy:
     # -- Scrape metrics from the Kube Proxy
     # @section -- Metrics Job: Kube Proxy
-    enabled: false
+    enabled: true
 
     # -- Port number used by the Kube Proxy, set in `--metrics-bind-address`.
     # @section -- Metrics Job: Kube Proxy
