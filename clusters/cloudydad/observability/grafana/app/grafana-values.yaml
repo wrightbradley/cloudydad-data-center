@@ -896,9 +896,7 @@ grafana.ini:
   server:
     domain: "{{ if (and .Values.ingress.enabled .Values.ingress.hosts) }}{{ tpl (.Values.ingress.hosts | first) . }}{{ else }}''{{ end }}"
   plugins:
-    allow_loading_unsigned_plugins:
-      - victorialogs-datasource
-      - victoriametrics-datasource
+    allow_loading_unsigned_plugins: victorialogs-datasource,victoriametrics-datasource
 ## grafana Authentication can be enabled with the following values on grafana.ini
 # server:
 # The full public facing url you use in browser, used for redirects and emails
