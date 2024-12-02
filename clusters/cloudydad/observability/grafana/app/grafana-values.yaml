@@ -683,6 +683,20 @@ datasources:
         url: http://vm-logs.cloudydad.world
         isDefault: false
         editable: true
+      - name: Alertmanager
+        type: alertmanager
+        url: http://alertmanager.cloudydad.world
+        access: proxy
+        jsonData:
+          # Valid options for implementation include mimir, cortex and prometheus
+          implementation: prometheus
+          # Whether or not Grafana should send alert instances to this Alertmanager
+          handleGrafanaManagedAlerts: true
+        # # optionally
+        # basicAuth: true
+        # basicAuthUser: my_user
+        # secureJsonData:
+        #   basicAuthPassword: test_password
       - name: Prometheus
         type: prometheus
         access: proxy
