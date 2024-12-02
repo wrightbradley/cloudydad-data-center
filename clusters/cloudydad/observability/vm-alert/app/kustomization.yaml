@@ -1,0 +1,14 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: vm-alert
+resources:
+  - ./vm-alert-namespace.yaml
+  - ./vm-alert-helm-release.yaml
+configMapGenerator:
+  - name: vm-alert-values
+    files:
+      - values.yaml=vm-alert-values.yaml
+configurations:
+  - kustomizeconfig.yaml
