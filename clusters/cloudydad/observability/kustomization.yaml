@@ -8,6 +8,7 @@ resources:
   - ./k8s-monitoring//kustomization.yaml
   - ./vm-logs/kustomization.yaml
   - ./vm-metrics/kustomization.yaml
+  - ./vm-alert/kustomization.yaml
   - ./node-problem-detector/kustomization.yaml
   # - ./loki/kustomization.yaml
   # - ./mimir/kustomization.yaml
