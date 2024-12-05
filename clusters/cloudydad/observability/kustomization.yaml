@@ -14,3 +14,4 @@ resources:
   # - ./mimir/kustomization.yaml
   # - ./oncall//kustomization.yaml
   # - ./tempo//kustomization.yaml
+  - ./vm-k8s-stack/kustomization.yaml

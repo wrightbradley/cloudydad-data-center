@@ -1,0 +1,14 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: vm-k8s-stack
+resources:
+  - ./vm-k8s-stack-namespace.yaml
+  - ./vm-k8s-stack-helm-release.yaml
+configMapGenerator:
+  - name: vm-k8s-stack-values
+    files:
+      - values.yaml=vm-k8s-stack-values.yaml
+configurations:
+  - kustomizeconfig.yaml
