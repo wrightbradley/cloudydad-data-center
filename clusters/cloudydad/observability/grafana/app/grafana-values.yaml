@@ -674,13 +674,13 @@ datasources:
       - name: VictoriaMetrics
         type: victoriametrics-datasource
         access: proxy
-        url: http://vm-metrics.cloudydad.world
+        url: http://vmmetrics.cloudydad.world
         isDefault: false
         editable: true
       - name: VictoriaLogs
         type: victorialogs-datasource
         access: proxy
-        url: http://vm-logs.cloudydad.world
+        url: http://vmlogs.cloudydad.world
         isDefault: false
         editable: true
       - name: Alertmanager
@@ -700,7 +700,7 @@ datasources:
       - name: Prometheus
         type: prometheus
         access: proxy
-        url: http://vm-metrics.cloudydad.world
+        url: http://vmmetrics.cloudydad.world
         isDefault: true
         editable: true
         jsonData:

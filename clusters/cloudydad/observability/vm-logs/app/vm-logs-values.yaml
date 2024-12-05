@@ -223,7 +223,7 @@ server:
 
     # -- Array of host objects
     hosts:
-      - name: vm-logs.cloudydad.world
+      - name: vmlogs.cloudydad.world
         path:
           - /
         port: http
