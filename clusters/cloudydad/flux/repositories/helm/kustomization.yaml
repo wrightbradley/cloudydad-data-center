@@ -10,6 +10,7 @@ resources:
   - ./democratic-csi.yaml
   - ./fairwinds.yaml
   - ./grafana.yaml
+  - ./jetstack.yaml
   - ./kube-vip.yaml
   - ./podinfo.yaml
   - ./reloader.yaml
