@@ -1,0 +1,17 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: otel-collector
+resources:
+  - ./otel-collector-namespace.yaml
+  # - ./opentelemetry.io_opampbridges.yaml
+  # - ./opentelemetry.io_instrumentations.yaml
+  # - ./opentelemetry.io_opentelemetrycollectors.yaml
+  - ./otel-collector-helm-release.yaml
+configMapGenerator:
+  - name: otel-collector-values
+    files:
+      - values.yaml=otel-collector-values.yaml
+configurations:
+  - kustomizeconfig.yaml
