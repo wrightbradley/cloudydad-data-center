@@ -12,6 +12,7 @@ resources:
   - ./grafana.yaml
   - ./jetstack.yaml
   - ./kube-vip.yaml
+  - ./opentelemetry.yaml
   - ./podinfo.yaml
   - ./reloader.yaml
   - ./sealed-secrets.yaml
