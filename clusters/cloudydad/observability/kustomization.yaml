@@ -3,16 +3,16 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - ./goldilocks/kustomization.yaml
-  - ./grafana/kustomization.yaml
-  - ./k8s-monitoring//kustomization.yaml
-  - ./vm-logs/kustomization.yaml
-  - ./vm-metrics/kustomization.yaml
-  - ./vm-alert/kustomization.yaml
-  - ./node-problem-detector/kustomization.yaml
+  # - ./k8s-monitoring/kustomization.yaml
   # - ./loki/kustomization.yaml
   # - ./mimir/kustomization.yaml
-  # - ./oncall//kustomization.yaml
-  # - ./tempo//kustomization.yaml
+  # - ./oncall/kustomization.yaml
+  # - ./tempo/kustomization.yaml
+  # - ./vm-alert/kustomization.yaml
+  # - ./vm-metrics/kustomization.yaml
+  - ./goldilocks/kustomization.yaml
+  - ./grafana/kustomization.yaml
+  - ./node-problem-detector/kustomization.yaml
   - ./otel-collector/kustomization.yaml
   - ./vm-k8s-stack/kustomization.yaml
+  - ./vm-logs/kustomization.yaml
