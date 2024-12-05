@@ -21,7 +21,7 @@ cilium_hubble: true # enable hubble observability relay and ui
 cluster_cidr: 10.52.0.0/16
 
 # enable cilium bgp control plane for lb services and pod cidrs. disables metallb.
-cilium_bgp: true
+cilium_bgp: false
 
 # bgp parameters for cilium cni. only active when cilium_iface is defined and cilium_bgp is true.
 cilium_bgp_my_asn: '64522'
