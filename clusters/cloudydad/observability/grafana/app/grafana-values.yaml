@@ -832,7 +832,11 @@ dashboardProviders:
 ## dashboards per provider, use provider name as key.
 ##
 dashboards:
-  {}
+  default:
+    traefik:
+      gnetId: 17347
+      revision: 9
+      datasource: Prometheus
   # grafana-dashboards-kubernetes:
   #   k8s-system-api-server:
   #     url: https://raw.githubusercontent.com/dotdc/grafana-dashboards-kubernetes/master/dashboards/k8s-system-api-server.json
