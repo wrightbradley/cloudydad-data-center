@@ -148,19 +148,16 @@ dashboard:
     # dashboard.ingress.ingressClassName -- From Kubernetes 1.18+ this field is supported in case your ingress controller supports it. When set, you do not need to add the ingress class as annotation.
     ingressClassName: traefik
     annotations:
-      {}
-      # kubernetes.io/ingress.class: nginx
-      # kubernetes.io/tls-acme: "true"
+      traefik.ingress.kubernetes.io/router.entrypoints: websecure
+      traefik.ingress.kubernetes.io/router.middlewares: goldilocks-redirect-to-https@kubernetescrd
     hosts:
       - host: goldilocks.cloudydad.world
         paths:
           - path: /
             type: ImplementationSpecific
 
-    tls: []
-    #  - secretName: chart-example-tls
-    #    hosts:
-    #      - chart-example.local
+    tls:
+      - secretName: goldilocks-tls
 
   # dashboard.resources -- A resources block for the dashboard.
   resources:
