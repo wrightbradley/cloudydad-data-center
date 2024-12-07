@@ -6,6 +6,8 @@ namespace: goldilocks
 resources:
   - ./goldilocks-namespace.yaml
   - ./goldilocks-helm-release.yaml
+  - ./goldilocks-certificate.yaml
+  - ./goldilocks-traefik-middleware.yaml
 configMapGenerator:
   - name: goldilocks-values
     files:

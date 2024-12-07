@@ -29,8 +29,13 @@ spec:
     ingress:
       enabled: true
       className: traefik
+      annotations:
+        traefik.ingress.kubernetes.io/router.entrypoints: websecure
+        traefik.ingress.kubernetes.io/router.middlewares: podinfo-redirect-to-https@kubernetescrd
       hosts:
         - host: podinfo.cloudydad.world
           paths:
             - path: /
               pathType: ImplementationSpecific
+      tls:
+        - secretName: podinfo-tls

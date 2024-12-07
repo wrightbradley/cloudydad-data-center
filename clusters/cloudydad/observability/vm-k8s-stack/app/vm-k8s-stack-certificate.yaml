@@ -1,0 +1,14 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: vm-k8s-stack
+spec:
+  secretName: vm-k8s-stack-tls
+  dnsNames:
+    - 'alertmanager.cloudydad.world'
+    - 'vmagent.cloudydad.world'
+    - 'vmalert.cloudydad.world'
+    - 'vmmetrics.cloudydad.world'
+  issuerRef:
+    name: letsencrypt
+    kind: ClusterIssuer

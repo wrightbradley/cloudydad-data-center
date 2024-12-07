@@ -277,9 +277,8 @@ vmsingle:
     enabled: true
     # -- Ingress annotations
     annotations:
-      {}
-      # kubernetes.io/ingress.class: nginx
-      # kubernetes.io/tls-acme: "true"
+      traefik.ingress.kubernetes.io/router.entrypoints: websecure
+      traefik.ingress.kubernetes.io/router.middlewares: vm-k8s-stack-redirect-to-https@kubernetescrd
     # -- Ingress extra labels
     labels: {}
     # -- Ingress default path
@@ -304,10 +303,8 @@ vmsingle:
     #         name: service
 
     # -- Array of TLS objects
-    tls: []
-    #  - secretName: vmsingle-ingress-tls
-    #    hosts:
-    #      - vmsingle.domain.com
+    tls:
+      - secretName: vm-k8s-stack-tls
 
 vmcluster:
   # -- Create VMCluster CR
@@ -629,9 +626,8 @@ alertmanager:
     ingressClassName: traefik
     # Values can be templated
     annotations:
-      {}
-      # kubernetes.io/ingress.class: nginx
-      # kubernetes.io/tls-acme: "true"
+      traefik.ingress.kubernetes.io/router.entrypoints: websecure
+      traefik.ingress.kubernetes.io/router.middlewares: vm-k8s-stack-redirect-to-https@kubernetescrd
     labels: {}
     path: '{{ .Values.alertmanager.spec.routePrefix | default "/" }}'
     pathType: Prefix
@@ -648,10 +644,8 @@ alertmanager:
     #       name: ssl-redirect
     #       port:
     #         name: service
-    tls: []
-    #  - secretName: alertmanager-ingress-tls
-    #    hosts:
-    #      - alertmanager.domain.com
+    tls:
+      - secretName: vm-k8s-stack-tls
 
 vmalert:
   # -- VMAlert annotations
@@ -699,9 +693,8 @@ vmalert:
     ingressClassName: traefik
     # Values can be templated
     annotations:
-      {}
-      # kubernetes.io/ingress.class: nginx
-      # kubernetes.io/tls-acme: "true"
+      traefik.ingress.kubernetes.io/router.entrypoints: websecure
+      traefik.ingress.kubernetes.io/router.middlewares: vm-k8s-stack-redirect-to-https@kubernetescrd
     labels: {}
     path: ''
     pathType: Prefix
@@ -718,10 +711,8 @@ vmalert:
     #       name: ssl-redirect
     #       port:
     #         name: service
-    tls: []
-    #  - secretName: vmalert-ingress-tls
-    #    hosts:
-    #      - vmalert.domain.com
+    tls:
+      - secretName: vm-k8s-stack-tls
 
 vmauth:
   # -- Enable VMAuth CR
@@ -773,9 +764,8 @@ vmagent:
     ingressClassName: traefik
     # Values can be templated
     annotations:
-      {}
-      # kubernetes.io/ingress.class: nginx
-      # kubernetes.io/tls-acme: "true"
+      traefik.ingress.kubernetes.io/router.entrypoints: websecure
+      traefik.ingress.kubernetes.io/router.middlewares: vm-k8s-stack-redirect-to-https@kubernetescrd
     labels: {}
     path: ''
     pathType: Prefix
@@ -791,10 +781,8 @@ vmagent:
     #       name: ssl-redirect
     #       port:
     #         name: service
-    tls: []
-    #  - secretName: vmagent-ingress-tls
-    #    hosts:
-    #      - vmagent.domain.com
+    tls:
+      - secretName: vm-k8s-stack-tls
 
 defaultDatasources:
   victoriametrics:

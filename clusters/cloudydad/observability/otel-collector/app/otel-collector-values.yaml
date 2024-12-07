@@ -487,7 +487,7 @@ collectors:
         otlphttp/vm/logs:
           compression: gzip
           encoding: proto
-          endpoint: http://vmlogs.cloudydad.world/insert/opentelemetry
+          endpoint: https://vmlogs.cloudydad.world/insert/opentelemetry
 
       service:
         pipelines:
@@ -576,11 +576,11 @@ collectors:
         otlphttp/vm/metrics:
           compression: gzip
           encoding: proto
-          endpoint: http://vmagent.cloudydad.world/opentelemetry
+          endpoint: https://vmagent.cloudydad.world/opentelemetry
         otlphttp/vm/logs:
           compression: gzip
           encoding: proto
-          endpoint: http://vmlogs.cloudydad.world/insert/opentelemetry
+          endpoint: https://vmlogs.cloudydad.world/insert/opentelemetry
       service:
         pipelines:
           metrics:

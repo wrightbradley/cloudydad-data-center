@@ -7,4 +7,6 @@ resources:
   - ./whoami-namespace.yaml
   - ./whoami-deployment.yaml
   - ./whoami-service.yaml
+  - ./whoami-certificate.yaml
+  - ./whoami-traefik-middleware.yaml
   - ./whoami-ingress.yaml
