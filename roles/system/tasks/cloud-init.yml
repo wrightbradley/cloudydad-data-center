@@ -1,0 +1,29 @@
+---
+- name: Disable cloud-init related systemd services
+  ansible.builtin.systemd:
+    name: '{{ item }}'
+    state: stopped
+    enabled: false
+  loop:
+    - cloud-init-local.service
+    - cloud-init.service
+  notify: Reboot
+  ignore_errors: true
+
+- name: Remove cloud-init package
+  ansible.builtin.apt:
+    name: cloud-init
+    state: absent
+
+- name: Remove cloud-init configuration files
+  ansible.builtin.file:
+    path: '{{ item }}'
+    state: absent
+  loop:
+    - /etc/cloud/cloud.cfg
+    - /etc/cloud/cloud.cfg.d/
+    - /etc/ssh/sshd_config.d/50-cloud-init.conf
+    - /etc/sudoers.d/90-cloud-init-users
+    - /var/lib/cloud/
+    - /var/log/cloud-init-output.log
+    - /var/log/cloud-init.log

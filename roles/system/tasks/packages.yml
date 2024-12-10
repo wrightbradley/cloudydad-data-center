@@ -1,9 +1,4 @@
 ---
-# - name: Install python-apt dependency
-#   ansible.builtin.command: apt-get install -y python3-apt
-#   args:
-#     warn: false
-
 - name: Perform a dist-upgrade.
   ansible.builtin.apt:
     upgrade: dist
