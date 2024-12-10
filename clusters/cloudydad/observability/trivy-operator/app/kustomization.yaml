@@ -1,0 +1,14 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: trivy-operator
+resources:
+  - ./trivy-operator-namespace.yaml
+  - ./trivy-operator-helm-release.yaml
+configMapGenerator:
+  - name: trivy-operator-values
+    files:
+      - values.yaml=trivy-operator-values.yaml
+configurations:
+  - kustomizeconfig.yaml
