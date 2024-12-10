@@ -1,3 +1,4 @@
+---
 # Top level field indicating an override for fullname
 fullnameOverride: ""
 # Top level field indicating an override for the namespace
@@ -1202,8 +1203,8 @@ kubeDns:
     skydns:
       port: 10055
       targetPort: 10055
-    # selector:
-    #   k8s-app: kube-dns
+      # selector:
+      #   k8s-app: kube-dns
   serviceMonitor:
     ## Scrape interval. If not set, the Prometheus default scrape interval is used.
     ##
@@ -1723,4 +1724,3 @@ prometheus-node-exporter:
     ## If true, create PSPs for node-exporter
     ##
     pspEnabled: false
-

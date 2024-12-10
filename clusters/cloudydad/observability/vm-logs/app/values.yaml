@@ -1,3 +1,4 @@
+---
 # Default values for victoria-logs.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
@@ -56,44 +57,38 @@ server:
     loggerFormat: json
 
   # -- Additional hostPath mounts
-  extraHostPathMounts:
-    []
-     #- name: certs-dir
-     #  mountPath: /etc/kubernetes/certs
-     #  subPath: ""
-     #  hostPath: /etc/kubernetes/certs
-     #  readOnly: true
+  extraHostPathMounts: []
+  #- name: certs-dir
+  #  mountPath: /etc/kubernetes/certs
+  #  subPath: ""
+  #  hostPath: /etc/kubernetes/certs
+  #  readOnly: true
 
   # -- Extra Volumes for the pod
-  extraVolumes:
-    []
-    #- name: example
-    #  configMap:
-    #   name: example
+  extraVolumes: []
+  #- name: example
+  #  configMap:
+  #   name: example
 
   # -- Extra Volume Mounts for the container
-  extraVolumeMounts:
-    []
-    # - name: example
-    #   mountPath: /example
+  extraVolumeMounts: []
+  # - name: example
+  #   mountPath: /example
 
   # -- Extra containers to run in a pod with Victoria Logs container
-  extraContainers:
-    []
-    #- name: config-reloader
-    #  image: reloader-image
+  extraContainers: []
+  #- name: config-reloader
+  #  image: reloader-image
 
   # -- Init containers for Victoria Logs Pod
-  initContainers:
-    []
+  initContainers: []
 
   # -- Node tolerations for server scheduling to nodes with taints. Details are [here](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/)
-  tolerations:
-    []
-    # - key: "key"
-    #   operator: "Equal|Exists"
-    #   value: "value"
-    #   effect: "NoSchedule|PreferNoSchedule"
+  tolerations: []
+  # - key: "key"
+  #   operator: "Equal|Exists"
+  #   value: "value"
+  #   effect: "NoSchedule|PreferNoSchedule"
 
   # -- Pod's node selector. Details are [here](https://kubernetes.io/docs/user-guide/node-selection/)
   nodeSelector: {}
@@ -108,10 +103,9 @@ server:
   env: []
 
   # -- Specify alternative source for env variables
-  envFrom:
-    []
-    #- configMapRef:
-    #    name: special-config
+  envFrom: []
+  #- configMapRef:
+  #    name: special-config
 
   # -- Container workdir
   containerWorkingDir: ""
@@ -160,14 +154,13 @@ server:
   podManagementPolicy: OrderedReady
 
   # -- Resource object. Details are [here](http://kubernetes.io/docs/user-guide/compute-resources/)
-  resources:
-    {}
-    # limits:
-    #   cpu: 500m
-    #   memory: 512Mi
-    # requests:
-    #   cpu: 500m
-    #   memory: 512Mi
+  resources: {}
+  # limits:
+  #   cpu: 500m
+  #   memory: 512Mi
+  # requests:
+  #   cpu: 500m
+  #   memory: 512Mi
 
   probe:
     # -- Indicates whether the Container is ready to service requests. If the readiness probe fails, the endpoints controller removes the Pod's IP address from the endpoints of all Services that match the Pod. The default state of readiness before the initial delay is Failure. If a Container does not provide a readiness probe, the default state is Success.
@@ -188,11 +181,11 @@ server:
 
     # -- Indicates whether the Container is done with potentially costly initialization. If set it is executed first. If it fails Container is restarted. If it succeeds liveness and readiness probes takes over.
     startup: {}
-     # tcpSocket: {}
-     # failureThreshold: 30
-     # periodSeconds: 15
-     # successThreshold: 1
-     # timeoutSeconds: 5
+    # tcpSocket: {}
+    # failureThreshold: 30
+    # periodSeconds: 15
+    # successThreshold: 1
+    # timeoutSeconds: 5
 
   # -- Security context to be added to server pods
   securityContext:
@@ -287,14 +280,14 @@ server:
     # -- Basic auth params for Service Monitor
     basicAuth: {}
     # -- Commented. Prometheus scrape interval for server component
-#    interval: 15s
+    #    interval: 15s
     # -- Commented. Prometheus pre-scrape timeout for server component
-#    scrapeTimeout: 5s
+    #    scrapeTimeout: 5s
     # -- Commented. HTTP scheme to use for scraping.
-#    scheme: https
+    #    scheme: https
     # -- Commented. TLS configuration to use when scraping the endpoint
-#    tlsConfig:
-#      insecureSkipVerify: true
+    #    tlsConfig:
+    #      insecureSkipVerify: true
     # -- Service Monitor relabelings
     relabelings: []
     # -- Service Monitor metricRelabelings
@@ -349,7 +342,7 @@ vector:
             VL-Msg-Field: message,msg,_msg,log.msg,log.message,log
             AccountID: "0"
             ProjectID: "0"
-      
+
 # -- Add extra specs dynamically to this chart
 extraObjects: []
 
@@ -368,4 +361,3 @@ dashboards:
         matchLabels:
           dashboards: "grafana"
       allowCrossNamespaceImport: false
-

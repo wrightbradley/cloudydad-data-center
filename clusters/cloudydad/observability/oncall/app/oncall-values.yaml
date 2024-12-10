@@ -1,3 +1,4 @@
+---
 # Values for configuring the deployment of Grafana OnCall
 
 # Set the domain name Grafana OnCall will be installed on.
@@ -30,14 +31,13 @@ service:
 # Engine pods configuration
 engine:
   replicaCount: 1
-  resources:
-    {}
-    # limits:
-    #   cpu: 100m
-    #   memory: 128Mi
-    # requests:
-    #   cpu: 100m
-    #   memory: 128Mi
+  resources: {}
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
 
   # Labels for engine pods
   podLabels: {}
@@ -108,14 +108,13 @@ detached_integrations_service:
 detached_integrations:
   enabled: false
   replicaCount: 1
-  resources:
-    {}
-    # limits:
-    #   cpu: 100m
-    #   memory: 128Mi
-    # requests:
-    #   cpu: 100m
-    #   memory: 128Mi
+  resources: {}
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
 
   ## Deployment update strategy
   ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy
@@ -191,14 +190,13 @@ celery:
     initialDelaySeconds: 30
     periodSeconds: 300
     timeoutSeconds: 10
-  resources:
-    {}
-    # limits:
-    #   cpu: 100m
-    #   memory: 128Mi
-    # requests:
-    #   cpu: 100m
-    #   memory: 128Mi
+  resources: {}
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
 
   # Labels for celery pods
   podLabels: {}
@@ -254,14 +252,13 @@ celery:
 # Telegram polling pod configuration
 telegramPolling:
   enabled: false
-  resources:
-    {}
-    # limits:
-    #   cpu: 100m
-    #   memory: 128Mi
-    # requests:
-    #   cpu: 100m
-    #   memory: 128Mi
+  resources: {}
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
 
   # Labels for telegram-polling pods
   podLabels: {}
@@ -408,14 +405,13 @@ migrate:
   #     - --private-ip
   #     - --port=5432
   #     - example:europe-west3:grafana-oncall-db
-  resources:
-    {}
-    # limits:
-    #   cpu: 100m
-    #   memory: 128Mi
-    # requests:
-    #   cpu: 100m
-    #   memory: 128Mi
+  resources: {}
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
 
   # Extra volume mounts for the main container
   extraVolumeMounts: []
@@ -455,7 +451,7 @@ ingress:
   tls:
     - hosts:
         - '{{ .Values.base_url }}'
-      secretName: certificate-tls
+      secretName: certificate-tls #pragma: allowlist secret
   # Extra paths to prepend to the host configuration. If using something
   # like an ALB ingress controller, you may want to configure SSL redirects
   extraPaths: []
@@ -676,40 +672,36 @@ serviceAccount:
 
 podAnnotations: {}
 
-podSecurityContext:
-  {}
-  # fsGroup: 2000
+podSecurityContext: {}
+# fsGroup: 2000
 
-securityContext:
-  {}
+securityContext: {}
+# capabilities:
+#   drop:
+#   - ALL
+# readOnlyRootFilesystem: true
+# runAsNonRoot: true
+# runAsGroup: 2000
+# runAsUser: 1000
+
+init:
+  securityContext: {}
+  # allowPrivilegeEscalation: false
   # capabilities:
   #   drop:
   #   - ALL
+  # privileged: false
   # readOnlyRootFilesystem: true
-  # runAsNonRoot: true
   # runAsGroup: 2000
+  # runAsNonRoot: true
   # runAsUser: 1000
-
-init:
-  securityContext:
-    {}
-    # allowPrivilegeEscalation: false
-    # capabilities:
-    #   drop:
-    #   - ALL
-    # privileged: false
-    # readOnlyRootFilesystem: true
-    # runAsGroup: 2000
-    # runAsNonRoot: true
-    # runAsUser: 1000
-  resources:
-    {}
-    # limits:
-    #   cpu: 100m
-    #   memory: 128Mi
-    # requests:
-    #   cpu: 100m
-    #   memory: 128Mi
+  resources: {}
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
 
 ui:
   # this is intended to be used for local development. In short, it will spin up an additional container

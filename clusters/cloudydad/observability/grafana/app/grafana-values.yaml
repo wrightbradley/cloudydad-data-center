@@ -1,3 +1,4 @@
+---
 global:
   # -- Overrides the Docker registry globally for all images
   imageRegistry: null
@@ -135,14 +136,13 @@ testFramework:
 
 # dns configuration for pod
 dnsPolicy: ~
-dnsConfig:
-  {}
-  # nameservers:
-  #   - 8.8.8.8
-  #   options:
-  #   - name: ndots
-  #     value: "2"
-  #   - name: edns0
+dnsConfig: {}
+# nameservers:
+#   - 8.8.8.8
+#   options:
+#   - name: ndots
+#     value: "2"
+#   - name: edns0
 
 securityContext:
   runAsNonRoot: true
@@ -163,19 +163,17 @@ createConfigmap: true
 
 # Extra configmaps to mount in grafana pods
 # Values are templated.
-extraConfigmapMounts:
-  []
-  # - name: certs-configmap
-  #   mountPath: /etc/grafana/ssl/
-  #   subPath: certificates.crt # (optional)
-  #   configMap: certs-configmap
-  #   readOnly: true
-  #   optional: false
+extraConfigmapMounts: []
+# - name: certs-configmap
+#   mountPath: /etc/grafana/ssl/
+#   subPath: certificates.crt # (optional)
+#   configMap: certs-configmap
+#   readOnly: true
+#   optional: false
 
-extraEmptyDirMounts:
-  []
-  # - name: provisioning-notifiers
-  #   mountPath: /etc/grafana/provisioning/notifiers
+extraEmptyDirMounts: []
+# - name: provisioning-notifiers
+#   mountPath: /etc/grafana/provisioning/notifiers
 
 # Apply extra labels to common labels.
 extraLabels: {}
@@ -238,9 +236,8 @@ service:
   loadBalancerClass: ''
   loadBalancerSourceRanges: []
   port: 80
-  targetPort:
-    3000
-    # targetPort: 4181 To be used with a proxy extraContainer
+  targetPort: 3000
+  # targetPort: 4181 To be used with a proxy extraContainer
   ## Service annotations. Can be templated.
   annotations: {}
   labels: {}
@@ -264,18 +261,16 @@ serviceMonitor:
   metricRelabelings: []
   targetLabels: []
 
-extraExposePorts:
-  []
-  # - name: keycloak
-  #   port: 8080
-  #   targetPort: 8080
+extraExposePorts: []
+# - name: keycloak
+#   port: 8080
+#   targetPort: 8080
 
 # overrides pod.spec.hostAliases in the grafana deployment's pods
-hostAliases:
-  []
-  # - ip: "1.2.3.4"
-  #   hostnames:
-  #     - "my.host.com"
+hostAliases: []
+# - ip: "1.2.3.4"
+#   hostnames:
+#     - "my.host.com"
 
 ingress:
   enabled: true
@@ -312,7 +307,7 @@ ingress:
   #         name: use-annotation
 
   tls:
-    - secretName: grafana-tls
+    - secretName: grafana-tls #pragma: allowlist secret
 
 # -- BETA: Configure the gateway routes for the chart here.
 # More routes can be added by adding a dictionary key like the 'main' route.
@@ -354,9 +349,9 @@ resources:
   requests:
     cpu: 23m
     memory: 145M
-  # limits:
-  #   cpu: 23m
-  #   memory: 145M
+    # limits:
+    #   cpu: 23m
+    #   memory: 145M
 
 ## Node labels for pod assignment
 ## ref: https://kubernetes.io/docs/user-guide/node-selection/
@@ -488,9 +483,9 @@ adminUser: admin
 # Use an existing secret for the admin user.
 admin:
   ## Name of the secret. Can be templated.
-  existingSecret: 'grafana-credentials'
+  existingSecret: 'grafana-credentials' #pragma: allowlist secret
   userKey: admin-user
-  passwordKey: admin-password
+  passwordKey: admin-password #pragma: allowlist secret
 
 ## Define command to be executed at startup by grafana container
 ## Needed if using `vault-env` to manage secrets (ref: https://banzaicloud.com/blog/inject-secrets-into-pods-vault/)
@@ -539,12 +534,11 @@ env: {}
 ##     - name: <key>
 ##       valueFrom:
 ##         <value rendered as YAML>
-envValueFrom:
-  {}
-  #  ENV_NAME:
-  #    configMapKeyRef:
-  #      name: configmap-name
-  #      key: value_key
+envValueFrom: {}
+#  ENV_NAME:
+#    configMapKeyRef:
+#      name: configmap-name
+#      key: value_key
 
 ## The name of a secret in the same kubernetes namespace which contain values to be added to the environment
 ## This can be useful for auth tokens, etc. Value is templated.
@@ -579,74 +573,70 @@ enableServiceLinks: true
 
 ## Additional grafana server secret mounts
 # Defines additional mounts with secrets. Secrets must be manually created in the namespace.
-extraSecretMounts:
-  []
-  # - name: secret-files
-  #   mountPath: /etc/secrets
-  #   secretName: grafana-secret-files
-  #   readOnly: true
-  #   optional: false
-  #   subPath: ""
-  #
-  # for AWS EKS (cloudwatch) use the following (see also instruction in env: above)
-  # - name: aws-iam-token
-  #   mountPath: /var/run/secrets/eks.amazonaws.com/serviceaccount
-  #   readOnly: true
-  #   projected:
-  #     defaultMode: 420
-  #     sources:
-  #       - serviceAccountToken:
-  #           audience: sts.amazonaws.com
-  #           expirationSeconds: 86400
-  #           path: token
-  #
-  # for CSI e.g. Azure Key Vault use the following
-  # - name: secrets-store-inline
-  #  mountPath: /run/secrets
-  #  readOnly: true
-  #  csi:
-  #    driver: secrets-store.csi.k8s.io
-  #    readOnly: true
-  #    volumeAttributes:
-  #      secretProviderClass: "akv-grafana-spc"
-  #    nodePublishSecretRef:                       # Only required when using service principal mode
-  #       name: grafana-akv-creds                  # Only required when using service principal mode
+extraSecretMounts: []
+# - name: secret-files
+#   mountPath: /etc/secrets
+#   secretName: grafana-secret-files
+#   readOnly: true
+#   optional: false
+#   subPath: ""
+#
+# for AWS EKS (cloudwatch) use the following (see also instruction in env: above)
+# - name: aws-iam-token
+#   mountPath: /var/run/secrets/eks.amazonaws.com/serviceaccount
+#   readOnly: true
+#   projected:
+#     defaultMode: 420
+#     sources:
+#       - serviceAccountToken:
+#           audience: sts.amazonaws.com
+#           expirationSeconds: 86400
+#           path: token
+#
+# for CSI e.g. Azure Key Vault use the following
+# - name: secrets-store-inline
+#  mountPath: /run/secrets
+#  readOnly: true
+#  csi:
+#    driver: secrets-store.csi.k8s.io
+#    readOnly: true
+#    volumeAttributes:
+#      secretProviderClass: "akv-grafana-spc"
+#    nodePublishSecretRef:                       # Only required when using service principal mode
+#       name: grafana-akv-creds                  # Only required when using service principal mode
 
 ## Additional grafana server volume mounts
 # Defines additional volume mounts.
-extraVolumeMounts:
-  []
-  # - name: extra-volume-0
-  #   mountPath: /mnt/volume0
-  #   readOnly: true
-  # - name: extra-volume-1
-  #   mountPath: /mnt/volume1
-  #   readOnly: true
-  # - name: grafana-secrets
-  #   mountPath: /mnt/volume2
+extraVolumeMounts: []
+# - name: extra-volume-0
+#   mountPath: /mnt/volume0
+#   readOnly: true
+# - name: extra-volume-1
+#   mountPath: /mnt/volume1
+#   readOnly: true
+# - name: grafana-secrets
+#   mountPath: /mnt/volume2
 
 ## Additional Grafana server volumes
-extraVolumes:
-  []
-  # - name: extra-volume-0
-  #   existingClaim: volume-claim
-  # - name: extra-volume-1
-  #   hostPath:
-  #     path: /usr/shared/
-  #     type: ""
-  # - name: grafana-secrets
-  #   csi:
-  #     driver: secrets-store.csi.k8s.io
-  #     readOnly: true
-  #     volumeAttributes:
-  #       secretProviderClass: "grafana-env-spc"
+extraVolumes: []
+# - name: extra-volume-0
+#   existingClaim: volume-claim
+# - name: extra-volume-1
+#   hostPath:
+#     path: /usr/shared/
+#     type: ""
+# - name: grafana-secrets
+#   csi:
+#     driver: secrets-store.csi.k8s.io
+#     readOnly: true
+#     volumeAttributes:
+#       secretProviderClass: "grafana-env-spc"
 
 ## Container Lifecycle Hooks. Execute a specific bash command or make an HTTP request
-lifecycleHooks:
-  {}
-  # postStart:
-  #   exec:
-  #     command: []
+lifecycleHooks: {}
+# postStart:
+#   exec:
+#     command: []
 
 ## Pass the plugins you want installed as a list.
 ##
@@ -691,11 +681,11 @@ datasources:
           implementation: prometheus
           # Whether or not Grafana should send alert instances to this Alertmanager
           handleGrafanaManagedAlerts: true
-        # # optionally
-        # basicAuth: true
-        # basicAuthUser: my_user
-        # secureJsonData:
-        #   basicAuthPassword: test_password
+          # # optionally
+          # basicAuth: true
+          # basicAuthUser: my_user
+          # secureJsonData:
+          #   basicAuthPassword: test_password
       - name: Prometheus
         type: prometheus
         access: proxy
@@ -723,69 +713,68 @@ datasources:
 ## Configure grafana alerting (can be templated)
 ## ref: http://docs.grafana.org/administration/provisioning/#alerting
 ##
-alerting:
-  {}
-  # rules.yaml:
-  #   apiVersion: 1
-  #   groups:
-  #     - orgId: 1
-  #       name: '{{ .Chart.Name }}_my_rule_group'
-  #       folder: my_first_folder
-  #       interval: 60s
-  #       rules:
-  #         - uid: my_id_1
-  #           title: my_first_rule
-  #           condition: A
-  #           data:
-  #             - refId: A
-  #               datasourceUid: '-100'
-  #               model:
-  #                 conditions:
-  #                   - evaluator:
-  #                       params:
-  #                         - 3
-  #                       type: gt
-  #                     operator:
-  #                       type: and
-  #                     query:
-  #                       params:
-  #                         - A
-  #                     reducer:
-  #                       type: last
-  #                     type: query
-  #                 datasource:
-  #                   type: __expr__
-  #                   uid: '-100'
-  #                 expression: 1==0
-  #                 intervalMs: 1000
-  #                 maxDataPoints: 43200
-  #                 refId: A
-  #                 type: math
-  #           dashboardUid: my_dashboard
-  #           panelId: 123
-  #           noDataState: Alerting
-  #           for: 60s
-  #           annotations:
-  #             some_key: some_value
-  #           labels:
-  #             team: sre_team_1
-  # contactpoints.yaml:
-  #   secret:
-  #     apiVersion: 1
-  #     contactPoints:
-  #       - orgId: 1
-  #         name: cp_1
-  #         receivers:
-  #           - uid: first_uid
-  #             type: pagerduty
-  #             settings:
-  #               integrationKey: XXX
-  #               severity: critical
-  #               class: ping failure
-  #               component: Grafana
-  #               group: app-stack
-  #               summary: |
-  #                 {{ `{{ include "default.message" . }}` }}
+alerting: {}
+# rules.yaml:
+#   apiVersion: 1
+#   groups:
+#     - orgId: 1
+#       name: '{{ .Chart.Name }}_my_rule_group'
+#       folder: my_first_folder
+#       interval: 60s
+#       rules:
+#         - uid: my_id_1
+#           title: my_first_rule
+#           condition: A
+#           data:
+#             - refId: A
+#               datasourceUid: '-100'
+#               model:
+#                 conditions:
+#                   - evaluator:
+#                       params:
+#                         - 3
+#                       type: gt
+#                     operator:
+#                       type: and
+#                     query:
+#                       params:
+#                         - A
+#                     reducer:
+#                       type: last
+#                     type: query
+#                 datasource:
+#                   type: __expr__
+#                   uid: '-100'
+#                 expression: 1==0
+#                 intervalMs: 1000
+#                 maxDataPoints: 43200
+#                 refId: A
+#                 type: math
+#           dashboardUid: my_dashboard
+#           panelId: 123
+#           noDataState: Alerting
+#           for: 60s
+#           annotations:
+#             some_key: some_value
+#           labels:
+#             team: sre_team_1
+# contactpoints.yaml:
+#   secret:
+#     apiVersion: 1
+#     contactPoints:
+#       - orgId: 1
+#         name: cp_1
+#         receivers:
+#           - uid: first_uid
+#             type: pagerduty
+#             settings:
+#               integrationKey: XXX
+#               severity: critical
+#               class: ping failure
+#               component: Grafana
+#               group: app-stack
+#               summary: |
+#                 {{ `{{ include "default.message" . }}` }}
 
 ## Configure notifiers
 ## ref: http://docs.grafana.org/administration/provisioning/#alert-notification-channels
@@ -810,19 +799,18 @@ notifiers: {}
 ##
 ## `path` must be /var/lib/grafana/dashboards/<provider_name>
 ##
-dashboardProviders:
-  {}
-  # dashboardproviders.yaml:
-  #   apiVersion: 1
-  #   providers:
-  #     - name: 'grafana-dashboards-kubernetes'
-  #       orgId: 1
-  #       folder: 'Kubernetes'
-  #       type: file
-  #       disableDeletion: true
-  #       editable: true
-  #       options:
-  #         path: /var/lib/grafana/dashboards/grafana-dashboards-kubernetes
+dashboardProviders: {}
+# dashboardproviders.yaml:
+#   apiVersion: 1
+#   providers:
+#     - name: 'grafana-dashboards-kubernetes'
+#       orgId: 1
+#       folder: 'Kubernetes'
+#       type: file
+#       disableDeletion: true
+#       editable: true
+#       options:
+#         path: /var/lib/grafana/dashboards/grafana-dashboards-kubernetes
 
 ## Configure grafana dashboard to import
 ## NOTE: To use dashboards you must also enable/configure dashboardProviders
@@ -836,52 +824,52 @@ dashboards:
       gnetId: 17347
       revision: 9
       datasource: Prometheus
-  # grafana-dashboards-kubernetes:
-  #   k8s-system-api-server:
-  #     url: https://raw.githubusercontent.com/dotdc/grafana-dashboards-kubernetes/master/dashboards/k8s-system-api-server.json
-  #     token: ''
-  #   k8s-system-coredns:
-  #     url: https://raw.githubusercontent.com/dotdc/grafana-dashboards-kubernetes/master/dashboards/k8s-system-coredns.json
-  #     token: ''
-  #   k8s-views-global:
-  #     url: https://raw.githubusercontent.com/dotdc/grafana-dashboards-kubernetes/master/dashboards/k8s-views-global.json
-  #     token: ''
-  #   k8s-views-namespaces:
-  #     url: https://raw.githubusercontent.com/dotdc/grafana-dashboards-kubernetes/master/dashboards/k8s-views-namespaces.json
-  #     token: ''
-  #   k8s-views-nodes:
-  #     url: https://raw.githubusercontent.com/dotdc/grafana-dashboards-kubernetes/master/dashboards/k8s-views-nodes.json
-  #     token: ''
-  #   k8s-views-pods:
-  #     url: https://raw.githubusercontent.com/dotdc/grafana-dashboards-kubernetes/master/dashboards/k8s-views-pods.json
-  #     token: ''
-  # default:
-  #   some-dashboard:
-  #     json: |
-  #       $RAW_JSON
-  #   custom-dashboard:
-  #     file: dashboards/custom-dashboard.json
-  #   prometheus-stats:
-  #     gnetId: 2
-  #     revision: 2
-  #     datasource: Prometheus
-  #   local-dashboard:
-  #     url: https://example.com/repository/test.json
-  #     token: ''
-  #   local-dashboard-base64:
-  #     url: https://example.com/repository/test-b64.json
-  #     token: ''
-  #     b64content: true
-  #   local-dashboard-gitlab:
-  #     url: https://example.com/repository/test-gitlab.json
-  #     gitlabToken: ''
-  #   local-dashboard-bitbucket:
-  #     url: https://example.com/repository/test-bitbucket.json
-  #     bearerToken: ''
-  #   local-dashboard-azure:
-  #     url: https://example.com/repository/test-azure.json
-  #     basic: ''
-  #     acceptHeader: '*/*'
+      # grafana-dashboards-kubernetes:
+      #   k8s-system-api-server:
+      #     url: https://raw.githubusercontent.com/dotdc/grafana-dashboards-kubernetes/master/dashboards/k8s-system-api-server.json
+      #     token: ''
+      #   k8s-system-coredns:
+      #     url: https://raw.githubusercontent.com/dotdc/grafana-dashboards-kubernetes/master/dashboards/k8s-system-coredns.json
+      #     token: ''
+      #   k8s-views-global:
+      #     url: https://raw.githubusercontent.com/dotdc/grafana-dashboards-kubernetes/master/dashboards/k8s-views-global.json
+      #     token: ''
+      #   k8s-views-namespaces:
+      #     url: https://raw.githubusercontent.com/dotdc/grafana-dashboards-kubernetes/master/dashboards/k8s-views-namespaces.json
+      #     token: ''
+      #   k8s-views-nodes:
+      #     url: https://raw.githubusercontent.com/dotdc/grafana-dashboards-kubernetes/master/dashboards/k8s-views-nodes.json
+      #     token: ''
+      #   k8s-views-pods:
+      #     url: https://raw.githubusercontent.com/dotdc/grafana-dashboards-kubernetes/master/dashboards/k8s-views-pods.json
+      #     token: ''
+      # default:
+      #   some-dashboard:
+      #     json: |
+      #       $RAW_JSON
+      #   custom-dashboard:
+      #     file: dashboards/custom-dashboard.json
+      #   prometheus-stats:
+      #     gnetId: 2
+      #     revision: 2
+      #     datasource: Prometheus
+      #   local-dashboard:
+      #     url: https://example.com/repository/test.json
+      #     token: ''
+      #   local-dashboard-base64:
+      #     url: https://example.com/repository/test-b64.json
+      #     token: ''
+      #     b64content: true
+      #   local-dashboard-gitlab:
+      #     url: https://example.com/repository/test-gitlab.json
+      #     gitlabToken: ''
+      #   local-dashboard-bitbucket:
+      #     url: https://example.com/repository/test-bitbucket.json
+      #     bearerToken: ''
+      #   local-dashboard-azure:
+      #     url: https://example.com/repository/test-azure.json
+      #     basic: ''
+      #     acceptHeader: '*/*'
 
 ## Reference to external ConfigMap per provider. Use provider name as key and ConfigMap name as value.
 ## A provider dashboards must be defined either by external ConfigMaps or in values.yaml, not in both.
@@ -982,7 +970,7 @@ smtp:
   # for Grafana.
   existingSecret: ''
   userKey: 'user'
-  passwordKey: 'password'
+  passwordKey: 'password' #pragma: allowlist secret
 
 ## Sidecars that collect the configmaps with specified label and stores the included files them into the respective folders
 ## Requires at least Grafana 5 to work and can't be used together with parameters dashboardProviders, datasources and dashboards
@@ -998,9 +986,9 @@ sidecar:
     requests:
       cpu: 11m
       memory: 110M
-    # limits:
-    #   cpu: 11m
-    #   memory: 110M
+      # limits:
+      #   cpu: 11m
+      #   memory: 110M
   securityContext:
     allowPrivilegeEscalation: false
     capabilities:
@@ -1326,12 +1314,11 @@ imageRenderer:
   ##     - name: <key>
   ##       valueFrom:
   ##         <value rendered as YAML>
-  envValueFrom:
-    {}
-    #  ENV_NAME:
-    #    configMapKeyRef:
-    #      name: configmap-name
-    #      key: value_key
+  envValueFrom: {}
+  #  ENV_NAME:
+  #    configMapKeyRef:
+  #      name: configmap-name
+  #      key: value_key
 
   # image-renderer deployment serviceAccount
   serviceAccountName: ''
@@ -1375,10 +1362,9 @@ imageRenderer:
     scrapeTimeout: 30s
     relabelings: []
     # See: https://doc.crds.dev/github.com/prometheus-operator/kube-prometheus/monitoring.coreos.com/ServiceMonitor/v1@v0.11.0#spec-targetLabels
-    targetLabels:
-      []
-      # - targetLabel1
-      # - targetLabel2
+    targetLabels: []
+    # - targetLabel1
+    # - targetLabel2
   # If https is enabled in Grafana, this needs to be set as 'https' to correctly configure the callback used in Grafana
   grafanaProtocol: http
   # In case a sub_path is used this needs to be added to the image renderer callback
@@ -1502,17 +1488,16 @@ networkPolicy:
 enableKubeBackwardCompatibility: false
 useStatefulSet: false
 # Create a dynamic manifests via values:
-extraObjects:
-  []
-  # - apiVersion: "kubernetes-client.io/v1"
-  #   kind: ExternalSecret
-  #   metadata:
-  #     name: grafana-secrets
-  #   spec:
-  #     backendType: gcpSecretsManager
-  #     data:
-  #       - key: grafana-admin-password
-  #         name: adminPassword
+extraObjects: []
+# - apiVersion: "kubernetes-client.io/v1"
+#   kind: ExternalSecret
+#   metadata:
+#     name: grafana-secrets
+#   spec:
+#     backendType: gcpSecretsManager
+#     data:
+#       - key: grafana-admin-password
+#         name: adminPassword
 
 # assertNoLeakedSecrets is a helper function defined in _helpers.tpl that checks if secret
 # values are not exposed in the rendered grafana.ini configmap. It is enabled by default.

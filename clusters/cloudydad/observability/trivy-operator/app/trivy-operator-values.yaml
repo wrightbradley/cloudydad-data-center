@@ -1,3 +1,4 @@
+---
 # Default values for the trivy-operator Helm chart, these are used to render
 # the templates into valid k8s Resources.
 
@@ -219,13 +220,13 @@ serviceMonitor:
   enabled: true
   # -- The namespace where Prometheus expects to find service monitors
   namespace: ~
-  # -- Interval at which metrics should be scraped. If not specified Prometheus’ global scrape interval is used.
+  # -- Interval at which metrics should be scraped. If not specified Prometheus' global scrape interval is used.
   interval: ~
   # -- Additional annotations for the serviceMonitor
   annotations: {}
   # -- Additional labels for the serviceMonitor
   labels: {}
-  # -- HonorLabels chooses the metric’s labels on collisions with target labels
+  # -- HonorLabels chooses the metric's labels on collisions with target labels
   honorLabels: true
   # -- EndpointAdditionalProperties allows setting additional properties on the endpoint such as relabelings, metricRelabelings etc.
   endpointAdditionalProperties: {}
@@ -635,9 +636,8 @@ serviceAccount:
 # -- podAnnotations annotations added to the operator's pod
 podAnnotations: {}
 
-podSecurityContext:
-  {}
-  # fsGroup: 2000
+podSecurityContext: {}
+# fsGroup: 2000
 
 # -- securityContext security context
 securityContext:
@@ -659,18 +659,17 @@ volumes:
   - name: cache-policies
     emptyDir: {}
 
-resources:
-  {}
-  # -- We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
-  # resources, such as Minikube. If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
+resources: {}
+# -- We usually recommend not to specify default resources and to leave this as a conscious
+# choice for the user. This also increases chances charts run on environments with little
+# resources, such as Minikube. If you do want to specify resources, uncomment the following
+# lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+# limits:
+#   cpu: 100m
+#   memory: 128Mi
+# requests:
+#   cpu: 100m
+#   memory: 128Mi
 # -- nodeSelector set the operator nodeSelector
 nodeSelector: {}
 
@@ -681,10 +680,9 @@ tolerations: []
 affinity: {}
 
 # -- priorityClassName set the operator priorityClassName
-priorityClassName:
-  ''
+priorityClassName: ''
 
-  # -- automountServiceAccountToken the flag to enable automount for service account token
+# -- automountServiceAccountToken the flag to enable automount for service account token
 automountServiceAccountToken: true
 
 policiesBundle:
@@ -693,9 +691,8 @@ policiesBundle:
   # -- repository of the policies bundle
   repository: aquasec/trivy-checks
   # -- tag version of the policies bundle
-  tag:
-    1
-    # -- registryUser is the user for the registry
+  tag: 1
+  # -- registryUser is the user for the registry
   registryUser: ~
   # -- registryPassword is the password for the registry
   registryPassword: ~

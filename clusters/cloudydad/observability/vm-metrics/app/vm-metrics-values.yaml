@@ -1,3 +1,4 @@
+---
 # Default values for victoria-metrics.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
@@ -89,56 +90,50 @@ server:
     loggerFormat: json
 
   # Additional hostPath mounts
-  extraHostPathMounts:
-    []
-    #- name: certs-dir
-    #  mountPath: /etc/kubernetes/certs
-    #  subPath: ""
-    #  hostPath: /etc/kubernetes/certs
-    #  readOnly: true
+  extraHostPathMounts: []
+  #- name: certs-dir
+  #  mountPath: /etc/kubernetes/certs
+  #  subPath: ""
+  #  hostPath: /etc/kubernetes/certs
+  #  readOnly: true
 
   # Extra Volumes for the pod
-  extraVolumes:
-    []
-    #- name: example
-    #  configMap:
-    #   name: example
+  extraVolumes: []
+  #- name: example
+  #  configMap:
+  #   name: example
 
   # -- Extra Volume Mounts for the container
-  extraVolumeMounts:
-    []
-    # - name: example
-    #   mountPath: /example
+  extraVolumeMounts: []
+  # - name: example
+  #   mountPath: /example
 
   # -- Extra containers to run in a pod with VM single
-  extraContainers:
-    []
-    #- name: config-reloader
-    #  image: reloader-image
+  extraContainers: []
+  #- name: config-reloader
+  #  image: reloader-image
 
   # -- Init containers for VM single pod
-  initContainers:
-    []
-    # - name: vmrestore
-    #   image: victoriametrics/vmrestore:latest
-    #   volumeMounts:
-    #   - mountPath: /storage
-    #     name: vmstorage-volume
-    #   - mountPath: /etc/vm/creds
-    #     name: secret-remote-storage-keys
-    #     readOnly: true
-    #   args:
-    #   - -storageDataPath=/storage
-    #   - -src=s3://your_bucket/folder/latest
-    #   - -credsFilePath=/etc/vm/creds/credentials
+  initContainers: []
+  # - name: vmrestore
+  #   image: victoriametrics/vmrestore:latest
+  #   volumeMounts:
+  #   - mountPath: /storage
+  #     name: vmstorage-volume
+  #   - mountPath: /etc/vm/creds
+  #     name: secret-remote-storage-keys
+  #     readOnly: true
+  #   args:
+  #   - -storageDataPath=/storage
+  #   - -src=s3://your_bucket/folder/latest
+  #   - -credsFilePath=/etc/vm/creds/credentials
 
   # -- Node tolerations for server scheduling to nodes with taints. Details are [here](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/)
-  tolerations:
-    []
-    # - key: "key"
-    #   operator: "Equal|Exists"
-    #   value: "value"
-    #   effect: "NoSchedule|PreferNoSchedule"
+  tolerations: []
+  # - key: "key"
+  #   operator: "Equal|Exists"
+  #   value: "value"
+  #   effect: "NoSchedule|PreferNoSchedule"
 
   # -- Pod's node selector. Details are [here](https://kubernetes.io/docs/user-guide/node-selection/)
   nodeSelector: {}
@@ -151,10 +146,9 @@ server:
   env: []
 
   # -- Specify alternative source for env variables
-  envFrom:
-    []
-    #- configMapRef:
-    #    name: special-config
+  envFrom: []
+  #- configMapRef:
+  #    name: special-config
 
   # -- Container workdir
   containerWorkingDir: ''
@@ -229,12 +223,11 @@ server:
       failureThreshold: 10
 
     # -- Indicates whether the Container is done with potentially costly initialization. If set it is executed first. If it fails Container is restarted. If it succeeds liveness and readiness probes takes over.
-    startup:
-      {}
-      #failureThreshold: 30
-      #periodSeconds: 15
-      #successThreshold: 1
-      #timeoutSeconds: 5
+    startup: {}
+    #failureThreshold: 30
+    #periodSeconds: 15
+    #successThreshold: 1
+    #timeoutSeconds: 5
 
   # -- Security context to be added to server pods
   securityContext:
@@ -309,10 +302,9 @@ server:
       envflag.prefix: VM_
       loggerFormat: json
     # Extra Volume Mounts for the container
-    extraVolumeMounts:
-      []
-      # - name: example
-      #   mountPath: /example
+    extraVolumeMounts: []
+    # - name: example
+    #   mountPath: /example
     # -- Allows to enable restore options for pod.
     # Read more [here](https://docs.victoriametrics.com/vmbackupmanager#restore-commands)
     restore:
@@ -429,6 +421,7 @@ server:
             - targets: ['localhost:8428']
 
           # COPY from Prometheus helm chart https://github.com/helm/charts/blob/master/stable/prometheus/values.yaml
+        - job_name: 'kubernetes-apiservers'
 
           # Scrape config for API servers.
           #
@@ -437,7 +430,6 @@ server:
           # the endpoints associated with the default/kubernetes service using the
           # default named port `https`. This works for single API server deployments as
           # well as HA API server deployments.
-        - job_name: 'kubernetes-apiservers'
           kubernetes_sd_configs:
             - role: endpoints
           # Default to scraping over https. If required, just disable this or change to
@@ -466,7 +458,7 @@ server:
             - source_labels: [__meta_kubernetes_namespace, __meta_kubernetes_service_name, __meta_kubernetes_endpoint_port_name]
               action: keep
               regex: default;kubernetes;https
-          # Scrape rule using kubernetes service discovery for nodes
+              # Scrape rule using kubernetes service discovery for nodes
         - job_name: 'kubernetes-nodes'
           # Default to scraping over https. If required, just disable this or change to
           # `http`.
@@ -498,7 +490,7 @@ server:
               regex: (.+)
               target_label: __metrics_path__
               replacement: /api/v1/nodes/$1/proxy/metrics
-          # Scrape rule using kubernetes service discovery for cadvisor
+              # Scrape rule using kubernetes service discovery for cadvisor
         - job_name: 'kubernetes-nodes-cadvisor'
           # Default to scraping over https. If required, just disable this or change to
           # `http`.
@@ -705,7 +697,7 @@ server:
             - source_labels: [__meta_kubernetes_pod_name]
               action: replace
               target_label: pod
-          # End of COPY
+              # End of COPY
 
     # -- Extra scrape configs that will be appended to `server.scrape.config`
     extraScrapeConfigs: []

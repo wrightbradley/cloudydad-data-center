@@ -1,3 +1,4 @@
+---
 # Default values for victoria-metrics.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
@@ -89,56 +90,50 @@ server:
     loggerFormat: json
 
   # Additional hostPath mounts
-  extraHostPathMounts:
-    []
-     #- name: certs-dir
-     #  mountPath: /etc/kubernetes/certs
-     #  subPath: ""
-     #  hostPath: /etc/kubernetes/certs
-     #  readOnly: true
+  extraHostPathMounts: []
+  #- name: certs-dir
+  #  mountPath: /etc/kubernetes/certs
+  #  subPath: ""
+  #  hostPath: /etc/kubernetes/certs
+  #  readOnly: true
 
   # Extra Volumes for the pod
-  extraVolumes:
-    []
-    #- name: example
-    #  configMap:
-    #   name: example
+  extraVolumes: []
+  #- name: example
+  #  configMap:
+  #   name: example
 
   # -- Extra Volume Mounts for the container
-  extraVolumeMounts:
-    []
-    # - name: example
-    #   mountPath: /example
+  extraVolumeMounts: []
+  # - name: example
+  #   mountPath: /example
 
   # -- Extra containers to run in a pod with VM single
-  extraContainers:
-    []
-    #- name: config-reloader
-    #  image: reloader-image
+  extraContainers: []
+  #- name: config-reloader
+  #  image: reloader-image
 
   # -- Init containers for VM single pod
-  initContainers:
-    []
-    # - name: vmrestore
-    #   image: victoriametrics/vmrestore:latest
-    #   volumeMounts:
-    #   - mountPath: /storage
-    #     name: vmstorage-volume
-    #   - mountPath: /etc/vm/creds
-    #     name: secret-remote-storage-keys
-    #     readOnly: true
-    #   args:
-    #   - -storageDataPath=/storage
-    #   - -src=s3://your_bucket/folder/latest
-    #   - -credsFilePath=/etc/vm/creds/credentials
+  initContainers: []
+  # - name: vmrestore
+  #   image: victoriametrics/vmrestore:latest
+  #   volumeMounts:
+  #   - mountPath: /storage
+  #     name: vmstorage-volume
+  #   - mountPath: /etc/vm/creds
+  #     name: secret-remote-storage-keys
+  #     readOnly: true
+  #   args:
+  #   - -storageDataPath=/storage
+  #   - -src=s3://your_bucket/folder/latest
+  #   - -credsFilePath=/etc/vm/creds/credentials
 
   # -- Node tolerations for server scheduling to nodes with taints. Details are [here](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/)
-  tolerations:
-    []
-    # - key: "key"
-    #   operator: "Equal|Exists"
-    #   value: "value"
-    #   effect: "NoSchedule|PreferNoSchedule"
+  tolerations: []
+  # - key: "key"
+  #   operator: "Equal|Exists"
+  #   value: "value"
+  #   effect: "NoSchedule|PreferNoSchedule"
 
   # -- Pod's node selector. Details are [here](https://kubernetes.io/docs/user-guide/node-selection/)
   nodeSelector: {}
@@ -152,8 +147,8 @@ server:
 
   # -- Specify alternative source for env variables
   envFrom: []
-    #- configMapRef:
-    #    name: special-config
+  #- configMapRef:
+  #    name: special-config
 
   # -- Container workdir
   containerWorkingDir: ""
@@ -201,14 +196,13 @@ server:
   podManagementPolicy: OrderedReady
 
   # -- Resource object. Details are [here](http://kubernetes.io/docs/user-guide/compute-resources/)
-  resources:
-    {}
-    # limits:
-    #   cpu: 500m
-    #   memory: 512Mi
-    # requests:
-    #   cpu: 500m
-    #   memory: 512Mi
+  resources: {}
+  # limits:
+  #   cpu: 500m
+  #   memory: 512Mi
+  # requests:
+  #   cpu: 500m
+  #   memory: 512Mi
 
   # -- Readiness & Liveness probes
   probe:
@@ -230,10 +224,10 @@ server:
 
     # -- Indicates whether the Container is done with potentially costly initialization. If set it is executed first. If it fails Container is restarted. If it succeeds liveness and readiness probes takes over.
     startup: {}
-      #failureThreshold: 30
-      #periodSeconds: 15
-      #successThreshold: 1
-      #timeoutSeconds: 5
+    #failureThreshold: 30
+    #periodSeconds: 15
+    #successThreshold: 1
+    #timeoutSeconds: 5
 
   # -- Security context to be added to server pods
   securityContext:
@@ -271,7 +265,7 @@ server:
   vmbackupmanager:
     # -- Enable automatic creation of backup via vmbackupmanager. vmbackupmanager is part of Enterprise packages
     enabled: false
-    
+
     image:
       # -- VMBackupManager image registry
       registry: ""
@@ -308,10 +302,9 @@ server:
       envflag.prefix: VM_
       loggerFormat: json
     # Extra Volume Mounts for the container
-    extraVolumeMounts:
-      []
-      # - name: example
-      #   mountPath: /example
+    extraVolumeMounts: []
+    # - name: example
+    #   mountPath: /example
     # -- Allows to enable restore options for pod.
     # Read more [here](https://docs.victoriametrics.com/vmbackupmanager#restore-commands)
     restore:
@@ -387,14 +380,14 @@ server:
     # -- Basic auth params for Service Monitor
     basicAuth: {}
     # -- Commented. Prometheus scrape interval for server component
-#    interval: 15s
+    #    interval: 15s
     # -- Commented. Prometheus pre-scrape timeout for server component
-#    scrapeTimeout: 5s
+    #    scrapeTimeout: 5s
     # -- Commented. HTTP scheme to use for scraping.
-#    scheme: https
+    #    scheme: https
     # -- Commented. TLS configuration to use when scraping the endpoint
-#    tlsConfig:
-#      insecureSkipVerify: true
+    #    tlsConfig:
+    #      insecureSkipVerify: true
     # -- Service Monitor relabelings
     relabelings: []
     # -- Service Monitor metricRelabelings
@@ -425,9 +418,10 @@ server:
         # Scrape rule for scrape victoriametrics
         - job_name: victoriametrics
           static_configs:
-            - targets: [ "localhost:8428" ]
+            - targets: ["localhost:8428"]
 
           # COPY from Prometheus helm chart https://github.com/helm/charts/blob/master/stable/prometheus/values.yaml
+        - job_name: "kubernetes-apiservers"
 
           # Scrape config for API servers.
           #
@@ -436,7 +430,6 @@ server:
           # the endpoints associated with the default/kubernetes service using the
           # default named port `https`. This works for single API server deployments as
           # well as HA API server deployments.
-        - job_name: "kubernetes-apiservers"
           kubernetes_sd_configs:
             - role: endpoints
           # Default to scraping over https. If required, just disable this or change to
@@ -462,15 +455,10 @@ server:
           # will add targets for each API server which Kubernetes adds an endpoint to
           # the default/kubernetes service.
           relabel_configs:
-            - source_labels:
-                [
-                    __meta_kubernetes_namespace,
-                    __meta_kubernetes_service_name,
-                    __meta_kubernetes_endpoint_port_name,
-                ]
+            - source_labels: [__meta_kubernetes_namespace, __meta_kubernetes_service_name, __meta_kubernetes_endpoint_port_name]
               action: keep
               regex: default;kubernetes;https
-          # Scrape rule using kubernetes service discovery for nodes
+              # Scrape rule using kubernetes service discovery for nodes
         - job_name: "kubernetes-nodes"
           # Default to scraping over https. If required, just disable this or change to
           # `http`.
@@ -498,11 +486,11 @@ server:
               regex: __meta_kubernetes_node_label_(.+)
             - target_label: __address__
               replacement: kubernetes.default.svc:443
-            - source_labels: [ __meta_kubernetes_node_name ]
+            - source_labels: [__meta_kubernetes_node_name]
               regex: (.+)
               target_label: __metrics_path__
               replacement: /api/v1/nodes/$1/proxy/metrics
-          # Scrape rule using kubernetes service discovery for cadvisor
+              # Scrape rule using kubernetes service discovery for cadvisor
         - job_name: "kubernetes-nodes-cadvisor"
           # Default to scraping over https. If required, just disable this or change to
           # `http`.
@@ -535,13 +523,13 @@ server:
               regex: __meta_kubernetes_node_label_(.+)
             - target_label: __address__
               replacement: kubernetes.default.svc:443
-            - source_labels: [ __meta_kubernetes_node_name ]
+            - source_labels: [__meta_kubernetes_node_name]
               regex: (.+)
               target_label: __metrics_path__
               replacement: /api/v1/nodes/$1/proxy/metrics/cadvisor
           # ignore timestamps of cadvisor's metrics by default
           # more info here https://github.com/VictoriaMetrics/VictoriaMetrics/issues/4697#issuecomment-1656540535
-          honor_timestamps: false 
+          honor_timestamps: false
         # Scrape config for service endpoints.
         #
         # The relabeling allows the actual service scrape endpoint to be configured
@@ -560,42 +548,35 @@ server:
             - role: endpoints
           relabel_configs:
             - action: drop
-              source_labels: [ __meta_kubernetes_pod_container_init ]
+              source_labels: [__meta_kubernetes_pod_container_init]
               regex: true
             - action: keep_if_equal
-              source_labels: [ __meta_kubernetes_service_annotation_prometheus_io_port, __meta_kubernetes_pod_container_port_number ]
-            - source_labels:
-                [ __meta_kubernetes_service_annotation_prometheus_io_scrape ]
+              source_labels: [__meta_kubernetes_service_annotation_prometheus_io_port, __meta_kubernetes_pod_container_port_number]
+            - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scrape]
               action: keep
               regex: true
-            - source_labels:
-                [ __meta_kubernetes_service_annotation_prometheus_io_scheme ]
+            - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scheme]
               action: replace
               target_label: __scheme__
               regex: (https?)
-            - source_labels:
-                [ __meta_kubernetes_service_annotation_prometheus_io_path ]
+            - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_path]
               action: replace
               target_label: __metrics_path__
               regex: (.+)
-            - source_labels:
-                [
-                    __address__,
-                    __meta_kubernetes_service_annotation_prometheus_io_port,
-                ]
+            - source_labels: [__address__, __meta_kubernetes_service_annotation_prometheus_io_port]
               action: replace
               target_label: __address__
               regex: ([^:]+)(?::\d+)?;(\d+)
               replacement: $1:$2
             - action: labelmap
               regex: __meta_kubernetes_service_label_(.+)
-            - source_labels: [ __meta_kubernetes_namespace ]
+            - source_labels: [__meta_kubernetes_namespace]
               action: replace
               target_label: namespace
-            - source_labels: [ __meta_kubernetes_service_name ]
+            - source_labels: [__meta_kubernetes_service_name]
               action: replace
               target_label: service
-            - source_labels: [ __meta_kubernetes_pod_node_name ]
+            - source_labels: [__meta_kubernetes_pod_node_name]
               action: replace
               target_label: node
         # Scrape config for slow service endpoints; same as above, but with a larger
@@ -618,42 +599,35 @@ server:
             - role: endpoints
           relabel_configs:
             - action: drop
-              source_labels: [ __meta_kubernetes_pod_container_init ]
+              source_labels: [__meta_kubernetes_pod_container_init]
               regex: true
             - action: keep_if_equal
-              source_labels: [ __meta_kubernetes_service_annotation_prometheus_io_port, __meta_kubernetes_pod_container_port_number ]
-            - source_labels:
-                [ __meta_kubernetes_service_annotation_prometheus_io_scrape_slow ]
+              source_labels: [__meta_kubernetes_service_annotation_prometheus_io_port, __meta_kubernetes_pod_container_port_number]
+            - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scrape_slow]
               action: keep
               regex: true
-            - source_labels:
-                [ __meta_kubernetes_service_annotation_prometheus_io_scheme ]
+            - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scheme]
               action: replace
               target_label: __scheme__
               regex: (https?)
-            - source_labels:
-                [ __meta_kubernetes_service_annotation_prometheus_io_path ]
+            - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_path]
               action: replace
               target_label: __metrics_path__
               regex: (.+)
-            - source_labels:
-                [
-                    __address__,
-                    __meta_kubernetes_service_annotation_prometheus_io_port,
-                ]
+            - source_labels: [__address__, __meta_kubernetes_service_annotation_prometheus_io_port]
               action: replace
               target_label: __address__
               regex: ([^:]+)(?::\d+)?;(\d+)
               replacement: $1:$2
             - action: labelmap
               regex: __meta_kubernetes_service_label_(.+)
-            - source_labels: [ __meta_kubernetes_namespace ]
+            - source_labels: [__meta_kubernetes_namespace]
               action: replace
               target_label: namespace
-            - source_labels: [ __meta_kubernetes_service_name ]
+            - source_labels: [__meta_kubernetes_service_name]
               action: replace
               target_label: service
-            - source_labels: [ __meta_kubernetes_pod_node_name ]
+            - source_labels: [__meta_kubernetes_pod_node_name]
               action: replace
               target_label: node
         # Example scrape config for probing services via the Blackbox Exporter.
@@ -666,25 +640,24 @@ server:
         - job_name: "kubernetes-services"
           metrics_path: /probe
           params:
-            module: [ http_2xx ]
+            module: [http_2xx]
           kubernetes_sd_configs:
             - role: service
           relabel_configs:
-            - source_labels:
-                [ __meta_kubernetes_service_annotation_prometheus_io_probe ]
+            - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_probe]
               action: keep
               regex: true
-            - source_labels: [ __address__ ]
+            - source_labels: [__address__]
               target_label: __param_target
             - target_label: __address__
               replacement: blackbox
-            - source_labels: [ __param_target ]
+            - source_labels: [__param_target]
               target_label: instance
             - action: labelmap
               regex: __meta_kubernetes_service_label_(.+)
-            - source_labels: [ __meta_kubernetes_namespace ]
+            - source_labels: [__meta_kubernetes_namespace]
               target_label: namespace
-            - source_labels: [ __meta_kubernetes_service_name ]
+            - source_labels: [__meta_kubernetes_service_name]
               target_label: service
         # Example scrape config for pods
         #
@@ -700,32 +673,31 @@ server:
             - role: pod
           relabel_configs:
             - action: drop
-              source_labels: [ __meta_kubernetes_pod_container_init ]
+              source_labels: [__meta_kubernetes_pod_container_init]
               regex: true
             - action: keep_if_equal
-              source_labels: [ __meta_kubernetes_pod_annotation_prometheus_io_port, __meta_kubernetes_pod_container_port_number ]
-            - source_labels: [ __meta_kubernetes_pod_annotation_prometheus_io_scrape ]
+              source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_port, __meta_kubernetes_pod_container_port_number]
+            - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
               action: keep
               regex: true
-            - source_labels: [ __meta_kubernetes_pod_annotation_prometheus_io_path ]
+            - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
               action: replace
               target_label: __metrics_path__
               regex: (.+)
-            - source_labels:
-                [ __address__, __meta_kubernetes_pod_annotation_prometheus_io_port ]
+            - source_labels: [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]
               action: replace
               regex: ([^:]+)(?::\d+)?;(\d+)
               replacement: $1:$2
               target_label: __address__
             - action: labelmap
               regex: __meta_kubernetes_pod_label_(.+)
-            - source_labels: [ __meta_kubernetes_namespace ]
+            - source_labels: [__meta_kubernetes_namespace]
               action: replace
               target_label: namespace
-            - source_labels: [ __meta_kubernetes_pod_name ]
+            - source_labels: [__meta_kubernetes_pod_name]
               action: replace
               target_label: pod
-          # End of COPY
+              # End of COPY
 
     # -- Extra scrape configs that will be appended to `server.scrape.config`
     extraScrapeConfigs: []
@@ -762,4 +734,3 @@ license:
     name: ""
     # -- Key in secret with license key
     key: ""
-

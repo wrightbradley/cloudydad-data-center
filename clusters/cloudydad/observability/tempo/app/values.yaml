@@ -1,3 +1,4 @@
+---
 global:
   # -- Common labels for all object directly managed by this chart.
   commonLabels: {}
@@ -104,13 +105,12 @@ tempo:
           endpoint: '0.0.0.0:4317'
         http:
           endpoint: '0.0.0.0:4318'
-  securityContext:
-    {}
-    # allowPrivilegeEscalation: false
-    #  capabilities:
-    #    drop:
-    #    - ALL
-    # readOnlyRootFilesystem: true
+  securityContext: {}
+  # allowPrivilegeEscalation: false
+  #  capabilities:
+  #    drop:
+  #    - ALL
+  # readOnlyRootFilesystem: true
   ## Additional container arguments
   extraArgs: {}
   # -- Environment variables to add
@@ -233,13 +233,12 @@ tempoQuery:
   #   mountPath: /mnt/volume
   #   readOnly: true
   #   existingClaim: volume-claim
-  securityContext:
-    {}
-    # allowPrivilegeEscalation: false
-    #  capabilities:
-    #    drop:
-    #    - ALL
-    # readOnlyRootFilesystem: false # fails if true, do not enable
+  securityContext: {}
+  # allowPrivilegeEscalation: false
+  #  capabilities:
+  #    drop:
+  #    - ALL
+  # readOnlyRootFilesystem: false # fails if true, do not enable
 
 # -- securityContext for container
 securityContext:
@@ -276,9 +275,8 @@ serviceMonitor:
   # scrapeTimeout: 10s
 
 persistence:
-  enabled:
-    false
-    # -- Enable StatefulSetAutoDeletePVC feature
+  enabled: false
+  # -- Enable StatefulSetAutoDeletePVC feature
   enableStatefulSetAutoDeletePVC: false
   # storageClassName: local-path
   accessModes:

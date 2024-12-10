@@ -1,3 +1,4 @@
+---
 # -- Overrides the version used to determine compatibility of resources with the target Kubernetes cluster.
 # This is useful when using `helm template`, because then helm will use the client version of kubectl as the Kubernetes version,
 # which may or may not match your cluster's server version. Example: 'v1.24.4'. Set to null to use the version that helm
@@ -1055,7 +1056,7 @@ gateway:
             # pathType: Prefix
     # -- TLS configuration for the gateway ingress. Hosts passed through the `tpl` function to allow templating
     tls:
-      - secretName: loki-gateway-tls
+      - secretName: loki-gateway-tls #pragma: allowlist secret
         hosts:
           - gateway.loki.example.com
   # Basic auth configuration
@@ -3329,7 +3330,7 @@ minio:
   # Since we only have 1 replica, that means 2 drives must be used.
   drivesPerNode: 2
   rootUser: enterprise-logs
-  rootPassword: supersecret
+  rootPassword: supersecret #pragma: allowlist secret
   buckets:
     - name: chunks
       policy: none

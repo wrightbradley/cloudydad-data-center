@@ -1,11 +1,7 @@
----
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: whoami-ingress
-  annotations:
-    traefik.ingress.kubernetes.io/router.entrypoints: websecure
-    traefik.ingress.kubernetes.io/router.middlewares: whoami-redirect-to-https@kubernetescrd
 spec:
   ingressClassName: traefik
   rules:
@@ -19,5 +15,3 @@ spec:
                 name: whoami
                 port:
                   name: web
-  tls:
-    - secretName: whoami-tls #pragma: allowlist secret
