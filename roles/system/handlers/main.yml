@@ -10,5 +10,3 @@
   ansible.builtin.service:
     name: ssh
     state: restarted
-# - name: Clean cloud-init
-#   command: cloud-init clean

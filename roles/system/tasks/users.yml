@@ -53,15 +53,6 @@
     - create-users
     - update-sshkeys
 
-- name: Set NOPASSWD for Sudoers
-  ansible.builtin.lineinfile:
-    state: present
-    path: /etc/sudoers.d/90-cloud-init-users
-    regexp: '^%sudo'
-    line: '%sudo ALL=(ALL) NOPASSWD:ALL' # pragma: allowlist secret
-    validate: 'visudo -cf %s'
-  notify: Reload sudoers
-
 - name: Configure motd for Ubuntu Systems
   when: ansible_distribution == "Ubuntu"
   block:
@@ -102,3 +93,45 @@
         owner: root
         group: root
         mode: 0644
+
+- name: Configure passwordless sudo for a user
+  when: ansible_users is defined and item.state != "absent"
+  block:
+    - name: Ensure the user exists
+      user:
+        name: '{{ item.name }}'
+        state: present
+      loop: '{{ ansible_users }}'
+      loop_control:
+        label: '{{ item.name }}'
+      tags:
+        - create-users
+      ignore_errors: '{{ ansible_check_mode }}'
+    - name: Configure passwordless sudo for the user
+      lineinfile:
+        path: /etc/sudoers.d/{{ item.name }}
+        line: '{{ item.name }} ALL=(ALL) NOPASSWD: ALL' # pragma: allowlist secret
+        create: true
+        state: present
+        owner: root
+        group: root
+        mode: '0440'
+        validate: 'visudo -cf %s'
+      loop: '{{ ansible_users }}'
+      loop_control:
+        label: '{{ item.name }}'
+      tags:
+        - create-users
+      ignore_errors: '{{ ansible_check_mode }}'
+    - name: Ensure correct permissions
+      file:
+        path: /etc/sudoers.d/{{ item.name }}
+        owner: root
+        group: root
+        mode: '0440'
+      loop: '{{ ansible_users }}'
+      loop_control:
+        label: '{{ item.name }}'
+      tags:
+        - create-users
+      ignore_errors: '{{ ansible_check_mode }}'
