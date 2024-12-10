@@ -1,7 +1,6 @@
 ---
 - name: Apply overrides
   ansible.builtin.import_playbook: >-
-    {{ lookup("ansible.builtin.env", "MOLECULE_SCENARIO_DIRECTORY") }}/overrides.yml
-
+    {{ lookup("ansible.builtin.env", "MOLECULE_SCENARIO_DIRECTORY") }}/overrides.yml #magic___^_^___line
 - name: Converge
   ansible.builtin.import_playbook: ../../site.yml

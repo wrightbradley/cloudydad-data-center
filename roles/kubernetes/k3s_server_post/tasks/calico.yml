@@ -45,17 +45,14 @@
 
     - name: Wait for Tigera Operator resources
       ansible.builtin.command: >-
-        {{ k3s_kubectl_binary | default('k3s kubectl') }} wait {{ item.type }}/{{ item.name }}
-        --namespace='tigera-operator'
-        --for=condition=Available=True
-        --timeout=30s
+        {{ k3s_kubectl_binary | default('k3s kubectl') }} wait {{ item.type }}/{{ item.name }} --namespace='tigera-operator' --for=condition=Available=True --timeout=30s
       register: tigera_result
       changed_when: false
       until: tigera_result is succeeded
       retries: 7
       delay: 7
       with_items:
-        - { name: tigera-operator, type: deployment }
+        - {name: tigera-operator, type: deployment}
       loop_control:
         label: "{{ item.type }}/{{ item.name }}"
 
@@ -77,25 +74,15 @@
 
     - name: Wait for Calico system resources to be available
       ansible.builtin.command: >-
-        {% if item.type == 'daemonset' %}
-        {{ k3s_kubectl_binary | default('k3s kubectl') }} wait pods
-        --namespace='{{ item.namespace }}'
-        --selector={{ item.selector }}
-        --for=condition=Ready
-        {% else %}
-        {{ k3s_kubectl_binary | default('k3s kubectl') }} wait {{ item.type }}/{{ item.name }}
-        --namespace='{{ item.namespace }}'
-        --for=condition=Available
-        {% endif %}
-        --timeout=30s
+        {% if item.type == 'daemonset' %} {{ k3s_kubectl_binary | default('k3s kubectl') }} wait pods --namespace='{{ item.namespace }}' --selector={{ item.selector }} --for=condition=Ready {% else %} {{ k3s_kubectl_binary | default('k3s kubectl') }} wait {{ item.type }}/{{ item.name }} --namespace='{{ item.namespace }}' --for=condition=Available {% endif %} --timeout=30s
       register: cr_result
       changed_when: false
       until: cr_result is succeeded
       retries: 30
       delay: 7
       with_items:
-        - { name: calico-typha, type: deployment, namespace: calico-system }
-        - { name: calico-kube-controllers, type: deployment, namespace: calico-system }
+        - {name: calico-typha, type: deployment, namespace: calico-system}
+        - {name: calico-kube-controllers, type: deployment, namespace: calico-system}
         - name: csi-node-driver
           type: daemonset
           selector: k8s-app=csi-node-driver
@@ -104,16 +91,14 @@
           type: daemonset
           selector: k8s-app=calico-node
           namespace: calico-system
-        - { name: calico-apiserver, type: deployment, namespace: calico-apiserver }
+        - {name: calico-apiserver, type: deployment, namespace: calico-apiserver}
       loop_control:
         label: "{{ item.type }}/{{ item.name }}"
 
     - name: Patch Felix configuration for eBPF mode
       ansible.builtin.command:
         cmd: >
-          {{ k3s_kubectl_binary | default('k3s kubectl') }} patch felixconfiguration default
-          --type='merge'
-          --patch='{"spec": {"bpfKubeProxyIptablesCleanupEnabled": false}}'
+          {{ k3s_kubectl_binary | default('k3s kubectl') }} patch felixconfiguration default --type='merge' --patch='{"spec": {"bpfKubeProxyIptablesCleanupEnabled": false}}'
       register: patch_result
       changed_when: "'felixconfiguration.projectcalico.org/default patched' in patch_result.stdout"
       failed_when: "'Error' in patch_result.stderr"

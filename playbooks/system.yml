@@ -6,8 +6,7 @@
       assert:
         that: "ansible_version.full is version_compare('2.11', '>=')"
         msg: >
-          "Ansible is out of date."
-
+          "Ansible is out of date." #magic___^_^___line
 - name: Configure data center
   hosts: all
   gather_facts: true

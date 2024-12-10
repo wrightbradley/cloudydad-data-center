@@ -61,7 +61,6 @@ k3s_master_taint: false
 extra_args: >-
   {{ '--flannel-iface=' + flannel_iface if calico_iface is not defined and cilium_iface is not defined else '' }}
   --node-ip={{ k3s_node_ip }}
-
 # --enforce-node-allocatable="pods"
 # --system-reserved="cpu=300m,memory=5Mi,ephemeral-storage=1Gi"
 # --kube-reserved="cpu=200m,memory=5Mi,ephemeral-storage=1Gi"
@@ -80,7 +79,6 @@ extra_server_args: >-
   --tls-san {{ apiserver_endpoint }}
   --disable servicelb
   --disable traefik
-
 extra_agent_args: >-
   {{ extra_args }}
 
@@ -131,26 +129,26 @@ custom_registries: false
 # in your deployments.
 # If all you need is your own images and you don't care about caching the docker/quay/ghcr.io images,
 # you can just remove those from the mirrors: section.
-custom_registries_yaml: |
-  mirrors:
-    docker.io:
-      endpoint:
-        - "https://registry.domain.com/v2/dockerhub"
-    quay.io:
-      endpoint:
-        - "https://registry.domain.com/v2/quayio"
-    ghcr.io:
-      endpoint:
-        - "https://registry.domain.com/v2/ghcrio"
-    registry.domain.com:
-      endpoint:
-        - "https://registry.domain.com"
-
-  configs:
-    "registry.domain.com":
-      auth:
-        username: yourusername
-        password: yourpassword
+# custom_registries_yaml: |
+#   mirrors:
+#     docker.io:
+#       endpoint:
+#         - "https://registry.domain.com/v2/dockerhub"
+#     quay.io:
+#       endpoint:
+#         - "https://registry.domain.com/v2/quayio"
+#     ghcr.io:
+#       endpoint:
+#         - "https://registry.domain.com/v2/ghcrio"
+#     registry.domain.com:
+#       endpoint:
+#         - "https://registry.domain.com"
+#
+#   configs:
+#     "registry.domain.com":
+#       auth:
+#         username: yourusername
+#         password: yourpassword
 
 # On some distros like Diet Pi, there is no dbus installed. dbus required by the default reboot command.
 # Uncomment if you need a custom reboot command

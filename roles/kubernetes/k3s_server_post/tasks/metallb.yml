@@ -47,12 +47,7 @@
 
 - name: Wait for MetalLB resources
   ansible.builtin.command: >-
-    {{ k3s_kubectl_binary | default('k3s kubectl') }} wait {{ item.resource }}
-    --namespace='metallb-system'
-    {% if item.name | default(False) -%}{{ item.name }}{%- endif %}
-    {% if item.selector | default(False) -%}--selector='{{ item.selector }}'{%- endif %}
-    {% if item.condition | default(False) -%}{{ item.condition }}{%- endif %}
-    --timeout='{{ metal_lb_available_timeout }}'
+    {{ k3s_kubectl_binary | default('k3s kubectl') }} wait {{ item.resource }} --namespace='metallb-system' {% if item.name | default(False) -%}{{ item.name }}{%- endif %} {% if item.selector | default(False) -%}--selector='{{ item.selector }}'{%- endif %} {% if item.condition | default(False) -%}{{ item.condition }}{%- endif %} --timeout='{{ metal_lb_available_timeout }}'
   changed_when: false
   run_once: true
   with_items:
@@ -106,8 +101,7 @@
 
 - name: Apply metallb CRs
   ansible.builtin.command: >-
-    {{ k3s_kubectl_binary | default('k3s kubectl') }} apply -f /tmp/k3s/metallb-crs.yaml
-    --timeout='{{ metal_lb_available_timeout }}'
+    {{ k3s_kubectl_binary | default('k3s kubectl') }} apply -f /tmp/k3s/metallb-crs.yaml --timeout='{{ metal_lb_available_timeout }}'
   register: this
   changed_when: false
   run_once: true

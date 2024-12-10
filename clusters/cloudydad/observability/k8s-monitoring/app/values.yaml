@@ -88,7 +88,7 @@ externalServices:
       password: ''
       # -- The key for the password property in the secret
       # @section -- External Services (Prometheus)
-      passwordKey: password
+      passwordKey: password #pragma: allowlist secret
 
     # Authenticate to Prometheus using OAuth2
     # @section -- External Services (Prometheus)
@@ -104,7 +104,7 @@ externalServices:
       clientSecret: ''
       # -- The key for the client secret property in the secret
       # @section -- External Services (Prometheus)
-      clientSecretKey: secret
+      clientSecretKey: secret #pragma: allowlist secret
       # -- File containing the OAuth2 client secret.
       # @section -- External Services (Prometheus)
       clientSecretFile: ''
@@ -165,7 +165,7 @@ externalServices:
       secretKey: ''
       # -- Configure the Key for Prometheus Remote Write SigV4 Secret Key secret
       # @section -- External Services (Prometheus)
-      secretKeyKey: 'secretKey'
+      secretKeyKey: 'secretKey' #pragma: allowlist secret
     # Configure the Prometheus Remote Write Queue
     # [docs](https://grafana.com/docs/alloy/latest/reference/components/prometheus/prometheus.remote_write/#queue_config-block)
     queue_config:
@@ -335,7 +335,7 @@ externalServices:
       password: ''
       # -- The key for the password property in the secret
       # @section -- External Services (Loki)
-      passwordKey: password
+      passwordKey: password #pragma: allowlist secret
 
     # Authenticate to Loki using OAuth2
     # @section -- External Services (Loki)
@@ -351,7 +351,7 @@ externalServices:
       clientSecret: ''
       # -- The key for the client secret property in the secret
       # @section -- External Services (Loki)
-      clientSecretKey: secret
+      clientSecretKey: secret #pragma: allowlist secret
       # -- File containing the OAuth2 client secret.
       # @section -- External Services (Loki)
       clientSecretFile: ''
@@ -481,7 +481,7 @@ externalServices:
       password: ''
       # -- The key for the password property in the secret
       # @section -- External Services (Tempo)
-      passwordKey: password
+      passwordKey: password #pragma: allowlist secret
 
     # Authenticate to Tempo using bearerToken
     bearerToken:
@@ -578,7 +578,7 @@ externalServices:
       password: ''
       # -- The key for the password property in the secret
       # @section -- External Services (Pyroscope)
-      passwordKey: password
+      passwordKey: password #pragma: allowlist secret
 
     # Credential management
     secret:
@@ -2443,13 +2443,13 @@ opencost:
     prometheus:
       # -- The name of the secret containing the username and password for the metrics service. This must be in the same namespace as the OpenCost deployment.
       # @section -- Deployment: [OpenCost](https://github.com/opencost/opencost-helm-chart)
-      existingSecretName: prometheus-k8s-monitoring
+      existingSecretName: prometheus-k8s-monitoring #pragma: allowlist secret
       # -- The key for the username property in the secret.
       # @section -- Deployment: [OpenCost](https://github.com/opencost/opencost-helm-chart)
       username_key: username
       # -- The key for the password property in the secret.
       # @section -- Deployment: [OpenCost](https://github.com/opencost/opencost-helm-chart)
-      password_key: password
+      password_key: password #pragma: allowlist secret
       external:
         # @ignored -- This skips including these values in README.md
         enabled: true
@@ -2556,7 +2556,7 @@ alloy:
       enabled: true
 
     # This chart is creating the configuration, so the alloy chart does not need to.
-    configMap: { create: false }
+    configMap: {create: false}
 
     # Default opened receiver ports
     extraPorts:
@@ -2611,7 +2611,7 @@ alloy:
 
   # Skip installation of the Grafana Alloy CRDs, since we don't use them in this chart
   # @ignored
-  crds: { create: false }
+  crds: {create: false}
 
 # Settings for the Grafana Alloy instance that gathers Cluster events.
 # See https://github.com/grafana/alloy/tree/main/operations/helm/charts/alloy for available values.
@@ -2636,7 +2636,7 @@ alloy-events:
       name: alloy-events
 
     # This chart is creating the configuration, so the alloy chart does not need to.
-    configMap: { create: false }
+    configMap: {create: false}
 
   # @ignored
   controller:
@@ -2656,7 +2656,7 @@ alloy-events:
 
   # Skip installation of the Grafana Alloy CRDs, since we don't use them in this chart
   # @ignored
-  crds: { create: false }
+  crds: {create: false}
 
 # Settings for the Grafana Alloy instance that gathers pod logs.
 # See https://github.com/grafana/alloy/tree/main/operations/helm/charts/alloy for available values.
@@ -2678,7 +2678,7 @@ alloy-logs:
   # @ignored
   alloy:
     # This chart is creating the configuration, so the alloy chart does not need to.
-    configMap: { create: false }
+    configMap: {create: false}
 
     # Disabling clustering by default, because the default log gathering format does not require clusters.
     clustering:
@@ -2708,7 +2708,7 @@ alloy-logs:
 
   # Skip installation of the Grafana Alloy CRDs, since we don't use them in this chart
   # @ignored
-  crds: { create: false }
+  crds: {create: false}
 
 # Settings for the Grafana Alloy instance that gathers profiles.
 # See https://github.com/grafana/alloy/tree/main/operations/helm/charts/alloy for available values.
@@ -2733,7 +2733,7 @@ alloy-profiles:
     stabilityLevel: public-preview
 
     # This chart is creating the configuration, so the alloy chart does not need to.
-    configMap: { create: false }
+    configMap: {create: false}
 
     # Disabling clustering because each instance will gather profiles for the workloads on the same node.
     clustering:
@@ -2761,7 +2761,7 @@ alloy-profiles:
 
   # Skip installation of the Grafana Alloy CRDs, since we don't use them in this chart
   # @ignored
-  crds: { create: false }
+  crds: {create: false}
 
 # -- Deploy additional manifest objects
 extraObjects: []
@@ -2783,4 +2783,3 @@ extraObjects: []
 #     dataFrom:
 #     - extract:
 #         key: mysecret
-

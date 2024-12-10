@@ -1,3 +1,4 @@
+---
 # uninstallVPA -- Enabling this flag will remove a vpa installation that was previously managed with this chart. It is considered deprecated and will be removed in a later release.
 uninstallVPA: false
 
@@ -144,8 +145,8 @@ dashboard:
     # dashboard.ingress.ingressClassName -- From Kubernetes 1.18+ this field is supported in case your ingress controller supports it. When set, you do not need to add the ingress class as annotation.
     ingressClassName:
     annotations: {}
-      # kubernetes.io/ingress.class: nginx
-      # kubernetes.io/tls-acme: "true"
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
     hosts:
       - host: chart-example.local
         paths:
@@ -181,4 +182,3 @@ dashboard:
   affinity: {}
   # dashboard.topologySpreadConstraints -- Topology spread constraints for the dashboard pods
   topologySpreadConstraints: []
-

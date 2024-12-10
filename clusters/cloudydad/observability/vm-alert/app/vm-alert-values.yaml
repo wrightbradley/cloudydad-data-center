@@ -1,3 +1,4 @@
+---
 # Default values for victoria-metrics-alert.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
@@ -56,19 +57,17 @@ server:
     labels: {}
 
   # -- Additional environment variables (ex.: secret tokens, flags). Check [here](https://docs.victoriametrics.com/#environment-variables) for details.
-  env:
-    []
-    # - name: VM_remoteWrite_basicAuth_password
-    #   valueFrom:
-    #     secretKeyRef:
-    #       name: auth_secret
-    #       key: password
+  env: []
+  # - name: VM_remoteWrite_basicAuth_password
+  #   valueFrom:
+  #     secretKeyRef:
+  #       name: auth_secret
+  #       key: password
 
   # -- Specify alternative source for env variables
-  envFrom:
-    []
-    #- configMapRef:
-    #    name: special-config
+  envFrom: []
+  #- configMapRef:
+  #    name: special-config
 
   probe:
     # -- Readiness probe
@@ -162,16 +161,15 @@ server:
         tokenFile: ''
 
   # -- Additional notifiers to use for alerts
-  notifiers:
-    []
-    # - alertmanager:
-    #    url: ""
-    #    basicAuth:
-    #      username: ""
-    #      password: ""
-    #    bearer:
-    #      token: ""
-    #      tokenFile: ""
+  notifiers: []
+  # - alertmanager:
+  #    url: ""
+  #    basicAuth:
+  #      username: ""
+  #      password: ""
+  #    bearer:
+  #      token: ""
+  #      tokenFile: ""
 
   # -- Extra command line arguments for container of component
   extraArgs:
@@ -182,34 +180,30 @@ server:
       - /config/alert-rules.yaml
 
   # -- Additional hostPath mounts
-  extraHostPathMounts:
-    []
-    # - name: certs-dir
-    #   mountPath: /etc/kubernetes/certs
-    #   subPath: ""
-    #   hostPath: /etc/kubernetes/certs
-    #   readOnly: true
+  extraHostPathMounts: []
+  # - name: certs-dir
+  #   mountPath: /etc/kubernetes/certs
+  #   subPath: ""
+  #   hostPath: /etc/kubernetes/certs
+  #   readOnly: true
 
   # -- Extra Volumes for the pod
-  extraVolumes:
-    []
-    # - name: example
-    #   configMap:
-    #     name: example
+  extraVolumes: []
+  # - name: example
+  #   configMap:
+  #     name: example
 
   # -- Extra Volume Mounts for the container.
   # Expects a lice of [volume mounts](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#volumemount-v1-core)
-  extraVolumeMounts:
-    []
-    # - name: example
-    #   mountPath: /example
-    #   subPath: ""
+  extraVolumeMounts: []
+  # - name: example
+  #   mountPath: /example
+  #   subPath: ""
 
   # -- Additional containers to run in the same pod
-  extraContainers:
-    []
-    #- name: config-reloader
-    #  image: reloader-image
+  extraContainers: []
+  #- name: config-reloader
+  #  image: reloader-image
 
   service:
     # -- Service annotations
@@ -285,17 +279,16 @@ server:
   # runAsUser: 1000
 
   # -- Resource object. Details are [here](http://kubernetes.io/docs/user-guide/compute-resources/)
-  resources:
-    {}
-    # We usually recommend not to specify default resources and to leave this as a conscious
-    # choice for the user. This also increases chances charts run on environments with little
-    # resources, such as Minikube. If you do want to specify resources, uncomment the following
-    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-    # limits:
-    #   cpu: 100m
-    #   memory: 128Mi
-    # requests:
-    #   cpu: 100m
+  resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
   #   memory: 128Mi
 
   # -- Annotations to be added to the deployment
@@ -2572,32 +2565,28 @@ alertmanager:
     size: 50Mi
 
   # -- Additional hostPath mounts
-  extraHostPathMounts:
-    []
-    # - name: certs-dir
-    #   mountPath: /etc/kubernetes/certs
-    #   subPath: ""
-    #   hostPath: /etc/kubernetes/certs
+  extraHostPathMounts: []
+  # - name: certs-dir
+  #   mountPath: /etc/kubernetes/certs
+  #   subPath: ""
+  #   hostPath: /etc/kubernetes/certs
   #   readOnly: true
 
   # -- Extra Volumes for the pod
-  extraVolumes:
-    []
-    #- name: example
-    #  configMap:
-    #    name: example
+  extraVolumes: []
+  #- name: example
+  #  configMap:
+  #    name: example
 
   # -- Extra Volume Mounts for the container
-  extraVolumeMounts:
-    []
-    # - name: example
-    #   mountPath: /example
+  extraVolumeMounts: []
+  # - name: example
+  #   mountPath: /example
 
   # -- Extra containers to run in a pod with alertmanager
-  extraContainers:
-    []
-    #- name: config-reloader
-    #  image: reloader-image
+  extraContainers: []
+  #- name: config-reloader
+  #  image: reloader-image
 
   # -- Additional initContainers to initialize the pod
   initContainers: []

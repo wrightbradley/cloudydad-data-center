@@ -1,9 +1,10 @@
+---
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: vm-logs
 spec:
-  secretName: vm-logs-tls
+  secretName: vm-logs-tls #pragma: allowlist secret
   dnsNames:
     - 'vmlogs.cloudydad.world'
   issuerRef:

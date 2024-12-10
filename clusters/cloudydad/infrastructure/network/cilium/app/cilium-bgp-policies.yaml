@@ -22,7 +22,7 @@ spec:
   timers:
     holdTimeSeconds: 9
     keepAliveTimeSeconds: 3
-  # authSecretRef: bgp-auth-secret
+  # authSecretRef: bgp-auth-secret #pragma: allowlist secret
   ebgpMultihop: 10
   gracefulRestart:
     enabled: true
@@ -75,4 +75,4 @@ spec:
           - LoadBalancerIP
       selector: # <-- select all services
         matchExpressions:
-          - { key: somekey, operator: NotIn, values: ['never-used-value'] }
+          - {key: somekey, operator: NotIn, values: ['never-used-value']}

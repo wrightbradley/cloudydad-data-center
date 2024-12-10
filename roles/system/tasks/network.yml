@@ -13,6 +13,7 @@
 
 - name: Ensure primary network interface is named eth0
   when: ansible_distribution == "Ubuntu"
+  notify: Reboot
   block:
     - name: Gather necessary network facts
       setup:
@@ -54,4 +55,3 @@
                           macaddress: {{ interface_mac }}
                       set-name: eth0
               version: 2
-  notify: Reboot
