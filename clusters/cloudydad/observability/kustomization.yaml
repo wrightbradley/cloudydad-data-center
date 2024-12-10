@@ -16,3 +16,4 @@ resources:
   - ./otel-collector/kustomization.yaml
   - ./vm-k8s-stack/kustomization.yaml
   - ./vm-logs/kustomization.yaml
+  - ./trivy-operator//kustomization.yaml
