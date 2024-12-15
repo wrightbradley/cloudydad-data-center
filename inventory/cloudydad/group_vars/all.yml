@@ -17,9 +17,6 @@ ansible_groups:
     system: false
 
 ansible_users:
-  - name: ubuntu
-    remove: true
-    state: absent
   - name: bwright
     authkey_comment: bwright # pragma: allowlist secret
     authkey_exclusive: true
