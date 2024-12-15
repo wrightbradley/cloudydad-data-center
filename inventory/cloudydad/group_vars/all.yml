@@ -1,12 +1,16 @@
 ---
 common_packages:
+  - curl
   - git
   - iputils-ping
   - lsb-release
   - mosh
   - neovim
   - ripgrep
+  - rsync
   - tmux
+  - sudo
+  - wget
 
 system_timezone: 'UTC'
 
