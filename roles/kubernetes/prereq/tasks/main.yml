@@ -1,9 +1,4 @@
 ---
-- name: Set same timezone on every Server
-  community.general.timezone:
-    name: "{{ system_timezone }}"
-  when: (system_timezone is defined) and (system_timezone != "Your/Timezone")
-
 - name: Set SELinux to disabled state
   ansible.posix.selinux:
     state: disabled
