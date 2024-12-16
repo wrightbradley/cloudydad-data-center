@@ -12,7 +12,7 @@ spec:
         kind: HelmRepository
         name: grafana
         namespace: flux-system
-      version: '1.6.7'
+      version: '1.6.15'
   interval: 50m
   releaseName: k8s-monitoring
   targetNamespace: k8s-monitoring

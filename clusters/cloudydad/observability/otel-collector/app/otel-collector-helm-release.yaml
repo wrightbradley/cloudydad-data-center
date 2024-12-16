@@ -12,7 +12,7 @@ spec:
         kind: HelmRepository
         name: opentelemetry
         namespace: flux-system
-      version: '0.3.4'
+      version: '0.3.8'
   interval: 50m
   releaseName: otel-collector
   targetNamespace: otel-collector
