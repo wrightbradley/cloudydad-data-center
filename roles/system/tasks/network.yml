@@ -11,9 +11,7 @@
     name: '{{ system_timezone }}'
   when: (system_timezone is defined) and (system_timezone != "UTC")
 
-- name: Ensure primary network interface is named eth0
-  when: ansible_distribution == "Ubuntu"
-  notify: Reboot
+- name: Set facts for primary network interface
   block:
     - name: Gather necessary network facts
       setup:
@@ -41,17 +39,19 @@
       debug:
         msg: 'Default route interface MAC address is {{ interface_mac }}'
 
-    - name: Place the netplan configuration file
+    - name: Set a persistent and common network interface name
       copy:
-        dest: /etc/netplan/10-interface-config.yaml
+        dest: /etc/udev/rules.d/10-persistent-net.rules
         mode: '0644'
+        owner: 'root'
+        group: 'root'
         content: |
-          network:
-              ethernets:
-                  {{ default_interface }}:
-                      dhcp4: true
-                      dhcp6: true
-                      match:
-                          macaddress: {{ interface_mac }}
-                      set-name: eth0
-              version: 2
+          SUBSYSTEM=="net", ACTION=="add", ATTR{address}=="{{interface_mac}}", NAME="lan0"
+
+    - name: Configure network interfaces
+      copy:
+        dest: /etc/network/interfaces
+        src: etc/network/interfaces
+        mode: '0644'
+        owner: 'root'
+        group: 'root'
