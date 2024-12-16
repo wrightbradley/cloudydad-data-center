@@ -47,7 +47,7 @@ ansible_users:
     expires: -1
     groups:
       - sudo
-    password:
+    password: '!'
     remove: false
     shell: /bin/bash
     state: present
