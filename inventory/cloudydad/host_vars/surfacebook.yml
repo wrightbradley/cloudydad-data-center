@@ -2,3 +2,4 @@
 hostname: surfacebook
 ethernet_id: enx00e04c6818f1
 ethernet_mac: 00:e0:4c:68:18:f1
+k3s_master_taint: false
