@@ -12,7 +12,7 @@ spec:
         kind: HelmRepository
         name: victoria-metrics
         namespace: flux-system
-      version: '>=0.30.2'
+      version: '0.31.0'
   interval: 50m
   releaseName: vm-k8s-stack
   targetNamespace: vm-k8s-stack
