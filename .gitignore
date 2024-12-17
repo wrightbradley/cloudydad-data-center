@@ -846,3 +846,6 @@ k3s-ansible
 playbooks/kubeconfig
 secret.yaml
 clusters/cloudydad/infrastructure/storage/democratic-csi/app/values.yaml
+clusters/cloudydad/infrastructure/database/cloudnative-pg/app/secret-postgres-bwright.yaml
+clusters/cloudydad/infrastructure/database/cloudnative-pg/app/secret-postgres-root.yaml
+clusters/cloudydad/infrastructure/database/cloudnative-pg/app/secret-minio-credentials.yaml
