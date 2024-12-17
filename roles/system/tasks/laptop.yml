@@ -1,0 +1,27 @@
+---
+- name: Ensure HandleLidSwitch is set to ignore
+  lineinfile:
+    path: /etc/systemd/logind.conf
+    regexp: '^#HandleLidSwitch='
+    line: 'HandleLidSwitch=ignore'
+    state: present
+    backrefs: yes
+
+- name: Ensure HandleLidSwitchDocked is set to ignore
+  lineinfile:
+    path: /etc/systemd/logind.conf
+    regexp: '^#HandleLidSwitchDocked='
+    line: 'HandleLidSwitchDocked=ignore'
+    state: present
+    backrefs: yes
+
+- name: Ensure HandleLidSwitchExternalPower is set to ignore
+  lineinfile:
+    path: /etc/systemd/logind.conf
+    regexp: '^#HandleLidSwitchExternalPower='
+    line: 'HandleLidSwitchExternalPower=ignore'
+    state: present
+    backrefs: yes
+
+- name: Ensure the logind service is reloaded
+  command: systemctl restart systemd-logind
