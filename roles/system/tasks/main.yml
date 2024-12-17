@@ -14,3 +14,8 @@
 - name: Configure ssh
   import_tasks: ssh.yml
   tags: ssh
+
+- name: Handle laptop specifics
+  import_tasks: laptop.yml
+  tags: laptop
+  when: "'laptop' in group_names"

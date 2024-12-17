@@ -1,11 +1,5 @@
 # Tasks
 
-## Raspberry Pis
-
-- Configure Users and Groups
-- Configure OpenSSH Server
-- Configure Boot Parameters
-
 ### Notes
 
 ```bash
