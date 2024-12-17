@@ -5,7 +5,12 @@ kind: Kustomization
 namespace: cloudnative-pg
 resources:
   - ./cloudnative-pg-namespace.yaml
+  - ./sealed-postgres-root.yaml
+  - ./sealed-postgres-bwright.yaml
+  - ./sealed-minio-credentials.yaml
   - ./cloudnative-pg-helm-release.yaml
+  - ./cloudnative-pg-cluster.yaml
+  - ./cloudnative-pg-prometheusrules.yaml
 configMapGenerator:
   - name: cloudnative-pg-values
     files:

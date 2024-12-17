@@ -1,0 +1,87 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: postgres-cluster
+spec:
+  description: 'common postgresql cluster'
+  # imageName: ghcr.io/cloudnative-pg/postgresql:17.0
+  # imagePullSecret is only required if the images are located in a private registry
+  # imagePullSecrets:
+  #   - name: private_registry_access
+  instances: 3
+  startDelay: 300
+  stopDelay: 300
+  monitoring:
+    enablePodMonitor: true
+  # Example of rolling update strategy:
+  # - unsupervised: automated update of the primary once all
+  #                 replicas have been upgraded (default)
+  # - supervised: requires manual supervision to perform
+  #               the switchover of the primary
+  primaryUpdateStrategy: unsupervised
+  # postgresql:
+  #   parameters:
+  #     shared_buffers: 256MB
+  #     pg_stat_statements.max: '10000'
+  #     pg_stat_statements.track: all
+  #     auto_explain.log_min_duration: '10s'
+  #   pg_hba:
+  #     - host all all 10.244.0.0/16 md5
+  enableSuperuserAccess: true
+  superuserSecret:
+    name: postgres-root
+  # Require 5Gi of space per instance using default storage class
+  storage:
+    storageClass: truenas-iscsi-csi
+    size: 5Gi
+  backup:
+    barmanObjectStore:
+      destinationPath: s3://cloudnative-pg-backup/
+      endpointURL: https://nas.cloudydad.world:9000
+      s3Credentials:
+        accessKeyId:
+          name: minio-credentials
+          key: ACCESS_KEY_ID
+        secretAccessKey:
+          name: minio-credentials
+          key: SECRET_ACCESS_KEY
+      wal:
+        compression: gzip
+      data:
+        compression: gzip
+        immediateCheckpoint: false
+        jobs: 2
+        additionalCommandArgs:
+          - '--min-chunk-size=5MB'
+          - '--read-timeout=60'
+          - '-vv'
+    retentionPolicy: '30d'
+  resources:
+    requests:
+      memory: '512Mi'
+      cpu: '1'
+    limits:
+      memory: '1Gi'
+      cpu: '2'
+  # affinity:
+  #   enablePodAntiAffinity: true
+  #   topologyKey: failure-domain.beta.kubernetes.io/zone
+  nodeMaintenanceWindow:
+    inProgress: false
+    reusePVC: true
+  managed:
+    roles:
+      - name: bwright
+        ensure: present
+        comment: DBA
+        login: true
+        superuser: true
+        createdb: true
+        createrole: true
+        connectionLimit: 4
+        validUntil: '2053-04-12T15:04:05Z'
+        inRoles:
+          - pg_monitor
+          - pg_signal_backend
+        passwordSecret:
+          name: postgres-bwright
