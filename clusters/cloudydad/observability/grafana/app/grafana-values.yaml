@@ -135,8 +135,8 @@ testFramework:
   #    memory: 128Mi
 
 # dns configuration for pod
-dnsPolicy: ~
-dnsConfig: {}
+# dnsPolicy: ~
+# dnsConfig: {}
 # nameservers:
 #   - 8.8.8.8
 #   options:
@@ -573,14 +573,13 @@ enableServiceLinks: true
 
 ## Additional grafana server secret mounts
 # Defines additional mounts with secrets. Secrets must be manually created in the namespace.
-extraSecretMounts: []
-# - name: secret-files
-#   mountPath: /etc/secrets
-#   secretName: grafana-secret-files
-#   readOnly: true
-#   optional: false
-#   subPath: ""
-#
+extraSecretMounts:
+  - name: auth-grafana-secret-mount
+    mountPath: /etc/secrets/auth_grafana
+    secretName: grafana-credentials
+    readOnly: true
+    optional: false
+
 # for AWS EKS (cloudwatch) use the following (see also instruction in env: above)
 # - name: aws-iam-token
 #   mountPath: /var/run/secrets/eks.amazonaws.com/serviceaccount
@@ -894,6 +893,8 @@ grafana.ini:
     provisioning: /etc/grafana/provisioning
   analytics:
     check_for_updates: false
+  feature_toggles:
+    enable: autoMigrateOldPanels exploreMixedDatasource panelTitleSearch correlations prometheusMetricsEncyclopedia
   log:
     mode: console
   grafana_net:
@@ -911,6 +912,14 @@ grafana.ini:
     # protocol: https
   plugins:
     allow_loading_unsigned_plugins: victorialogs-datasource,victoriametrics-datasource
+  database:
+    type: postgres
+    host: $__file{/etc/secrets/auth_grafana/dbhost}
+    name: $__file{/etc/secrets/auth_grafana/dbname}
+    user: $__file{/etc/secrets/auth_grafana/dbuser}
+    password: $__file{/etc/secrets/auth_grafana/dbpassword}
+    log_queries: false
+    ssl_mode: require
   security:
     disable_gravatar: true
     cookie_secure: true
