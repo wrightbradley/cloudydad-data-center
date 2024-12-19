@@ -573,7 +573,7 @@ enableServiceLinks: true
 extraSecretMounts:
   - name: auth-grafana-secret-mount
     mountPath: /etc/secrets/auth_grafana
-    secretName: grafana-credentials
+    secretName: grafana-credentials #pragma: allowlist secret
     readOnly: true
     optional: false
 
