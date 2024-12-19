@@ -1,0 +1,12 @@
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: gatus
+spec:
+  secretName: gatus-tls #pragma: allowlist secret
+  dnsNames:
+    - 'gatus.cloudydad.world'
+  issuerRef:
+    name: letsencrypt
+    kind: ClusterIssuer

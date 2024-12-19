@@ -22,6 +22,7 @@ spec:
             - 'alertmanager.cloudydad.world'
             - 'cloudydad.life'
             - 'cloudydad.world'
+            - 'gatus.cloudydad.world'
             - 'goldilocks.cloudydad.world'
             - 'grafana.cloudydad.world'
             - 'podinfo.cloudydad.world'
