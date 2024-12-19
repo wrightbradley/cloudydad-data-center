@@ -11,6 +11,7 @@ resources:
   - ./cloudnative-pg-helm-release.yaml
   - ./cloudnative-pg-cluster.yaml
   - ./cloudnative-pg-prometheusrules.yaml
+  - ./cloudnative-pg-scheduled-backup.yaml
 configMapGenerator:
   - name: cloudnative-pg-values
     files:

@@ -849,3 +849,10 @@ clusters/cloudydad/infrastructure/storage/democratic-csi/app/values.yaml
 clusters/cloudydad/infrastructure/database/cloudnative-pg/app/secret-postgres-bwright.yaml
 clusters/cloudydad/infrastructure/database/cloudnative-pg/app/secret-postgres-root.yaml
 clusters/cloudydad/infrastructure/database/cloudnative-pg/app/secret-minio-credentials.yaml
+clusters/cloudydad/observability/vm-k8s-stack/app/alertmanager-config.yaml
+clusters/cloudydad/infrastructure/database/cloudnative-pg/app/backup.yaml
+clusters/cloudydad/infrastructure/database/cloudnative-pg/app/create-grafana.sql
+clusters/cloudydad/infrastructure/database/cloudnative-pg/app/create-oncall.sql
+playbooks/copy-docker-image.yml
+delete-pods.py
+docker-pull-copy.py
