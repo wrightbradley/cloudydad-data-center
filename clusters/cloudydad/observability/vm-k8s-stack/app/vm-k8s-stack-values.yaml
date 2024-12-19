@@ -494,7 +494,7 @@ alertmanager:
     routePrefix: /
 
     # -- (string) If this one defined, it will be used for alertmanager configuration and config parameter will be ignored
-    configSecret: ''
+    configSecret: 'alertmanager-config'
   # -- (object) Alertmanager configuration
   config:
     templates:
