@@ -10,6 +10,7 @@ resources:
   # - ./tempo/kustomization.yaml
   # - ./vm-alert/kustomization.yaml
   # - ./vm-metrics/kustomization.yaml
+  - ./gatus/kustomization.yaml
   - ./goldilocks/kustomization.yaml
   - ./grafana/kustomization.yaml
   - ./node-problem-detector/kustomization.yaml

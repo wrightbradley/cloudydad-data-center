@@ -10,6 +10,7 @@ resources:
   - ./deliveryhero.yaml
   - ./democratic-csi.yaml
   - ./fairwinds.yaml
+  - ./gatus.yaml
   - ./grafana.yaml
   - ./jetstack.yaml
   - ./kube-vip.yaml
