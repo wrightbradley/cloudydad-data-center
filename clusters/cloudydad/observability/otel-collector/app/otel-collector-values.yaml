@@ -155,7 +155,6 @@ defaultCRConfig:
       cpu: '250m'
     limits:
       memory: '128Mi'
-      cpu: '250m'
 
   # Node selector for the collector
   nodeSelector: {}
@@ -448,7 +447,6 @@ collectors:
     enabled: true
     resources:
       limits:
-        cpu: 100m
         memory: 250Mi
       requests:
         cpu: 100m
@@ -524,7 +522,6 @@ collectors:
     enabled: true
     resources:
       limits:
-        cpu: 100m
         memory: 500Mi
       requests:
         cpu: 100m
@@ -832,7 +829,6 @@ opAMPBridge:
   # Resources configuration for OpAMP bridge
   resources:
     limits:
-      cpu: '250m'
       memory: '256Mi'
     requests:
       cpu: '250m'
