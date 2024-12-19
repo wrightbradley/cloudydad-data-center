@@ -690,7 +690,7 @@ datasources:
         editable: true
         jsonData:
           httpMethod: POST
-          manageAlerts: false
+          manageAlerts: true
           prometheusType: Prometheus
           prometheusVersion: 2.46.0
           cacheLevel: 'High'
