@@ -74,11 +74,7 @@ pre-commit:
 
 ## Test:
 .PHONY: test
-test: molecule ## Run tests
-
-.PHONY: molecule
-molecule: ## Run pytest
-	molecule tests # TODO
+test: ## Run tests
 
 ## Docs:
 .PHONY: docs

@@ -8,22 +8,13 @@ jobs:
     runs-on: ubuntu-24.04
     env:
       PYTHON_VERSION: '3.12'
-
     steps:
       - name: Check out the codebase
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # 4.1.7
         with:
           ref: ${{ github.event.pull_request.head.sha }}
-
-      - name: Set up Python ${{ env.PYTHON_VERSION }}
-        uses: actions/setup-python@82c7e631bb3cdc910f68e0081d67478d79c6982d # 5.1.0
-        with:
-          python-version: ${{ env.PYTHON_VERSION }}
-          cache: 'pip' # caching pip dependencies
-
       - name: Run pre-commit
         uses: pre-commit/action@2c7b3805fd2a0fd8c1884dcaebf91fc102a13ecd # 3.0.1
-
   ensure-pinned-actions:
     name: Ensure SHA Pinned Actions
     runs-on: ubuntu-24.04
@@ -32,7 +23,3 @@ jobs:
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # 4.1.7
       - name: Ensure SHA pinned actions
         uses: zgosalvez/github-actions-ensure-sha-pinned-actions@b88cd0aad2c36a63e42c71f81cb1958fed95ac87 # 3.0.10
-        with:
-          allowlist: |
-            aws-actions/
-            docker/login-action
