@@ -68,11 +68,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Secure system users  - ([c79f3f7](c79f3f740803b8d9eb308b5a0cc9f7661d12238d))
 - Dynamically set proper interface for k3s cluster  - ([1fe488a](1fe488ac2f27700b2e8456c783699bb4255e28d8))
 - Only taint master nodes for raspberry pi devices  - ([6306f89](6306f894d37bb042dcc9f173f85c93d076af2745))
-- Pin helm release versions  - ([9f211c4](9f211c41e4398bd44207bcab67c86240258f57df))
-- Configure laptop lid settings  - ([c846b12](c846b125a14606541887f2c6f59d5fc9d849f923))
-- Create common postgres database  - ([85ecfcd](85ecfcdcda1f019a95c0ed658aa5524964e078d2))
-- Configure grafana to use postgres backend  - ([7b4bb1f](7b4bb1f54ed88933538c3306f4af08354afc294e))
-- Increase grafana replicas for HA  - ([c5614db](c5614dbb1a8a56a164e28db1aa9d77ce614cb584))
+- Pin helm release versions  - ([36531bf](36531bfd2921ed5982f4adaff08cab2c4916a2c5))
+- Configure laptop lid settings  - ([51a95af](51a95af0c6c46caf0e7b2376945325cc1a133447))
+- Create common postgres database  - ([a00765d](a00765d138a6141ad311ba96cd69ad8d2ad6b26c))
+- Configure grafana to use postgres backend  - ([4fb7dc8](4fb7dc8cc4aadb3e4e9db462d83b073f11bdddfb))
+- Increase grafana replicas for HA  - ([04a9c64](04a9c64d9166b1a7a8cb0df41d8801f0d9b52dd5))
+- Setup Grafana Oncall  - ([c54a7a6](c54a7a66441dddbc181cd3b8d36c33c096fafcf6))
+- Allow management of alerts for prometheus in grafana  - ([687bd50](687bd50b9c1109b87c913a5a29e6d20ba48e3484))
+- Add node-problem-detector dashboard  - ([ec784f8](ec784f87f497f75c484cfdf957f35ccaf5a6c09d))
+- Add scheduled backup for cloudnative-pg  - ([6c8390e](6c8390ef9ae45904ad0ffab19a9f44bf22d971e5))
+- Add custom alertmanager config  - ([7a013f6](7a013f677aa50c52f04a562c1de97216fd3b85a8))
+- Add uptime-kuma  - ([7969591](7969591b48e7eafc3ea1dd37862a86f7df23f163))
+- Create wildcard certificate  - ([3b967e4](3b967e4829974eebfbc4d791829a7dd93576a7f7))
+- Add gatus  - ([6164ed2](6164ed27107cb8e44d13eed09b771262dd5a1501))
+- Use uptime-kuma beta  - ([dd16230](dd162301f1e368462763e8a5a6a05f660e4579c5))
 
 ### <!-- 1 -->🐛 Bug Fixes
 
@@ -108,11 +117,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Disable persistence for grafana  - ([79dd856](79dd856c4cdd1dca72a74f50f8cfccf82840d107))
 - Timezone configuration  - ([e867335](e867335b6fd2501043dfa3324acb4c334779b0a2))
 - Re-encrypt secrets after cluster rebuild  - ([9d1b5c1](9d1b5c12b9dcc6fbd44ad286b0a2e6734f524e33))
-- Remove local-path storageclass as default  - ([41fda60](41fda60ed867b735b2d433f2ec0e4c052ef7c01b))
-- Install crds for cert-manager  - ([cdbc217](cdbc2178191fac680318af08fd2f226713761a81))
-- Correct portal initiator group id  - ([8e06779](8e06779654959dbbd0c56140e0ec370918920d01))
-- Update truenas iscsi  - ([deed4ab](deed4abd52f99cf71289149e87c800b3d406dfcb))
-- Grafana alpine dns resolution  - ([cc84646](cc846468f83585f1972c0ab121f35910cef0af44))
+- Remove local-path storageclass as default  - ([fd5874e](fd5874e4a0e5a4c024f6682929681903105198ae))
+- Install crds for cert-manager  - ([b3eb3e9](b3eb3e968d60a561aeded011bb2b4e4767c2be5e))
+- Correct portal initiator group id  - ([59aaa3a](59aaa3ad3ec96a59f4bb3cb31fc455f11a792ecc))
+- Update truenas iscsi  - ([83cc440](83cc440d36599a06b5182a2773da49fafbd9efcc))
+- Grafana alpine dns resolution  - ([4c52a94](4c52a94335e6b7d3f9ddc3377a59b2e5e5b6615d))
+- VM naming  - ([a469e3d](a469e3d4b6191d55a982d506dfc5362065b1d148))
+- Cpu throttling on goldilocks  - ([34b6387](34b638704b9d31ab713ff31787ecc04923009a85))
+- Cpu throttling for otel-collector  - ([a6349bd](a6349bd5dad6b803d4d23dc42d387e0838faa92d))
+- Cpu throttling for vm-logs  - ([386a367](386a3672b0b480cdf6ab72de9ef3b01e1bf57c58))
+- Nodeselector issues with trivy nodecollector  - ([60d9832](60d98322c2e1a0bbcc3a542968ce05c1def8c12c))
 
 ### <!-- 10 -->◀️ Revert
 
@@ -130,7 +144,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Bump zgosalvez/github-actions-ensure-sha-pinned-actions  by @dependabot[bot] in [#1](https://github.com/wrightbradley/cloudydad-data-center/pull/1) - ([a79c218](a79c21873da00373f8cd1b8b1998139f31c75c4e))
 - Disable coredns  - ([33abb51](33abb51779cbf1f4ddd6d56a93a981ea0ee79d11))
 - Setup wakatime  - ([9c23e6d](9c23e6dac27281951a38d9be53e504ecadc8597a))
-- Don't deploy kube-vip  - ([bed9f3b](bed9f3b7fa51db83c4c4b4fa86aca1d96aa7408a))
+- Don't deploy kube-vip  - ([e26c38a](e26c38a351259febc5112dcb9e8575be8eef8388))
 
 ### <!-- 2 -->🚜 Refactor
 
@@ -143,6 +157,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Run linters  by @wrightbradley - ([59f2dbb](59f2dbbd57ccd0f9845f767a6b39ec719cf00f17))
 - Update ingress names for vm-logs and vm-metrics  - ([6e095be](6e095beab7171c24d1696146f04d06a31b8f3859))
 - Run pre-commit linting  - ([735ee41](735ee41abc86b1f48e35ddcf141a8885904b91c3))
+- Run pre-commit  - ([b16b303](b16b3032ad4fed06d6e2cc654da303fb2dafb43e))
 
 ### <!-- 7 -->📚 Documentation
 
@@ -152,6 +167,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Disable debug logging for the trueNAS CSI driver  by @wrightbradley - ([8086132](8086132630ad6c6f1c9c074d7749c8a8cf19ec6a))
 - Remove vm-metrics, k8s-monitoring, vm-alert  - ([648c902](648c90242f553467a29ff49cca71f501b737c86d))
+- Add git-cliff changelog config  - ([5bd9080](5bd9080fa6c75dd8445c5e9ee389f1373cf1a186))
+- Disable Grafana oncall  - ([d54de39](d54de391774d0cbb54450deef4865faa9178fe72))
+- Removed unused apps  - ([9b16978](9b169782b8f104953f96ed0e03642cc6f28ed300))
 
 ### <!-- 9 -->🤖 CI
 
