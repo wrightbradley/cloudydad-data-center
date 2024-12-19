@@ -1,4 +1,3 @@
----
 # Values for configuring the deployment of Grafana OnCall
 
 # Set the domain name Grafana OnCall will be installed on.
@@ -31,13 +30,14 @@ service:
 # Engine pods configuration
 engine:
   replicaCount: 1
-  resources: {}
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
+  resources:
+    {}
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
 
   # Labels for engine pods
   podLabels: {}
@@ -68,10 +68,10 @@ engine:
 
   ## Priority class for the pods
   ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/pod-priority-preemption/
-  priorityClassName: ''
+  priorityClassName: ""
 
   # Extra containers which runs as sidecar
-  extraContainers: ''
+  extraContainers: ""
   # extraContainers: |
   # - name: cloud-sql-proxy
   #   image: gcr.io/cloud-sql-connectors/cloud-sql-proxy:2.1.2
@@ -108,13 +108,14 @@ detached_integrations_service:
 detached_integrations:
   enabled: false
   replicaCount: 1
-  resources: {}
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
+  resources:
+    {}
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
 
   ## Deployment update strategy
   ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy
@@ -142,10 +143,10 @@ detached_integrations:
 
   ## Priority class for the pods
   ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/pod-priority-preemption/
-  priorityClassName: ''
+  priorityClassName: ""
 
   # Extra containers which runs as sidecar
-  extraContainers: ''
+  extraContainers: ""
   # extraContainers: |
   # - name: cloud-sql-proxy
   #   image: gcr.io/cloud-sql-connectors/cloud-sql-proxy:2.1.2
@@ -175,28 +176,29 @@ detached_integrations:
 # Celery workers pods configuration
 celery:
   replicaCount: 1
-  worker_queue: 'default,critical,long,slack,telegram,webhook,celery,grafana,retry'
-  worker_concurrency: '1'
-  worker_max_tasks_per_child: '100'
-  worker_beat_enabled: 'True'
+  worker_queue: "default,critical,long,slack,telegram,webhook,celery,grafana,retry"
+  worker_concurrency: "1"
+  worker_max_tasks_per_child: "100"
+  worker_beat_enabled: "True"
   ## Restart of the celery workers once in a given interval as an additional precaution to the probes
   ## If this setting is enabled TERM signal will be sent to celery workers
   ## It will lead to warm shutdown (waiting for the tasks to complete) and restart the container
   ## If this setting is set numbers of pod restarts will increase
   ## Comment this line out if you want to remove restarts
-  worker_shutdown_interval: '65m'
+  worker_shutdown_interval: "65m"
   livenessProbe:
     enabled: true
     initialDelaySeconds: 30
     periodSeconds: 300
     timeoutSeconds: 10
-  resources: {}
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
+  resources:
+    {}
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
 
   # Labels for celery pods
   podLabels: {}
@@ -219,10 +221,10 @@ celery:
 
   ## Priority class for the pods
   ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/pod-priority-preemption/
-  priorityClassName: ''
+  priorityClassName: ""
 
   # Extra containers which runs as sidecar
-  extraContainers: ''
+  extraContainers: ""
   # extraContainers: |
   # - name: cloud-sql-proxy
   #   image: gcr.io/cloud-sql-connectors/cloud-sql-proxy:2.1.2
@@ -252,13 +254,14 @@ celery:
 # Telegram polling pod configuration
 telegramPolling:
   enabled: false
-  resources: {}
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
+  resources:
+    {}
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
 
   # Labels for telegram-polling pods
   podLabels: {}
@@ -293,11 +296,11 @@ oncall:
   # oncall secrets
   secrets:
     # Use existing secret. (secretKey and mirageSecretKey is required)
-    existingSecret: ''
+    existingSecret: ""
     # The key in the secret containing secret key
-    secretKey: ''
+    secretKey: ""
     # The key in the secret containing mirage secret key
-    mirageSecretKey: ''
+    mirageSecretKey: ""
   # Slack configures the Grafana Oncall Slack ChatOps integration.
   slack:
     # Enable the Slack ChatOps integration for the Oncall Engine.
@@ -314,13 +317,13 @@ oncall:
     signingSecret: ~
     # Use existing secret for clientId, clientSecret and signingSecret.
     # clientIdKey, clientSecretKey and signingSecretKey are required
-    existingSecret: ''
+    existingSecret: ""
     # The key in the secret containing OAuth2 client ID
-    clientIdKey: ''
+    clientIdKey: ""
     # The key in the secret containing OAuth2 client secret
-    clientSecretKey: ''
+    clientSecretKey: ""
     # The key in the secret containing the Slack app signature secret
-    signingSecretKey: ''
+    signingSecretKey: ""
     # OnCall external URL
     redirectHost: ~
   telegram:
@@ -328,9 +331,9 @@ oncall:
     token: ~
     webhookUrl: ~
     # Use existing secret. (tokenKey is required)
-    existingSecret: ''
+    existingSecret: ""
     # The key in the secret containing Telegram token
-    tokenKey: ''
+    tokenKey: ""
   smtp:
     enabled: true
     host: ~
@@ -345,32 +348,32 @@ oncall:
     authToken: ~
   twilio:
     # Twilio account SID/username to allow OnCall to send SMSes and make phone calls
-    accountSid: ''
+    accountSid: ""
     # Twilio password to allow OnCall to send SMSes and make calls
-    authToken: ''
+    authToken: ""
     # Number from which you will receive calls and SMS
     # (NOTE: must be quoted, otherwise would be rendered as float value)
-    phoneNumber: ''
+    phoneNumber: ""
     # SID of Twilio service for number verification. You can create a service in Twilio web interface.
     # twilio.com -> verify -> create new service
-    verifySid: ''
+    verifySid: ""
     # Twilio API key SID/username to allow OnCall to send SMSes and make phone calls
-    apiKeySid: ''
+    apiKeySid: ""
     # Twilio API key secret/password to allow OnCall to send SMSes and make phone calls
-    apiKeySecret: ''
+    apiKeySecret: ""
     # Use existing secret for authToken, phoneNumber, verifySid, apiKeySid and apiKeySecret.
-    existingSecret: ''
+    existingSecret: ""
     # Twilio password to allow OnCall to send SMSes and make calls
     # The key in the secret containing the auth token
-    authTokenKey: ''
+    authTokenKey: ""
     # The key in the secret containing the phone number
-    phoneNumberKey: ''
+    phoneNumberKey: ""
     # The key in the secret containing verify service sid
-    verifySidKey: ''
+    verifySidKey: ""
     # The key in the secret containing api key sid
-    apiKeySidKey: ''
+    apiKeySidKey: ""
     # The key in the secret containing the api key secret
-    apiKeySecretKey: ''
+    apiKeySecretKey: ""
     # Phone notifications limit (the only non-secret value).
     # TODO: rename to phoneNotificationLimit
     limitPhone:
@@ -397,7 +400,7 @@ migrate:
   tolerations: []
 
   # Extra containers which runs as sidecar
-  extraContainers: ''
+  extraContainers: ""
   # extraContainers: |
   # - name: cloud-sql-proxy
   #   image: gcr.io/cloud-sql-connectors/cloud-sql-proxy:2.1.2
@@ -405,13 +408,14 @@ migrate:
   #     - --private-ip
   #     - --port=5432
   #     - example:europe-west3:grafana-oncall-db
-  resources: {}
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
+  resources:
+    {}
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
 
   # Extra volume mounts for the main container
   extraVolumeMounts: []
@@ -446,12 +450,12 @@ ingress:
   enabled: true
   #  className: ""
   annotations:
-    kubernetes.io/ingress.class: 'nginx'
-    cert-manager.io/issuer: 'letsencrypt-prod'
+    kubernetes.io/ingress.class: "nginx"
+    cert-manager.io/issuer: "letsencrypt-prod"
   tls:
     - hosts:
-        - '{{ .Values.base_url }}'
-      secretName: certificate-tls #pragma: allowlist secret
+        - "{{ .Values.base_url }}"
+      secretName: certificate-tls
   # Extra paths to prepend to the host configuration. If using something
   # like an ALB ingress controller, you may want to configure SSL redirects
   extraPaths: []
@@ -590,7 +594,7 @@ externalRabbitmq:
   # Use an existing secret for the rabbitmq password
   existingSecret:
   # The key in the secret containing the rabbitmq password
-  passwordKey: ''
+  passwordKey: ""
   # The key in the secret containing the rabbitmq username
   usernameKey: username
 
@@ -631,7 +635,7 @@ grafana:
   grafana.ini:
     server:
       domain: helm-testing-grafana
-      root_url: '%(protocol)s://%(domain)s/grafana/'
+      root_url: "%(protocol)s://%(domain)s/grafana/"
       serve_from_sub_path: true
     feature_toggles:
       enable: externalServiceAccounts
@@ -658,8 +662,8 @@ externalGrafana:
   # Example: https://grafana.mydomain.com
   url:
 
-nameOverride: ''
-fullnameOverride: ''
+nameOverride: ""
+fullnameOverride: ""
 
 serviceAccount:
   # Specifies whether a service account should be created
@@ -668,40 +672,44 @@ serviceAccount:
   annotations: {}
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
-  name: ''
+  name: ""
 
 podAnnotations: {}
 
-podSecurityContext: {}
-# fsGroup: 2000
+podSecurityContext:
+  {}
+  # fsGroup: 2000
 
-securityContext: {}
-# capabilities:
-#   drop:
-#   - ALL
-# readOnlyRootFilesystem: true
-# runAsNonRoot: true
-# runAsGroup: 2000
-# runAsUser: 1000
-
-init:
-  securityContext: {}
-  # allowPrivilegeEscalation: false
+securityContext:
+  {}
   # capabilities:
   #   drop:
   #   - ALL
-  # privileged: false
   # readOnlyRootFilesystem: true
-  # runAsGroup: 2000
   # runAsNonRoot: true
+  # runAsGroup: 2000
   # runAsUser: 1000
-  resources: {}
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
+
+init:
+  securityContext:
+    {}
+    # allowPrivilegeEscalation: false
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # privileged: false
+    # readOnlyRootFilesystem: true
+    # runAsGroup: 2000
+    # runAsNonRoot: true
+    # runAsUser: 1000
+  resources:
+    {}
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
 
 ui:
   # this is intended to be used for local development. In short, it will spin up an additional container
@@ -721,3 +729,4 @@ prometheus:
   #     static_configs:
   #       - targets:
   #         - oncall-dev-engine.default.svc.cluster.local:8080
+
