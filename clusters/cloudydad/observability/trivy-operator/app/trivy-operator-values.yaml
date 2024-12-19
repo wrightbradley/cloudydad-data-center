@@ -706,7 +706,7 @@ policiesBundle:
 
 nodeCollector:
   # -- useNodeSelector determine if to use nodeSelector (by auto detecting node name) with node-collector scan job
-  useNodeSelector: true
+  useNodeSelector: false
   # -- registry of the node-collector image
   registry: ghcr.io
   # -- repository of the node-collector image
