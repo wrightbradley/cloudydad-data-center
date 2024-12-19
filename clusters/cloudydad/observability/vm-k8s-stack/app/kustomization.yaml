@@ -5,6 +5,7 @@ kind: Kustomization
 namespace: vm-k8s-stack
 resources:
   - ./vm-k8s-stack-namespace.yaml
+  - ./sealed-alertmanager-config.yaml
   - ./vm-k8s-stack-helm-release.yaml
   - ./vm-k8s-stack-certificate.yaml
   - ./vm-k8s-stack-traefik-middleware.yaml
