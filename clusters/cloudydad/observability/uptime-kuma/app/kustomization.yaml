@@ -1,0 +1,16 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: uptime-kuma
+resources:
+  - ./uptime-kuma-namespace.yaml
+  - ./uptime-kuma-helm-release.yaml
+  - ./uptime-kuma-certificate.yaml
+  - ./uptime-kuma-traefik-middleware.yaml
+configMapGenerator:
+  - name: uptime-kuma-values
+    files:
+      - values.yaml=uptime-kuma-values.yaml
+configurations:
+  - kustomizeconfig.yaml

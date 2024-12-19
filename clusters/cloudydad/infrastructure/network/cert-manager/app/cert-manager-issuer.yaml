@@ -25,6 +25,7 @@ spec:
             - 'goldilocks.cloudydad.world'
             - 'grafana.cloudydad.world'
             - 'podinfo.cloudydad.world'
+            - 'uptime-kuma.cloudydad.world'
             - 'vmagent.cloudydad.world'
             - 'vmalert.cloudydad.world'
             - 'vmlogs.cloudydad.world'

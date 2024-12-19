@@ -19,4 +19,5 @@ resources:
   - ./sealed-secrets.yaml
   - ./snapshot-controller.yaml
   - ./traefik.yaml
+  - ./uptime-kuma.yaml
   - ./victoria-metrics.yaml
