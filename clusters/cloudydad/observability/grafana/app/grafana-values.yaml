@@ -820,6 +820,10 @@ dashboards:
       gnetId: 17347
       revision: 9
       datasource: Prometheus
+    node-problem-detector:
+      gnetId: 15549
+      revision: 1
+      datasource: Prometheus
       # grafana-dashboards-kubernetes:
       #   k8s-system-api-server:
       #     url: https://raw.githubusercontent.com/dotdc/grafana-dashboards-kubernetes/master/dashboards/k8s-system-api-server.json
