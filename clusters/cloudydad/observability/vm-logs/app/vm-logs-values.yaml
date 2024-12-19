@@ -159,7 +159,6 @@ server:
       cpu: 23m
       memory: 298M
     limits:
-      cpu: 23m
       memory: 298M
 
   probe:
