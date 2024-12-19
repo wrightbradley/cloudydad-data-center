@@ -13,7 +13,7 @@ global:
     dnsDomain: cluster.local.
 
 # -- Resource full name suffix override
-nameOverride: ''
+nameOverride: 'vm'
 # -- Resource full name prefix override
 fullnameOverride: ''
 # -- Tenant to use for Grafana datasources and remote write
