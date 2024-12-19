@@ -67,7 +67,6 @@ controller:
       cpu: 15m
       memory: 105M
     limits:
-      cpu: 15m
       memory: 105M
   # controller.podSecurityContext -- Defines the podSecurityContext for the controller pod
   podSecurityContext:
@@ -166,7 +165,6 @@ dashboard:
       cpu: 15m
       memory: 105M
     limits:
-      cpu: 15m
       memory: 105M
   # dashboard.podSecurityContext -- Defines the podSecurityContext for the dashboard pod
   podSecurityContext:
