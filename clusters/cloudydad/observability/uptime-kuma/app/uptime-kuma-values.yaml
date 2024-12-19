@@ -6,7 +6,8 @@ image:
   repository: louislam/uptime-kuma
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: '1.23.13-debian'
+  # tag: '1.23.13-debian'
+  tag: 'nightly2'
 
 imagePullSecrets: []
 nameOverride: ''
@@ -29,10 +30,8 @@ podLabels:
   {}
   # app: uptime-kuma
 podEnv:
-  []
-  # optional additional environment variables
-  # - name: "A_VARIABLE"
-  #   value: "a-value"
+  - name: UPTIME_KUMA_DB_TYPE
+    value: embedded-mariadb
 
 podSecurityContext:
   {}
