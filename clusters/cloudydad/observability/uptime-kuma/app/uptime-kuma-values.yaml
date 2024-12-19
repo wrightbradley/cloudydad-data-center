@@ -1,3 +1,4 @@
+---
 # Default values for uptime-kuma.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
@@ -26,25 +27,22 @@ serviceAccount:
   name: ''
 
 podAnnotations: {}
-podLabels:
-  {}
-  # app: uptime-kuma
+podLabels: {}
+# app: uptime-kuma
 podEnv:
   - name: UPTIME_KUMA_DB_TYPE
     value: embedded-mariadb
 
-podSecurityContext:
-  {}
-  # fsGroup: 2000
+podSecurityContext: {}
+# fsGroup: 2000
 
-securityContext:
-  {}
-  # capabilities:
-  #   drop:
-  #   - ALL
-  # readOnlyRootFilesystem: true
-  # runAsNonRoot: true
-  # runAsUser: 1000
+securityContext: {}
+# capabilities:
+#   drop:
+#   - ALL
+# readOnlyRootFilesystem: true
+# runAsNonRoot: true
+# runAsUser: 1000
 
 service:
   type: ClusterIP
@@ -55,9 +53,8 @@ service:
 ingress:
   enabled: true
   className: 'traefik'
-  extraLabels:
-    {}
-    # vhost: uptime-kuma.company.corp
+  extraLabels: {}
+  # vhost: uptime-kuma.company.corp
   annotations:
     traefik.ingress.kubernetes.io/router.entrypoints: websecure
     traefik.ingress.kubernetes.io/router.middlewares: uptime-kuma-redirect-to-https@kubernetescrd
@@ -70,18 +67,17 @@ ingress:
   tls:
     - secretName: uptime-kuma-tls #pragma: allowlist secret
 
-resources:
-  {}
-  # We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
-  # resources, such as Minikube. If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
+resources: {}
+# We usually recommend not to specify default resources and to leave this as a conscious
+# choice for the user. This also increases chances charts run on environments with little
+# resources, such as Minikube. If you do want to specify resources, uncomment the following
+# lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+# limits:
+#   cpu: 100m
+#   memory: 128Mi
+# requests:
+#   cpu: 100m
+#   memory: 128Mi
 
 nodeSelector: {}
 
@@ -130,21 +126,19 @@ volume:
   existingClaim: ''
 
 # -- A list of additional volumes to be added to the pod
-additionalVolumes:
-  []
-  # - name: "additional-certificates"
-  #   configMap:
-  #     name: "additional-certificates"
-  #     optional: true
-  #     defaultMode: 420
+additionalVolumes: []
+# - name: "additional-certificates"
+#   configMap:
+#     name: "additional-certificates"
+#     optional: true
+#     defaultMode: 420
 
 # -- A list of additional volumeMounts to be added to the pod
-additionalVolumeMounts:
-  []
-  # - name: "additional-certificates"
-  #   mountPath: "/etc/ssl/certs/additional/additional-ca.pem"
-  #   readOnly: true
-  #   subPath: "additional-ca.pem"
+additionalVolumeMounts: []
+# - name: "additional-certificates"
+#   mountPath: "/etc/ssl/certs/additional/additional-ca.pem"
+#   readOnly: true
+#   subPath: "additional-ca.pem"
 
 strategy:
   type: Recreate

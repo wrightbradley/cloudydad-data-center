@@ -12,4 +12,3 @@ allow-hotplug lan0
 iface lan0 inet dhcp
 # This is an autoconfigured IPv6 interface
 iface lan0 inet6 auto
-
