@@ -1,0 +1,12 @@
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: uptime-kuma
+spec:
+  secretName: uptime-kuma-tls #pragma: allowlist secret
+  dnsNames:
+    - 'uptime-kuma.cloudydad.world'
+  issuerRef:
+    name: letsencrypt
+    kind: ClusterIssuer
