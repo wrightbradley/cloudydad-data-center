@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Merge changelog and release workflows  by @wrightbradley in [#78](https://github.com/wrightbradley/cloudydad-data-center/pull/78) - ([12122b4](12122b4d4682484b94a3c6fce6bebc0dd605fcc4))
 - Release workflows  by @wrightbradley in [#79](https://github.com/wrightbradley/cloudydad-data-center/pull/79) - ([c660252](c660252c7c77709c7321eeae1958aa8c48bd3f0e))
+- Optimize release workflows  by @wrightbradley in [#80](https://github.com/wrightbradley/cloudydad-data-center/pull/80) - ([eff918c](eff918cc8061a00cb26ba091b3a2af1640c48430))
 
 
 **Full Changelog**: https://github.com/wrightbradley/cloudydad-data-center/compare/0.1.1...0.1.2
