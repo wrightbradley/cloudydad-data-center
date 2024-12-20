@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.1.0] - 2024-12-20
 ## What's Changed
 
 ### <!-- 0 -->🚀 Features
@@ -145,6 +145,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Disable coredns  by @wrightbradley - ([ce3ead2](ce3ead229b2f0e957ff5c33490068e1f00e82968))
 - Setup wakatime  by @wrightbradley - ([8d5df38](8d5df38d586913cef0a1ffe094995c550135941c))
 - Don't deploy kube-vip  by @wrightbradley - ([860c7c5](860c7c565cc4065c58de5d419569ee08596161a1))
+- Update changelog  by @github-actions[bot] - ([ea7aae8](ea7aae8f9364c65d43328bc1fa1048a64983fcf9))
 
 ### <!-- 2 -->🚜 Refactor
 
@@ -171,15 +172,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Disable Grafana oncall  by @wrightbradley - ([ec5eefb](ec5eefb69e19fcdea20c9065aee11d9c4b29afae))
 - Removed unused apps  by @wrightbradley - ([fc52e2c](fc52e2c2c8c14523809381b559ec4a0ff67a19e6))
 - Update changelog  by @wrightbradley - ([503e7db](503e7dbfde3d2242ea4cbdad4b789101678e66c7))
+- Remove molecule  by @wrightbradley - ([300d573](300d573dd4f225d83c2773e2abde58ad44b4dc80))
 
 ### <!-- 9 -->🤖 CI
 
 - Improve conditional workflow executions  by @wrightbradley in [#6](https://github.com/wrightbradley/cloudydad-data-center/pull/6) - ([2768673](2768673d8a982d1b801b51791a77b4706f9704e3))
 - Configure github ci and release  by @wrightbradley in [#67](https://github.com/wrightbradley/cloudydad-data-center/pull/67) - ([a71a139](a71a139edc520310b4cd670d5718b50296edb91d))
+- Improve release and changelog automation  by @wrightbradley in [#75](https://github.com/wrightbradley/cloudydad-data-center/pull/75) - ([9a9736e](9a9736ed26d19b318ad32a44609028760c2ce57c))
+- Use git-cliff action for getting version  by @wrightbradley in [#76](https://github.com/wrightbradley/cloudydad-data-center/pull/76) - ([b70f49f](b70f49f147f1a74045f4620f498b82921eaf7186))
 
 
 ## New Contributors
-* @wrightbradley made their first contribution in [#67](https://github.com/wrightbradley/cloudydad-data-center/pull/67)
+* @wrightbradley made their first contribution in [#76](https://github.com/wrightbradley/cloudydad-data-center/pull/76)
+* @github-actions[bot] made their first contribution
 * @dependabot[bot] made their first contribution in [#18](https://github.com/wrightbradley/cloudydad-data-center/pull/18)
 * @ made their first contribution
 
