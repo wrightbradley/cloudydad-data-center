@@ -20,15 +20,17 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
       - name: Get next semantic version
-        id: next_version
-        run: |
-          version=$(git-cliff --bumped-version)
-          echo "Next version: $version"
-          echo "version=$version" >> "$GITHUB_OUTPUT"
+        id: git-cliff-next-version
+        uses: orhun/git-cliff-action@4a4a951bc43fafe41cd2348d181853f52356bee7 # 4.4.2
+        with:
+          config: cliff.toml
+          args: --verbose --bump
+        env:
+          GITHUB_REPO: ${{ github.repository }}
       - name: Create Tag
         run: |
           set +e
-          version=${{ steps.next_version.outputs.version }}
+          version=${{ steps.git-cliff-next-version.outputs.version }}
           git tag "$version"
           git push origin "$version"
       - name: Generate changelog
