@@ -5,8 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.2] - 2024-12-20
+## What's Changed
+
+### <!-- 9 -->🤖 CI
+
+- Merge changelog and release workflows  by @wrightbradley in [#78](https://github.com/wrightbradley/cloudydad-data-center/pull/78) - ([12122b4](12122b4d4682484b94a3c6fce6bebc0dd605fcc4))
+
+
+**Full Changelog**: https://github.com/wrightbradley/cloudydad-data-center/compare/0.1.1...0.1.2
+
 ## [0.1.1] - 2024-12-20
 ## What's Changed
+
+### <!-- 7 -->📚 Documentation
+
+- Release 0.1.1  by @github-actions[bot] - ([3432708](34327083812118990353ea0363ed0f197923e727))
 
 ### <!-- 8 -->🧹 Miscellaneous Tasks
 
