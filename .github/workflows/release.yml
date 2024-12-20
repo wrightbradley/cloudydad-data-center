@@ -21,21 +21,8 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-      - name: Get next semantic version
-        id: git-cliff-next-version
-        uses: orhun/git-cliff-action@4a4a951bc43fafe41cd2348d181853f52356bee7 # 4.4.2
-        with:
-          config: cliff.toml
-          args: --verbose --bump
-        env:
-          GITHUB_REPO: ${{ github.repository }}
-      - name: Create Tag
-        run: |
-          set +e
-          version=${{ steps.git-cliff-next-version.outputs.version }}
-          git tag "$version"
-          git push origin "$version"
       - name: Generate changelog
+        id: git-cliff-next-version
         uses: orhun/git-cliff-action@4a4a951bc43fafe41cd2348d181853f52356bee7 # 4.4.2
         with:
           config: cliff.toml
@@ -43,6 +30,12 @@ jobs:
         env:
           OUTPUT: CHANGELOG.md
           GITHUB_REPO: ${{ github.repository }}
+      - name: Create Tag
+        run: |
+          set +e
+          version=${{ steps.git-cliff-next-version.outputs.version }}
+          git tag "$version"
+          git push origin "$version"
       - name: Commit changelog
         run: |
           set +e
@@ -67,15 +60,6 @@ jobs:
           git fetch origin main
           git checkout main
           git pull origin main
-      - name: Get semantic version
-        id: git-cliff-version
-        uses: orhun/git-cliff-action@4a4a951bc43fafe41cd2348d181853f52356bee7 # 4.4.2
-        with:
-          config: cliff.toml
-          args: --verbose
-        env:
-          OUTPUT: VERSION.md
-          GITHUB_REPO: ${{ github.repository }}
       - name: Generate a release note
         uses: orhun/git-cliff-action@4a4a951bc43fafe41cd2348d181853f52356bee7 # 4.4.2
         id: git-cliff-release
@@ -89,7 +73,7 @@ jobs:
         uses: softprops/action-gh-release@7b4da11513bf3f43f9999e90eabced41ab8bb048 # 2.2.0
         with:
           body_path: RELEASE.md
-          tag_name: '${{ steps.git-cliff-version.outputs.version }}'
+          tag_name: '${{ steps.git-cliff-release.outputs.version }}'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Clean up md files
