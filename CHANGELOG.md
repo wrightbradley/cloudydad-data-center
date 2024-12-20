@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.1] - 2024-12-20
+## What's Changed
+
+### <!-- 8 -->🧹 Miscellaneous Tasks
+
+- Update dependency versions  by @wrightbradley - ([240a772](240a772e1d004d494ea946a11c442692f90c6c6a))
+
+### <!-- 9 -->🤖 CI
+
+- Improve changelog workflow  by @wrightbradley in [#77](https://github.com/wrightbradley/cloudydad-data-center/pull/77) - ([8843a0e](8843a0ecd098215f7e67a06d989d9cacfb66d5e8))
+
+
+**Full Changelog**: https://github.com/wrightbradley/cloudydad-data-center/compare/0.1.0...0.1.1
+
 ## [0.1.0] - 2024-12-20
 ## What's Changed
 
@@ -163,6 +177,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### <!-- 7 -->📚 Documentation
 
 - Update democratic-csi  by @wrightbradley - ([90f1292](90f1292147a642d698145e48b69f9d9e94797afc))
+- Update CHANGELOG.md  by @github-actions[bot] - ([efbdd87](efbdd873fec2afef89abba5571e3ef51b214ca6e))
 
 ### <!-- 8 -->🧹 Miscellaneous Tasks
 
@@ -183,8 +198,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ## New Contributors
-* @wrightbradley made their first contribution in [#76](https://github.com/wrightbradley/cloudydad-data-center/pull/76)
 * @github-actions[bot] made their first contribution
+* @wrightbradley made their first contribution in [#76](https://github.com/wrightbradley/cloudydad-data-center/pull/76)
 * @dependabot[bot] made their first contribution in [#18](https://github.com/wrightbradley/cloudydad-data-center/pull/18)
 * @ made their first contribution
 
