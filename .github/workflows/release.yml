@@ -72,8 +72,9 @@ jobs:
         uses: orhun/git-cliff-action@4a4a951bc43fafe41cd2348d181853f52356bee7 # 4.4.2
         with:
           config: cliff.toml
-          args: --verbose --version
+          args: --verbose
         env:
+          OUTPUT: VERSION.md
           GITHUB_REPO: ${{ github.repository }}
       - name: Generate a release note
         uses: orhun/git-cliff-action@4a4a951bc43fafe41cd2348d181853f52356bee7 # 4.4.2
@@ -91,7 +92,8 @@ jobs:
           tag_name: '${{ steps.git-cliff-version.outputs.version }}'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Clean up RELEASE.md
+      - name: Clean up md files
         run: |
           set +e
+          rm VERSION.md
           rm RELEASE.md
