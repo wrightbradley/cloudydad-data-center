@@ -15,13 +15,14 @@ jobs:
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # 4.1.7
         with:
           fetch-depth: 0
-      - name: Get next semantic version
-        id: next_version
-        run: |
-          set +e
-          version=$(git-cliff --bumped-version)
-          echo "Next version: $version"
-          echo "version=$version" >> "$GITHUB_OUTPUT"
+      - name: Get semantic version
+        id: git-cliff-version
+        uses: orhun/git-cliff-action@4a4a951bc43fafe41cd2348d181853f52356bee7 # 4.4.2
+        with:
+          config: cliff.toml
+          args: --verbose --version
+        env:
+          GITHUB_REPO: ${{ github.repository }}
       - name: Generate a release note
         uses: orhun/git-cliff-action@4a4a951bc43fafe41cd2348d181853f52356bee7 # 4.4.2
         id: git-cliff-release
@@ -35,7 +36,7 @@ jobs:
         uses: softprops/action-gh-release@7b4da11513bf3f43f9999e90eabced41ab8bb048 # 2.2.0
         with:
           body_path: RELEASE.md
-          tag_name: '${{ steps.next_version.outputs.version }}'
+          tag_name: '${{ steps.git-cliff-version.outputs.version }}'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Clean up RELEASE.md
