@@ -5,6 +5,7 @@ kind: Kustomization
 namespace: traefik
 resources:
   - ./traefik-namespace.yaml
+  - ./traefik-cloudydad-wildcard.yaml
   - ./traefik-helm-release.yaml
 configMapGenerator:
   - name: traefik-values

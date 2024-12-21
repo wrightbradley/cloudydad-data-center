@@ -655,7 +655,7 @@ ports:
     # Port Redirections
     # Added in 2.2, you can make permanent redirects via entrypoints.
     # https://docs.traefik.io/routing/entrypoints/#redirection
-    redirectTo: {}
+    redirectTo: websecure
     forwardedHeaders:
       # -- Trust forwarded headers information (X-Forwarded-*).
       trustedIPs: []
@@ -757,7 +757,10 @@ ports:
 tlsOptions: {}
 
 # -- TLS Store are created as [TLSStore CRDs](https://doc.traefik.io/traefik/https/tls/#default-certificate). This is useful if you want to set a default certificate. See EXAMPLE.md for details.
-tlsStore: {}
+tlsStore:
+  default:
+    defaultCertificate:
+      secretName: cloudydad-wildcard-tls # pragma: allowlist secret
 
 service:
   enabled: true

@@ -8,7 +8,6 @@ resources:
   - ./cert-manager-helm-release.yaml
   - ./sealed-cert-manager-cloudflare-api-token.yaml
   - ./cert-manager-issuer.yaml
-  - ./cert-manager-wildcard.yaml
 configMapGenerator:
   - name: cert-manager-values
     files:
