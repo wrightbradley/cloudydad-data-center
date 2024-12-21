@@ -34,6 +34,14 @@ victoria-metrics-operator:
       image:
         repository: bitnami/kubectl
         pullPolicy: IfNotPresent
+  replicaCount: 2
+  resources:
+    limits:
+      memory: 128Mi
+      cpu: 1
+    requests:
+      memory: 128Mi
+      cpu: 100m
   serviceMonitor:
     enabled: true
   operator:
@@ -258,6 +266,13 @@ vmsingle:
   annotations: {}
   # -- Create VMSingle CR
   enabled: true
+  resources:
+    limits:
+      memory: 1500Mi
+      cpu: 1
+    requests:
+      memory: 1500Mi
+      cpu: 300m
   # -- Full spec for VMSingle CRD. Allowed values describe [here](https://docs.victoriametrics.com/operator/api#vmsinglespec)
   spec:
     port: '8429'
@@ -644,7 +659,13 @@ vmalert:
   annotations: {}
   # -- Create VMAlert CR
   enabled: true
-
+  resources:
+    limits:
+      memory: 128Mi
+      cpu: 1
+    requests:
+      memory: 50Mi
+      cpu: 25m
   # -- Controls whether VMAlert should use VMAgent or VMInsert as a target for remotewrite
   remoteWriteVMAgent: true
   # -- (object) Full spec for VMAlert CRD. Allowed values described [here](https://docs.victoriametrics.com/operator/api#vmalertspec)
@@ -886,7 +907,13 @@ grafana:
 # -- prometheus-node-exporter dependency chart configuration. For possible values check [here](https://github.com/prometheus-community/helm-charts/blob/main/charts/prometheus-node-exporter/values.yaml)
 prometheus-node-exporter:
   enabled: true
-
+  resources:
+    limits:
+      memory: 128Mi
+      cpu: 1
+    requests:
+      memory: 128Mi
+      cpu: 25m
   # all values for prometheus-node-exporter helm chart can be specified here
   service:
     # Add the 'node-exporter' label to be used by serviceMonitor to match standard common usage in rules and grafana dashboards
@@ -916,6 +943,13 @@ prometheus-node-exporter:
 # -- kube-state-metrics dependency chart configuration. For possible values check [here](https://github.com/prometheus-community/helm-charts/blob/main/charts/kube-state-metrics/values.yaml)
 kube-state-metrics:
   enabled: true
+  resources:
+    limits:
+      memory: 128Mi
+      cpu: 1
+    requests:
+      memory: 128Mi
+      cpu: 15m
   # -- [Scrape configuration](https://docs.victoriametrics.com/operator/api#vmservicescrapespec) for Kube State Metrics
   vmScrape:
     enabled: true
