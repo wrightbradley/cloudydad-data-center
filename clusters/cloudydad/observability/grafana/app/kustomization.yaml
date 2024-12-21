@@ -8,7 +8,6 @@ resources:
   - ./sealed-grafana-credentials.yaml
   - ./grafana-helm-release.yaml
   - ./grafana-certificate.yaml
-  # - ./grafana-traefik-middleware.yaml
 generatorOptions:
   labels:
     grafana_dashboard: enabled

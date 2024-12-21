@@ -149,7 +149,6 @@ dashboard:
     ingressClassName: traefik
     annotations:
       traefik.ingress.kubernetes.io/router.entrypoints: websecure
-      traefik.ingress.kubernetes.io/router.middlewares: goldilocks-redirect-to-https@kubernetescrd
     hosts:
       - host: goldilocks.cloudydad.world
         paths:

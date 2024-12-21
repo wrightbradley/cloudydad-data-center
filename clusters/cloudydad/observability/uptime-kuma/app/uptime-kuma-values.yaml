@@ -57,7 +57,6 @@ ingress:
   # vhost: uptime-kuma.company.corp
   annotations:
     traefik.ingress.kubernetes.io/router.entrypoints: websecure
-    traefik.ingress.kubernetes.io/router.middlewares: uptime-kuma-redirect-to-https@kubernetescrd
   hosts:
     - host: uptime-kuma.cloudydad.world
       paths:

@@ -7,4 +7,3 @@ resources:
   - ./podinfo-namespace.yaml
   - ./podinfo-helm-release.yaml
   - ./podinfo-certificate.yaml
-  - ./podinfo-traefik-middleware.yaml

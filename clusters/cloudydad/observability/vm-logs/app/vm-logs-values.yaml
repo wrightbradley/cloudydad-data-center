@@ -209,7 +209,6 @@ server:
     # -- Ingress annotations
     annotations:
       traefik.ingress.kubernetes.io/router.entrypoints: websecure
-      traefik.ingress.kubernetes.io/router.middlewares: vm-logs-redirect-to-https@kubernetescrd
 
     # -- Ingress extra labels
     extraLabels: {}
