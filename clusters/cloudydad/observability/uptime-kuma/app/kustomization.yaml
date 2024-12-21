@@ -7,7 +7,6 @@ resources:
   - ./uptime-kuma-namespace.yaml
   - ./uptime-kuma-helm-release.yaml
   - ./uptime-kuma-certificate.yaml
-  - ./uptime-kuma-traefik-middleware.yaml
 configMapGenerator:
   - name: uptime-kuma-values
     files:

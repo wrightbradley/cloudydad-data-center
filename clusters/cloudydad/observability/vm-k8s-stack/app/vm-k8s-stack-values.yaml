@@ -292,7 +292,6 @@ vmsingle:
     # -- Ingress annotations
     annotations:
       traefik.ingress.kubernetes.io/router.entrypoints: websecure
-      traefik.ingress.kubernetes.io/router.middlewares: vm-k8s-stack-redirect-to-https@kubernetescrd
     # -- Ingress extra labels
     labels: {}
     # -- Ingress default path
@@ -634,7 +633,6 @@ alertmanager:
     # Values can be templated
     annotations:
       traefik.ingress.kubernetes.io/router.entrypoints: websecure
-      traefik.ingress.kubernetes.io/router.middlewares: vm-k8s-stack-redirect-to-https@kubernetescrd
     labels: {}
     path: '{{ .Values.alertmanager.spec.routePrefix | default "/" }}'
     pathType: Prefix
@@ -705,7 +703,6 @@ vmalert:
     # Values can be templated
     annotations:
       traefik.ingress.kubernetes.io/router.entrypoints: websecure
-      traefik.ingress.kubernetes.io/router.middlewares: vm-k8s-stack-redirect-to-https@kubernetescrd
     labels: {}
     path: ''
     pathType: Prefix
@@ -774,7 +771,6 @@ vmagent:
     # Values can be templated
     annotations:
       traefik.ingress.kubernetes.io/router.entrypoints: websecure
-      traefik.ingress.kubernetes.io/router.middlewares: vm-k8s-stack-redirect-to-https@kubernetescrd
     labels: {}
     path: ''
     pathType: Prefix

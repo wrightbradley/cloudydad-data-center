@@ -5,7 +5,6 @@ metadata:
   name: whoami-ingress
   annotations:
     traefik.ingress.kubernetes.io/router.entrypoints: websecure
-    traefik.ingress.kubernetes.io/router.middlewares: whoami-redirect-to-https@kubernetescrd
 spec:
   ingressClassName: traefik
   rules:

@@ -277,7 +277,6 @@ ingress:
   # Values can be templated
   annotations:
     traefik.ingress.kubernetes.io/router.entrypoints: websecure
-    # traefik.ingress.kubernetes.io/router.middlewares: grafana-redirect-to-https@kubernetescrd
 
   labels: {}
   path: /

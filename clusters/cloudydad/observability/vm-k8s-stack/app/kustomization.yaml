@@ -8,7 +8,6 @@ resources:
   - ./sealed-alertmanager-config.yaml
   - ./vm-k8s-stack-helm-release.yaml
   - ./vm-k8s-stack-certificate.yaml
-  - ./vm-k8s-stack-traefik-middleware.yaml
 configMapGenerator:
   - name: vm-k8s-stack-values
     files:

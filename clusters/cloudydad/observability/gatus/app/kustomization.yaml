@@ -7,7 +7,6 @@ resources:
   - ./gatus-namespace.yaml
   - ./gatus-helm-release.yaml
   - ./gatus-certificate.yaml
-  - ./gatus-traefik-middleware.yaml
 configMapGenerator:
   - name: gatus-values
     files:

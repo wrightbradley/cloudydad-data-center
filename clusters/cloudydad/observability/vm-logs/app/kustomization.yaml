@@ -7,7 +7,6 @@ resources:
   - ./vm-logs-namespace.yaml
   - ./vm-logs-helm-release.yaml
   - ./vm-logs-certificate.yaml
-  - ./vm-logs-traefik-middleware.yaml
 configMapGenerator:
   - name: vm-logs-values
     files:
