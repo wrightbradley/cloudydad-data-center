@@ -5,6 +5,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.4] - 2024-12-22
+## What's Changed
+
+### <!-- 0 -->🚀 Features
+
+- Configure default tls for traefik ingress with wildcard  by @wrightbradley - ([5fdcbd5](5fdcbd5d677593feef686f5590e2e2d35176cf4a))
+- Upgrade vm-k8s-stack to 0.33.0  by @wrightbradley in [#82](https://github.com/wrightbradley/cloudydad-data-center/pull/82) - ([3aa9a33](3aa9a336debc9cd36defaf43933f7a638bcbcd52))
+
+### <!-- 4 -->⚡ Performance
+
+- Set cpu/mem reqs/limits for vm-k8s-stack  by @wrightbradley - ([6a45a96](6a45a96ed5b7078b058667f4a158f6893c7613b6))
+
+### <!-- 7 -->📚 Documentation
+
+- Release 0.1.3  by @github-actions[bot] - ([54c15c0](54c15c038824150034bba6ec43d01b378616242a))
+
+### <!-- 9 -->🤖 CI
+
+- Improve release automation  by @wrightbradley - ([6e6d4dc](6e6d4dcac57adea6d633a37ca7e570a713671538))
+
+
+**Full Changelog**: https://github.com/wrightbradley/cloudydad-data-center/compare/0.1.3...0.1.4
+
 ## [0.1.3] - 2024-12-20
 ## What's Changed
 
