@@ -38,11 +38,7 @@ bw-auth: # Authenticate to Bitwarden
 
 ## Compile:
 .PHONY: compile
-compile: compile-docs-reqs compile-reqs ## pip-compile requirements
-
-.PHONY: compile-reqs
-compile-reqs: requirements.in ## pip-compile requirements
-	uv pip compile --output-file=requirements.txt requirements.in
+compile: compile-docs-reqs ## pip-compile requirements
 
 .PHONY: compile-docs-reqs
 compile-docs-reqs: requirements-docs.in ## pip-compile dev requirements
@@ -58,7 +54,8 @@ install-pip: ## pip-sync requirements
 
 .PHONY: install-galaxy
 install-galaxy: ## Install Ansible Galaxy roles
-	ansible-galaxy install -r ./collections/requirements.yml
+	uvx --from ansible-core ansible-galaxy install -r ./collections/requirements.yml
+	uvx --from ansible-core ansible-galaxy collection install -r ./collections/requirements.yml
 
 .PHONY: install-docs
 install-docs: ## pip-sync requirements
@@ -84,19 +81,19 @@ docs: install-docs ## Spin up docs site
 ## Playbooks:
 .PHONY: site
 site: ## Deploy cloudydad-data-center
-	ansible-playbook playbooks/site.yml
+	uvx --from ansible-core ansible-playbook playbooks/site.yml
 
 .PHONY: reset
 reset: ## Reset Kubernetes cluster
-	ansible-playbook playbooks/reset.yml
+	uvx --from ansible-core ansible-playbook playbooks/reset.yml
 
 .PHONY: show-facts
 show-facts: ## Show facts for cloudydad-data-center
-	ansible-playbook playbooks/show-facts.yml
+	uvx --from ansible-core ansible-playbook playbooks/show-facts.yml
 
 .PHONY: reboot
 reboot: ## Reboot cloudydad-data-center
-	ansible-playbook playbooks/reboot.yml
+	uvx --from ansible-core ansible-playbook playbooks/reboot.yml
 
 ## Help:
 .PHONY: help

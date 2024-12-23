@@ -856,3 +856,4 @@ clusters/cloudydad/infrastructure/database/cloudnative-pg/app/create-oncall.sql
 playbooks/copy-docker-image.yml
 delete-pods.py
 docker-pull-copy.py
+roles/artis3n.tailscale
