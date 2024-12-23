@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.6] - 2024-12-23
+## What's Changed
+
+### <!-- 0 -->🚀 Features
+
+- Add tailscale setup on hosts  by @wrightbradley - ([721a160](721a1600aa34e1f80b994e700e2e78c1c5e5df4c))
+- Add rpi remote hosts  by @wrightbradley in [#85](https://github.com/wrightbradley/cloudydad-data-center/pull/85) - ([aec046b](aec046b8d2c563902b8a8ea9f40263d1e4276f10))
+
+
+**Full Changelog**: https://github.com/wrightbradley/cloudydad-data-center/compare/0.1.5...0.1.6
+
 ## [0.1.5] - 2024-12-23
 ## What's Changed
 
@@ -12,6 +23,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Configure default tls for traefik ingress with wildcard  by @wrightbradley - ([7742756](7742756b7d9e53bf9f86170b462a23d4391f6282))
 - Add flux dashboards  by @wrightbradley in [#83](https://github.com/wrightbradley/cloudydad-data-center/pull/83) - ([0d04648](0d046487aeebaf6209d40c676e9802d99c60c61b))
+
+### <!-- 7 -->📚 Documentation
+
+- Release 0.1.5 [skip ci]  by @github-actions[bot] - ([168137c](168137c6bb4b66362275e8dcd14430d11c9f33a4))
 
 
 **Full Changelog**: https://github.com/wrightbradley/cloudydad-data-center/compare/0.1.4...0.1.5
