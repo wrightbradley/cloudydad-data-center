@@ -11,7 +11,9 @@
     name: '{{ system_timezone }}'
   when: system_timezone is defined
 
+# TODO: update to use nmcli
 - name: Set facts for primary network interface
+  when: "'k3s_cluster' in group_names"
   block:
     - name: Gather necessary network facts
       setup:
