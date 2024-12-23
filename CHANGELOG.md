@@ -13,6 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add tailscale setup on hosts  by @wrightbradley - ([721a160](721a1600aa34e1f80b994e700e2e78c1c5e5df4c))
 - Add rpi remote hosts  by @wrightbradley in [#85](https://github.com/wrightbradley/cloudydad-data-center/pull/85) - ([aec046b](aec046b8d2c563902b8a8ea9f40263d1e4276f10))
 
+### <!-- 7 -->📚 Documentation
+
+- Release 0.1.6 [skip ci]  by @github-actions[bot] - ([a4ef96a](a4ef96a37f2ce065b2557593e8ddc16d11ae39b9))
+
 
 **Full Changelog**: https://github.com/wrightbradley/cloudydad-data-center/compare/0.1.5...0.1.6
 
