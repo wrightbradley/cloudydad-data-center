@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.5] - 2024-12-23
+## What's Changed
+
+### <!-- 0 -->🚀 Features
+
+- Configure default tls for traefik ingress with wildcard  by @wrightbradley - ([7742756](7742756b7d9e53bf9f86170b462a23d4391f6282))
+- Add flux dashboards  by @wrightbradley in [#83](https://github.com/wrightbradley/cloudydad-data-center/pull/83) - ([0d04648](0d046487aeebaf6209d40c676e9802d99c60c61b))
+
+
+**Full Changelog**: https://github.com/wrightbradley/cloudydad-data-center/compare/0.1.4...0.1.5
+
 ## [0.1.4] - 2024-12-22
 ## What's Changed
 
@@ -20,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### <!-- 7 -->📚 Documentation
 
 - Release 0.1.3  by @github-actions[bot] - ([54c15c0](54c15c038824150034bba6ec43d01b378616242a))
+- Release 0.1.4 [skip ci]  by @github-actions[bot] - ([10437fc](10437fc7c8df2bfa9db85fd9a04ab260af6016a3))
 
 ### <!-- 9 -->🤖 CI
 
