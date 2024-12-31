@@ -815,6 +815,10 @@ dashboardProviders: {}
 ##
 dashboards:
   default:
+    authentik:
+      gnetId: 14837
+      revision: 2
+      datasource: Prometheus
     traefik:
       gnetId: 17347
       revision: 9
