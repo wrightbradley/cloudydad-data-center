@@ -19,6 +19,7 @@ spec:
           dnsNames:
             - '*.cloudydad.life'
             - '*.cloudydad.world'
+            - 'authentik.cloudydad.world'
             - 'alertmanager.cloudydad.world'
             - 'cloudydad.life'
             - 'cloudydad.world'

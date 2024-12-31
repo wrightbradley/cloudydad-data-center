@@ -857,3 +857,5 @@ playbooks/copy-docker-image.yml
 delete-pods.py
 docker-pull-copy.py
 roles/artis3n.tailscale
+clusters/cloudydad/infrastructure/authentik/authentik-secret-values.yaml
+clusters/cloudydad/infrastructure/database/cloudnative-pg/app/create-authentik.sql
