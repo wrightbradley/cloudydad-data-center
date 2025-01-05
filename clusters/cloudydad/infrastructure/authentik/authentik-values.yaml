@@ -186,7 +186,7 @@ server:
   name: server
 
   # -- The number of server pods to run
-  replicas: 1
+  replicas: 2
 
   ## authentik server Horizontal Pod Autoscaler
   autoscaling:
@@ -223,17 +223,17 @@ server:
   ## Ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
   pdb:
     # -- Deploy a [PodDistrubtionBudget] for the authentik server
-    enabled: false
+    enabled: true
     # -- Labels to be added to the authentik server pdb
     labels: {}
     # -- Annotations to be added to the authentik server pdb
     annotations: {}
     # -- Number of pods that are available after eviction as number or percentage (eg.: 50%)
     # @default -- `""` (defaults to 0 if not specified)
-    minAvailable: ''
+    minAvailable: '1'
     # -- Number of pods that are unavailable after eviction as number or percentage (eg.: 50%)
     ## Has higher precedence over `server.pdb.minAvailable`
-    maxUnavailable: ''
+    # maxUnavailable: ''
 
   ## authentik server image
   ## This should match what is deployed in the worker. Prefer using global.image
@@ -583,7 +583,7 @@ worker:
   name: worker
 
   # -- The number of worker pods to run
-  replicas: 1
+  replicas: 2
 
   ## authentik worker Horizontal Pod Autoscaler
   autoscaling:
@@ -620,17 +620,17 @@ worker:
   ## Ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
   pdb:
     # -- Deploy a [PodDistrubtionBudget] for the authentik worker
-    enabled: false
+    enabled: true
     # -- Labels to be added to the authentik worker pdb
     labels: {}
     # -- Annotations to be added to the authentik worker pdb
     annotations: {}
     # -- Number of pods that are available after eviction as number or percentage (eg.: 50%)
     # @default -- `""` (defaults to 0 if not specified)
-    minAvailable: ''
+    minAvailable: '1'
     # -- Number of pods that are unavailable after eviction as number or percentage (eg.: 50%)
     ## Has higher precedence over `worker.pdb.minAvailable`
-    maxUnavailable: ''
+    # maxUnavailable: ''
 
   ## authentik worker image
   ## This should match what is deployed in the server. Prefer using global.image
