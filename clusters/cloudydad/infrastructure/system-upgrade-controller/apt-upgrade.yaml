@@ -1,0 +1,59 @@
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: apt-upgrade
+  namespace: system-upgrade
+type: Opaque
+stringData:
+  upgrade.sh: |
+    #!/bin/bash
+    set -e
+    echo "starting upgrade"
+    apt-get --assume-yes update
+    apt-get --assume-yes upgrade
+    if [ -f /run/reboot-required ]; then
+        echo "Reboot is required. Initiating reboot..."
+        reboot
+    else
+        echo "No reboot needed."
+        exit 0  # Exiting with return code 0
+    fi
+---
+apiVersion: upgrade.cattle.io/v1
+kind: Plan
+metadata:
+  name: apt-upgrade
+  namespace: system-upgrade
+spec:
+  concurrency: 1
+  nodeSelector:
+    matchExpressions:
+      - { key: node.kubernetes.io/instance-type, operator: In, values: ['k3s'] }
+      - { key: node-role.kubernetes.io/control-plane, operator: Exists }
+  tolerations:
+    - key: 'CriticalAddonsOnly'
+      operator: 'Exists'
+    - key: 'node-role.kubernetes.io/master'
+      operator: 'Exists'
+      effect: 'NoSchedule'
+    - key: 'node-role.kubernetes.io/controlplane'
+      operator: 'Exists'
+      effect: 'NoSchedule'
+    - key: 'node-role.kubernetes.io/control-plane'
+      operator: 'Exists'
+      effect: 'NoSchedule'
+    - key: 'node-role.kubernetes.io/etcd'
+      operator: 'Exists'
+      effect: 'NoExecute'
+  serviceAccountName: system-upgrade
+  secrets:
+    - name: apt-upgrade
+      path: /host/run/system-upgrade/secrets/apt-upgrade
+  drain:
+    force: false
+    skipWaitForDeleteTimeout: 300
+  upgrade:
+    image: ubuntu
+    command: ['chroot', '/host']
+    args: ['/bin/sh', '/run/system-upgrade/secrets/apt-upgrade/upgrade.sh']
