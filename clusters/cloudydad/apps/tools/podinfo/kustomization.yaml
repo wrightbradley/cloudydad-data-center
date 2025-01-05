@@ -5,5 +5,5 @@ kind: Kustomization
 namespace: podinfo
 resources:
   - ./podinfo-namespace.yaml
-  - ./podinfo-helm-release.yaml
-  - ./podinfo-certificate.yaml
+  # - ./podinfo-helm-release.yaml
+  # - ./podinfo-certificate.yaml
