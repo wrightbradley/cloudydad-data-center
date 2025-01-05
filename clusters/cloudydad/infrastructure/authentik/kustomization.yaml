@@ -8,6 +8,8 @@ resources:
   - ./sealed-authentik-secret-values.yaml
   - ./authentik-helm-release.yaml
   - ./authentik-certificate.yaml
+  - ./sealed-authentik-tunnel-credentials.yaml
+  - ./cloudflared.yaml
 configMapGenerator:
   - name: authentik-values
     files:
