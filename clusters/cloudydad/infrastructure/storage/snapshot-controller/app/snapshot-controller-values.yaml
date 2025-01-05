@@ -14,11 +14,10 @@ controller:
 
   resources:
     requests:
-      cpu: 15m
-      memory: 105M
+      cpu: 10m
+      memory: 100Mi
     limits:
-      cpu: 15m
-      memory: 105M
+      memory: 100Mi
 
   replicaCount: 1
   image:
