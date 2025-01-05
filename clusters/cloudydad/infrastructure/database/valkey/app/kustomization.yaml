@@ -1,0 +1,15 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: valkey
+resources:
+  - ./valkey-namespace.yaml
+  - ./sealed-valkey-auth.yaml
+  - ./valkey-helm-release.yaml
+configMapGenerator:
+  - name: valkey-values
+    files:
+      - values.yaml=valkey-values.yaml
+configurations:
+  - kustomizeconfig.yaml

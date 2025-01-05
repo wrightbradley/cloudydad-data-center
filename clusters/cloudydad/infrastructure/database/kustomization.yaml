@@ -3,4 +3,5 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - ./cloudnative-pg//kustomization.yaml
+  - ./cloudnative-pg/kustomization.yaml
+  - ./valkey/kustomization.yaml
