@@ -151,10 +151,10 @@ defaultCRConfig:
   # Resource requests and limits for the collector
   resources:
     requests:
-      memory: '64Mi'
-      cpu: '250m'
+      memory: '100Mi'
+      cpu: '10m'
     limits:
-      memory: '128Mi'
+      memory: '100Mi'
 
   # Node selector for the collector
   nodeSelector: {}
@@ -447,10 +447,11 @@ collectors:
     enabled: true
     resources:
       limits:
-        memory: 250Mi
+        cpu: 1
+        memory: 174Mi
       requests:
-        cpu: 100m
-        memory: 128Mi
+        cpu: 97m
+        memory: 174Mi
     # A scrape config file to instruct the daemon collector to pull metrics from any matching targets on the same node with
     # prometheus.io/scrape=true
     # This config also scrapes a running node exporter and the kubelet CAdvisor metrics which aren't currently supported.
@@ -522,10 +523,11 @@ collectors:
     enabled: true
     resources:
       limits:
-        memory: 500Mi
+        cpu: 1
+        memory: 115Mi
       requests:
-        cpu: 100m
-        memory: 500Mi
+        cpu: 10m
+        memory: 115Mi
     presets:
       kubernetesAttributes:
         enabled: true

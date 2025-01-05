@@ -37,11 +37,10 @@ victoria-metrics-operator:
   replicaCount: 2
   resources:
     limits:
-      memory: 128Mi
-      cpu: 1
+      memory: 119Mi
     requests:
-      memory: 128Mi
-      cpu: 100m
+      memory: 119Mi
+      cpu: 12m
   serviceMonitor:
     enabled: true
   operator:
@@ -266,13 +265,6 @@ vmsingle:
   annotations: {}
   # -- Create VMSingle CR
   enabled: true
-  resources:
-    limits:
-      memory: 1500Mi
-      cpu: 1
-    requests:
-      memory: 1500Mi
-      cpu: 300m
   # -- Full spec for VMSingle CRD. Allowed values describe [here](https://docs.victoriametrics.com/operator/api#vmsinglespec)
   spec:
     port: '8429'
@@ -286,6 +278,12 @@ vmsingle:
       resources:
         requests:
           storage: 20Gi
+    resources:
+      limits:
+        memory: 1717Mi
+      requests:
+        memory: 1717Mi
+        cpu: 240m
   ingress:
     # -- Enable deployment of ingress for server component
     enabled: true
@@ -506,6 +504,12 @@ alertmanager:
       tag: v0.27.0
     externalURL: ''
     routePrefix: /
+    resources:
+      limits:
+        memory: 100Mi
+      requests:
+        memory: 100Mi
+        cpu: 10m
 
     # -- (string) If this one defined, it will be used for alertmanager configuration and config parameter will be ignored
     configSecret: 'alertmanager-config' #pragma: allowlist secret
@@ -657,13 +661,6 @@ vmalert:
   annotations: {}
   # -- Create VMAlert CR
   enabled: true
-  resources:
-    limits:
-      memory: 128Mi
-      cpu: 1
-    requests:
-      memory: 50Mi
-      cpu: 25m
   # -- Controls whether VMAlert should use VMAgent or VMInsert as a target for remotewrite
   remoteWriteVMAgent: true
   # -- (object) Full spec for VMAlert CRD. Allowed values described [here](https://docs.victoriametrics.com/operator/api#vmalertspec)
@@ -676,6 +673,12 @@ vmalert:
 
     # External labels to add to all generated recording rules and alerts
     externalLabels: {}
+    resources:
+      limits:
+        memory: 100Mi
+      requests:
+        memory: 100Mi
+        cpu: 29m
 
   # -- (object) Extra VMAlert annotation templates
   templateFiles: {}
@@ -762,6 +765,12 @@ vmagent:
       # Do not store original labels in vmagent's memory by default. This reduces the amount of memory used by vmagent
       # but makes vmagent debugging UI less informative. See: https://docs.victoriametrics.com/vmagent/#relabel-debug
       promscrape.dropOriginalLabels: 'true'
+    resources:
+      limits:
+        memory: 510Mi
+      requests:
+        memory: 510Mi
+        cpu: 238m
   # -- (object) VMAgent ingress configuration
   ingress:
     enabled: true
@@ -905,11 +914,10 @@ prometheus-node-exporter:
   enabled: true
   resources:
     limits:
-      memory: 128Mi
-      cpu: 1
+      memory: 100Mi
     requests:
-      memory: 128Mi
-      cpu: 25m
+      memory: 100Mi
+      cpu: 11m
   # all values for prometheus-node-exporter helm chart can be specified here
   service:
     # Add the 'node-exporter' label to be used by serviceMonitor to match standard common usage in rules and grafana dashboards
@@ -941,11 +949,10 @@ kube-state-metrics:
   enabled: true
   resources:
     limits:
-      memory: 128Mi
-      cpu: 1
+      memory: 100Mi
     requests:
-      memory: 128Mi
-      cpu: 15m
+      memory: 100Mi
+      cpu: 10m
   # -- [Scrape configuration](https://docs.victoriametrics.com/operator/api#vmservicescrapespec) for Kube State Metrics
   vmScrape:
     enabled: true
