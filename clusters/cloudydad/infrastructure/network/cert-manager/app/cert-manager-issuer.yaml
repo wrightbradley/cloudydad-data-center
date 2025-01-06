@@ -26,6 +26,7 @@ spec:
             - 'gatus.cloudydad.world'
             - 'goldilocks.cloudydad.world'
             - 'grafana.cloudydad.world'
+            - 'homepage.cloudydad.world'
             - 'immich.cloudydad.world'
             - 'podinfo.cloudydad.world'
             - 'uptime-kuma.cloudydad.world'
