@@ -5,6 +5,7 @@ kind: Kustomization
 namespace: uptime-kuma
 resources:
   - ./uptime-kuma-namespace.yaml
+  - ./sealed-uptime-kuma-secret-values.yaml
   - ./uptime-kuma-helm-release.yaml
   - ./uptime-kuma-certificate.yaml
 configMapGenerator:
