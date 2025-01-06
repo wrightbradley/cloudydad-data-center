@@ -25,3 +25,5 @@ spec:
   valuesFrom:
     - kind: ConfigMap
       name: uptime-kuma-values
+    - kind: Secret
+      name: uptime-kuma-secret-values
