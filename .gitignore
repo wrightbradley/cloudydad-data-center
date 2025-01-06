@@ -860,3 +860,7 @@ roles/artis3n.tailscale
 clusters/cloudydad/infrastructure/authentik/authentik-secret-values.yaml
 clusters/cloudydad/infrastructure/database/cloudnative-pg/app/create-authentik.sql
 clusters/cloudydad/infrastructure/authentik/authentik-tunnel-credentials.yaml
+clusters/cloudydad/apps/immich/immich-secret-values.yaml
+clusters/cloudydad/infrastructure/database/cloudnative-pg/app/create-immich.sql
+clusters/cloudydad/observability/uptime-kuma/app/uptime-kuma-secret-values.yaml
+clusters/cloudydad/apps/immich/app/immich-secret-values.yaml
