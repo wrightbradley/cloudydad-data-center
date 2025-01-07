@@ -73,9 +73,12 @@ resources:
     cpu: 37m
     memory: 535Mi
 
-nodeSelector: {}
+nodeSelector:
+  kubernetes.io/hostname: 'rpi07'
 
-tolerations: []
+tolerations:
+  - effect: NoSchedule
+    operator: Exists
 
 affinity: {}
 
