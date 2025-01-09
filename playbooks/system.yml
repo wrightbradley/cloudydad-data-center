@@ -19,7 +19,9 @@
     - role: system
       become: true
     - role: artis3n.tailscale
+      state: absent
       vars:
         tailscale_authkey: "{{ lookup('community.general.bitwarden', '0c769bf1-4a82-4cde-876f-b1a3018171e6', search='id', field='TAILSCALE_AUTHKEY') | first }}"
-        tailscale_args: '--ssh --accept-routes'
+        # tailscale_args: '--accept-routes --ssh'
+        # tailscale_args: '--reset'
       tags: tailscale
