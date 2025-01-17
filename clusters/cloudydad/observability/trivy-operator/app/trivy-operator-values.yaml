@@ -660,12 +660,11 @@ volumes:
     emptyDir: {}
 
 resources:
-  {}
-  # limits:
-  #   memory: 512Mi
-  # requests:
-  #   cpu: 29m
-  #   memory: 512Mi
+  limits:
+    memory: 512Mi
+  requests:
+    cpu: 30m
+    memory: 512Mi
 
   # -- nodeSelector set the operator nodeSelector
 nodeSelector: {}
