@@ -36,10 +36,10 @@ server:
     pullPolicy: IfNotPresent
   resources:
     requests:
-      memory: 7745Mi
-      cpu: 3
+      memory: 2Gi
+      cpu: 1
     limits:
-      memory: 7745Mi
+      memory: 2Gi
   ingress:
     main:
       enabled: true
@@ -60,10 +60,10 @@ machine-learning:
     pullPolicy: IfNotPresent
   resources:
     requests:
-      memory: 1845Mi
-      cpu: 2
+      memory: 2Gi
+      cpu: 1
     limits:
-      memory: 1845Mi
+      memory: 2Gi
   env:
     TRANSFORMERS_CACHE: /cache
   persistence:
