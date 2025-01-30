@@ -34,7 +34,7 @@ spec:
   # Require 5Gi of space per instance using default storage class
   storage:
     storageClass: truenas-iscsi-csi
-    size: 5Gi
+    size: 20Gi
   backup:
     barmanObjectStore:
       destinationPath: s3://cloudnative-pg-backup/
