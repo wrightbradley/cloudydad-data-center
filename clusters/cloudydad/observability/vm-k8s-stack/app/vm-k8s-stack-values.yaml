@@ -34,7 +34,7 @@ victoria-metrics-operator:
       image:
         repository: bitnami/kubectl
         pullPolicy: IfNotPresent
-  replicaCount: 2
+  replicaCount: 1
   resources:
     limits:
       memory: 119Mi
