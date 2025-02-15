@@ -1,0 +1,164 @@
+# Default values for wakapi.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: ghcr.io/muety/wakapi
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ''
+
+imagePullSecrets: []
+nameOverride: ''
+fullnameOverride: ''
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ''
+
+podAnnotations: {}
+
+podSecurityContext: {}
+# fsGroup: 2000
+
+securityContext: {}
+# capabilities:
+#   drop:
+#   - ALL
+# readOnlyRootFilesystem: true
+# runAsNonRoot: true
+# runAsUser: 1000
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: false
+  annotations: {}
+  # kubernetes.io/ingress.class: nginx
+  # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: chart-example.local
+      paths: []
+      #  - path: /
+      #    pathType: Prefix
+      #    backend:
+      #      service:
+      #        name: wakapi.wakapi
+      #        port:
+      #          number: 80
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+## Enable persistence using Persistent Volume Claims
+## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
+##
+persistence:
+  enabled: true
+
+  ## A manually managed Persistent Volume and Claim
+  ## Requires persistence.enabled: true
+  ## If defined, PVC must be created manually before volume will be bound
+  # existingClaim:
+
+  ## mariadb data Persistent Volume Storage Class
+  ## If defined, storageClassName: <storageClass>
+  ## If set to "-", storageClassName: "", which disables dynamic provisioning
+  ## If undefined (the default) or set to null, no storageClassName spec is
+  ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+  ##   GKE, AWS & OpenStack)
+  ##
+  storageClass: ''
+  accessMode: ReadWriteOnce
+  size: 2Gi
+
+resources: {}
+# We usually recommend not to specify default resources and to leave this as a conscious
+# choice for the user. This also increases chances charts run on environments with little
+# resources, such as Minikube. If you do want to specify resources, uncomment the following
+# lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+# limits:
+#   cpu: 100m
+#   memory: 128Mi
+# requests:
+#   cpu: 100m
+#   memory: 128Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 1
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+exposeMetrics: false
+
+# Wakapi app config
+wakapi_config:
+  env: development
+
+  server:
+    listen_ipv4: '0.0.0.0' # leave blank to disable ipv4
+    listen_ipv6: # leave blank to disable ipv6
+    tls_cert_path: # leave blank to not use https
+    tls_key_path: # leave blank to not use https
+    port: 3000
+    base_path: /
+
+  app:
+    aggregation_time: '02:15' # time at which to run daily aggregation batch jobs
+    inactive_days: 7 # time of previous days within a user must have logged in to be considered active
+    custom_languages:
+      vue: Vue
+      jsx: JSX
+
+  db:
+    host: # leave blank when using sqlite3
+    port: # leave blank when using sqlite3
+    user: # leave blank when using sqlite3
+    password: # leave blank when using sqlite3
+    name: /data/wakapi_db.db # database name for mysql / postgres or file path for sqlite (e.g. /tmp/wakapi.db)
+    dialect: sqlite3 # mysql, postgres, sqlite3
+    charset: utf8mb4 # only used for mysql connections
+    max_conn: 2 # maximum number of concurrent connections to maintain
+    ssl: false # whether to use tls for db connection (must be true for cockroachdb) (ignored for mysql and sqlite)
+
+  security:
+    password_salt: # CHANGE !
+    insecure_cookies: false # You need to set this to 'true' when on localhost
+    cookie_max_age: 172800
+    allow_signup: true
+    expose_metrics: false
+
+  mail:
+    enabled: false
+    sender: 'noreply@wakapi.dev'
+    provider: 'smtp'
+    smtp:
+      host: 'smtp.example.com'
+      port: 465
+      username: 'your_username'
+      password: 'your_password'
+      tls: true
+
+  sentry:
+    environment: ''
+    enable_tracing: ''
+    sample_rate: ''
+    sample_rate_heartbeats: ''

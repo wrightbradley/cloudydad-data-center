@@ -34,4 +34,5 @@ spec:
             - 'vmalert.cloudydad.world'
             - 'vmlogs.cloudydad.world'
             - 'vmmetrics.cloudydad.world'
+            - 'wakapi.cloudydad.world'
             - 'whoami.cloudydad.world'

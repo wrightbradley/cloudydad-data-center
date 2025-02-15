@@ -1,0 +1,12 @@
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: wakapi
+spec:
+  secretName: wakapi-tls #pragma: allowlist secret
+  dnsNames:
+    - 'wakapi.cloudydad.world'
+  issuerRef:
+    name: letsencrypt
+    kind: ClusterIssuer

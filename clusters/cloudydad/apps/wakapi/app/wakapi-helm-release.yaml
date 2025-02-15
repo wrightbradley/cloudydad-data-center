@@ -1,0 +1,29 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/all.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: wakapi
+spec:
+  chart:
+    spec:
+      chart: wakapi
+      sourceRef:
+        kind: HelmRepository
+        name: wakapi
+        namespace: flux-system
+      version: '1.0.2'
+  interval: 30m
+  releaseName: wakapi
+  targetNamespace: wakapi
+  install:
+    remediation:
+      retries: 3
+    crds: Create
+  upgrade:
+    crds: CreateReplace
+  valuesFrom:
+    - kind: ConfigMap
+      name: wakapi-values
+    - kind: Secret
+      name: wakapi-secret-values
