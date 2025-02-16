@@ -1,0 +1,12 @@
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: signoz
+spec:
+  secretName: signoz-tls #pragma: allowlist secret
+  dnsNames:
+    - 'vmlogs.cloudydad.world'
+  issuerRef:
+    name: letsencrypt
+    kind: ClusterIssuer
