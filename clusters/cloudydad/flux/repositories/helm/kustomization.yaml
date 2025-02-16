@@ -23,6 +23,7 @@ resources:
   - ./podinfo.yaml
   - ./reloader.yaml
   - ./sealed-secrets.yaml
+  - ./signoz.yaml
   - ./snapshot-controller.yaml
   - ./traefik.yaml
   - ./uptime-kuma.yaml

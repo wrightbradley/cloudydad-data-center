@@ -1,0 +1,19 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: signoz
+resources:
+  - ./signoz-namespace.yaml
+  - ./signoz-pvc.yaml
+  - ./signoz-helm-release.yaml
+  - ./signoz-certificate.yaml
+configMapGenerator:
+  - name: signoz-values
+    files:
+      - values.yaml=signoz-values.yaml
+  - name: signoz-k8s-infra-values
+    files:
+      - values.yaml=signoz-k8s-infra-values.yaml
+configurations:
+  - kustomizeconfig.yaml

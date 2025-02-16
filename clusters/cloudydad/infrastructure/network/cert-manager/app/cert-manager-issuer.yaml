@@ -30,6 +30,7 @@ spec:
             - 'immich.cloudydad.world'
             - 'invidious.cloudydad.world'
             - 'podinfo.cloudydad.world'
+            - 'signoz.cloudydad.world'
             - 'uptime-kuma.cloudydad.world'
             - 'vmagent.cloudydad.world'
             - 'vmalert.cloudydad.world'
