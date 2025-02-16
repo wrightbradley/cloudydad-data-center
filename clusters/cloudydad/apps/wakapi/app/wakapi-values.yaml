@@ -1,3 +1,4 @@
+---
 # Default values for wakapi.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
@@ -151,8 +152,8 @@ wakapi_config:
     smtp:
       host: 'smtp.example.com'
       port: 465
-      username: 'your_username'
-      password: 'your_password'
+      username: 'your_username' # pragma: allowlist secret
+      password: 'your_password' # pragma: allowlist secret
       tls: true
 
   sentry:

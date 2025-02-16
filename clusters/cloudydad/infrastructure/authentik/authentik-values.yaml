@@ -13,9 +13,8 @@ global:
   # -- String to fully override `"authentik.fullname"`
   fullnameOverride: ''
   # -- Common labels for all resources.
-  additionalLabels:
-    {}
-    # app: authentik
+  additionalLabels: {}
+  # app: authentik
 
   # Number of old deployment ReplicaSets to retain. The rest will be garbage collected.
   revisionHistoryLimit: 3
@@ -51,18 +50,16 @@ global:
 
   # -- Toggle and define pod-level security context.
   # @default -- `{}` (See [values.yaml])
-  securityContext:
-    {}
-    # runAsUser: 1000
-    # runAsGroup: 1000
-    # fsGroup: 1000
+  securityContext: {}
+  # runAsUser: 1000
+  # runAsGroup: 1000
+  # fsGroup: 1000
 
   # -- Mapping between IP and hostnames that will be injected as entries in the pod's hosts files
-  hostAliases:
-    []
-    # - ip: 10.20.30.40
-    #   hostnames:
-    #     - my.hostname
+  hostAliases: []
+  # - ip: 10.20.30.40
+  #   hostnames:
+  #     - my.hostname
 
   # -- Default priority class for all components
   priorityClassName: ''
@@ -82,70 +79,63 @@ global:
       # -- Default node affinity rules. Either `none`, `soft` or `hard`
       type: hard
       # -- Default match expressions for node affinity
-      matchExpressions:
-        []
-        # - key: topology.kubernetes.io/zone
-        #   operator: In
-        #   values:
-        #     - zonea
-        #     - zoneb
+      matchExpressions: []
+      # - key: topology.kubernetes.io/zone
+      #   operator: In
+      #   values:
+      #     - zonea
+      #     - zoneb
 
   # -- Default [TopologySpreadConstraints] rules for all components
   ## Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
-  topologySpreadConstraints:
-    []
-    # - maxSkew: 1
-    #   topologyKey: topology.kubernetes.io/zone
-    #   whenUnsatisfiable: DoNotSchedule
+  topologySpreadConstraints: []
+  # - maxSkew: 1
+  #   topologyKey: topology.kubernetes.io/zone
+  #   whenUnsatisfiable: DoNotSchedule
 
   # -- Deployment strategy for all deployed Deployments
-  deploymentStrategy:
-    {}
-    # type: RollingUpdate
-    # rollingUpdate:
-    #   maxSurge: 25%
-    #   maxUnavailable: 25%
+  deploymentStrategy: {}
+  # type: RollingUpdate
+  # rollingUpdate:
+  #   maxSurge: 25%
+  #   maxUnavailable: 25%
 
   # -- Environment variables to pass to all deployed Deployments. Does not apply to GeoIP
   # See configuration options at https://goauthentik.io/docs/installation/configuration/
   # @default -- `[]` (See [values.yaml])
-  env:
-    []
-    # - name: AUTHENTIK_VAR_NAME
-    #   value: VALUE
-    # - name: AUTHENTIK_VAR_OTHER
-    #   valueFrom:
-    #     secretKeyRef:
-    #       name: secret-name
-    #       key: secret-key
-    # - name: AUTHENTIK_VAR_ANOTHER
-    #   valueFrom:
-    #     configMapKeyRef:
-    #       name: config-map-name
-    #       key: config-map-key
+  env: []
+  # - name: AUTHENTIK_VAR_NAME
+  #   value: VALUE
+  # - name: AUTHENTIK_VAR_OTHER
+  #   valueFrom:
+  #     secretKeyRef:
+  #       name: secret-name
+  #       key: secret-key
+  # - name: AUTHENTIK_VAR_ANOTHER
+  #   valueFrom:
+  #     configMapKeyRef:
+  #       name: config-map-name
+  #       key: config-map-key
 
   # -- envFrom to pass to all deployed Deployments. Does not apply to GeoIP
   # @default -- `[]` (See [values.yaml])
-  envFrom:
-    []
-    # - configMapRef:
-    #     name: config-map-name
-    # - secretRef:
-    #     name: secret-name
+  envFrom: []
+  # - configMapRef:
+  #     name: config-map-name
+  # - secretRef:
+  #     name: secret-name
 
   # -- Additional volumeMounts to all deployed Deployments. Does not apply to GeoIP
   # @default -- `[]` (See [values.yaml])
-  volumeMounts:
-    []
-    # - name: custom
-    #   mountPath: /custom
+  volumeMounts: []
+  # - name: custom
+  #   mountPath: /custom
 
   # -- Additional volumes to all deployed Deployments.
   # @default -- `[]` (See [values.yaml])
-  volumes:
-    []
-    # - name: custom
-    #   emptyDir: {}
+  volumes: []
+  # - name: custom
+  #   emptyDir: {}
 
 ## Authentik configuration
 authentik:
@@ -201,20 +191,19 @@ server:
     # -- Average memory utilization percentage for the authentik server [HPA]
     targetMemoryUtilizationPercentage: ~
     # -- Configures the scaling behavior of the target in both Up and Down directions.
-    behavior:
-      {}
-      # scaleDown:
-      #   stabilizationWindowSeconds: 300
-      #   policies:
-      #     - type: Pods
-      #       value: 1
-      #       periodSeconds: 180
-      # scaleUp:
-      #   stabilizationWindowSeconds: 300
-      #   policies:
-      #     - type: Pods
-      #       value: 2
-      #       periodSeconds: 60
+    behavior: {}
+    # scaleDown:
+    #   stabilizationWindowSeconds: 300
+    #   policies:
+    #     - type: Pods
+    #       value: 1
+    #       periodSeconds: 180
+    # scaleUp:
+    #   stabilizationWindowSeconds: 300
+    #   policies:
+    #     - type: Pods
+    #       value: 2
+    #       periodSeconds: 60
     # -- Configures custom HPA metrics for the authentik server
     # Ref: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/
     metrics: []
@@ -258,29 +247,27 @@ server:
   # -- Environment variables to pass to the authentik server. Does not apply to GeoIP
   # See configuration options at https://goauthentik.io/docs/installation/configuration/
   # @default -- `[]` (See [values.yaml])
-  env:
-    []
-    # - name: AUTHENTIK_VAR_NAME
-    #   value: VALUE
-    # - name: AUTHENTIK_VAR_OTHER
-    #   valueFrom:
-    #     secretKeyRef:
-    #       name: secret-name
-    #       key: secret-key
-    # - name: AUTHENTIK_VAR_ANOTHER
-    #   valueFrom:
-    #     configMapKeyRef:
-    #       name: config-map-name
-    #       key: config-map-key
+  env: []
+  # - name: AUTHENTIK_VAR_NAME
+  #   value: VALUE
+  # - name: AUTHENTIK_VAR_OTHER
+  #   valueFrom:
+  #     secretKeyRef:
+  #       name: secret-name
+  #       key: secret-key
+  # - name: AUTHENTIK_VAR_ANOTHER
+  #   valueFrom:
+  #     configMapKeyRef:
+  #       name: config-map-name
+  #       key: config-map-key
 
   # -- envFrom to pass to the authentik server. Does not apply to GeoIP
   # @default -- `[]` (See [values.yaml])
-  envFrom:
-    []
-    # - configMapRef:
-    #     name: config-map-name
-    # - secretRef:
-    #     name: secret-name
+  envFrom: []
+  # - configMapRef:
+  #     name: config-map-name
+  # - secretRef:
+  #     name: secret-name
 
   # -- Specify postStart and preStop lifecycle hooks for you authentik server container
   lifecycle: {}
@@ -301,16 +288,14 @@ server:
   #     - echo init
 
   # -- Additional volumeMounts to the authentik server main container
-  volumeMounts:
-    []
-    # - name: custom
-    #   mountPath: /custom
+  volumeMounts: []
+  # - name: custom
+  #   mountPath: /custom
 
   # -- Additional volumes to the authentik server pod
-  volumes:
-    []
-    # - name: custom
-    #   emptyDir: {}
+  volumes: []
+  # - name: custom
+  #   emptyDir: {}
 
   # -- Annotations to be added to the authentik server Deployment
   deploymentAnnotations: {}
@@ -351,25 +336,23 @@ server:
 
   # -- authentik server pod-level security context
   # @default -- `{}` (See [values.yaml])
-  securityContext:
-    {}
-    # runAsUser: 1000
-    # runAsGroup: 1000
-    # fsGroup: 1000
+  securityContext: {}
+  # runAsUser: 1000
+  # runAsGroup: 1000
+  # fsGroup: 1000
 
   # -- authentik server container-level security context
   # @default -- See [values.yaml]
-  containerSecurityContext:
-    {}
-    # Not all of the following has been tested. Use at your own risk.
-    # runAsNonRoot: true
-    # readOnlyRootFilesystem: true
-    # allowPrivilegeEscalation: false
-    # seccomProfile:
-    #   type: RuntimeDefault
-    # capabilities:
-    #   drop:
-    #     - ALL
+  containerSecurityContext: {}
+  # Not all of the following has been tested. Use at your own risk.
+  # runAsNonRoot: true
+  # readOnlyRootFilesystem: true
+  # allowPrivilegeEscalation: false
+  # seccomProfile:
+  #   type: RuntimeDefault
+  # capabilities:
+  #   drop:
+  #     - ALL
 
   ## Liveness, readiness and startup probes for authentik server
   ## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/
@@ -444,20 +427,18 @@ server:
   # @default -- `[]` (defaults to global.topologySpreadConstraints)
   ## Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
   ## If labelSelector is left out, it will default to the labelSelector configuration of the deployment
-  topologySpreadConstraints:
-    []
-    # - maxSkew: 1
-    #   topologyKey: topology.kubernetes.io/zone
-    #   whenUnsatisfiable: DoNotSchedule
+  topologySpreadConstraints: []
+  # - maxSkew: 1
+  #   topologyKey: topology.kubernetes.io/zone
+  #   whenUnsatisfiable: DoNotSchedule
 
   # -- Deployment strategy to be added to the authentik server Deployment
   # @default -- `{}` (defaults to global.deploymentStrategy)
-  deploymentStrategy:
-    {}
-    # type: RollingUpdate
-    # rollingUpdate:
-    #   maxSurge: 25%
-    #   maxUnavailable: 25%
+  deploymentStrategy: {}
+  # type: RollingUpdate
+  # rollingUpdate:
+  #   maxSurge: 25%
+  #   maxUnavailable: 25%
 
   ## authentik server service configuration
   service:
@@ -525,9 +506,8 @@ server:
       # -- Prometheus [MetricsRelabelConfigs] to apply to samples before ingestion
       metricRelabelings: []
       # -- Prometheus ServiceMonitor selector
-      selector:
-        {}
-        # prometheus: kube-prometheus
+      selector: {}
+      # prometheus: kube-prometheus
 
       # -- Prometheus ServiceMonitor scheme
       scheme: ''
@@ -560,15 +540,14 @@ server:
     # -- Ingress path type. One of `Exact`, `Prefix` or `ImplementationSpecific`
     pathType: Prefix
     # -- additional ingress paths
-    extraPaths:
-      []
-      # - path: /*
-      #   pathType: Prefix
-      #   backend:
-      #     service:
-      #       name: ssl-redirect
-      #       port:
-      #         name: use-annotation
+    extraPaths: []
+    # - path: /*
+    #   pathType: Prefix
+    #   backend:
+    #     service:
+    #       name: ssl-redirect
+    #       port:
+    #         name: use-annotation
 
     # -- ingress TLS configuration
     tls:
@@ -598,20 +577,19 @@ worker:
     # -- Average memory utilization percentage for the authentik worker [HPA]
     targetMemoryUtilizationPercentage: ~
     # -- Configures the scaling behavior of the target in both Up and Down directions.
-    behavior:
-      {}
-      # scaleDown:
-      #   stabilizationWindowSeconds: 300
-      #   policies:
-      #     - type: Pods
-      #       value: 1
-      #       periodSeconds: 180
-      # scaleUp:
-      #   stabilizationWindowSeconds: 300
-      #   policies:
-      #     - type: Pods
-      #       value: 2
-      #       periodSeconds: 60
+    behavior: {}
+    # scaleDown:
+    #   stabilizationWindowSeconds: 300
+    #   policies:
+    #     - type: Pods
+    #       value: 1
+    #       periodSeconds: 180
+    # scaleUp:
+    #   stabilizationWindowSeconds: 300
+    #   policies:
+    #     - type: Pods
+    #       value: 2
+    #       periodSeconds: 60
     # -- Configures custom HPA metrics for the authentik worker
     # Ref: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/
     metrics: []
@@ -655,29 +633,27 @@ worker:
   # -- Environment variables to pass to the authentik worker. Does not apply to GeoIP
   # See configuration options at https://goauthentik.io/docs/installation/configuration/
   # @default -- `[]` (See [values.yaml])
-  env:
-    []
-    # - name: AUTHENTIK_VAR_NAME
-    #   value: VALUE
-    # - name: AUTHENTIK_VAR_OTHER
-    #   valueFrom:
-    #     secretKeyRef:
-    #       name: secret-name
-    #       key: secret-key
-    # - name: AUTHENTIK_VAR_ANOTHER
-    #   valueFrom:
-    #     configMapKeyRef:
-    #       name: config-map-name
-    #       key: config-map-key
+  env: []
+  # - name: AUTHENTIK_VAR_NAME
+  #   value: VALUE
+  # - name: AUTHENTIK_VAR_OTHER
+  #   valueFrom:
+  #     secretKeyRef:
+  #       name: secret-name
+  #       key: secret-key
+  # - name: AUTHENTIK_VAR_ANOTHER
+  #   valueFrom:
+  #     configMapKeyRef:
+  #       name: config-map-name
+  #       key: config-map-key
 
   # -- envFrom to pass to the authentik worker. Does not apply to GeoIP
   # @default -- `[]` (See [values.yaml])
-  envFrom:
-    []
-    # - configMapRef:
-    #     name: config-map-name
-    # - secretRef:
-    #     name: secret-name
+  envFrom: []
+  # - configMapRef:
+  #     name: config-map-name
+  # - secretRef:
+  #     name: secret-name
 
   # -- Specify postStart and preStop lifecycle hooks for you authentik worker container
   lifecycle: {}
@@ -698,16 +674,14 @@ worker:
   #     - echo init
 
   # -- Additional volumeMounts to the authentik worker main container
-  volumeMounts:
-    []
-    # - name: custom
-    #   mountPath: /custom
+  volumeMounts: []
+  # - name: custom
+  #   mountPath: /custom
 
   # -- Additional volumes to the authentik worker pod
-  volumes:
-    []
-    # - name: custom
-    #   emptyDir: {}
+  volumes: []
+  # - name: custom
+  #   emptyDir: {}
 
   # -- Annotations to be added to the authentik worker Deployment
   deploymentAnnotations: {}
@@ -739,25 +713,23 @@ worker:
 
   # -- authentik worker pod-level security context
   # @default -- `{}` (See [values.yaml])
-  securityContext:
-    {}
-    # runAsUser: 1000
-    # runAsGroup: 1000
-    # fsGroup: 1000
+  securityContext: {}
+  # runAsUser: 1000
+  # runAsGroup: 1000
+  # fsGroup: 1000
 
   # -- authentik worker container-level security context
   # @default -- See [values.yaml]
-  containerSecurityContext:
-    {}
-    # Not all of the following has been tested. Use at your own risk.
-    # runAsNonRoot: true
-    # readOnlyRootFilesystem: true
-    # allowPrivilegeEscalation: false
-    # seccomProfile:
-    #   type: RuntimeDefault
-    # capabilities:
-    #   drop:
-    #     - ALL
+  containerSecurityContext: {}
+  # Not all of the following has been tested. Use at your own risk.
+  # runAsNonRoot: true
+  # readOnlyRootFilesystem: true
+  # allowPrivilegeEscalation: false
+  # seccomProfile:
+  #   type: RuntimeDefault
+  # capabilities:
+  #   drop:
+  #     - ALL
 
   livenessProbe:
     # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
@@ -833,20 +805,18 @@ worker:
   # @default -- `[]` (defaults to global.topologySpreadConstraints)
   ## Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
   ## If labelSelector is left out, it will default to the labelSelector configuration of the deployment
-  topologySpreadConstraints:
-    []
-    # - maxSkew: 1
-    #   topologyKey: topology.kubernetes.io/zone
-    #   whenUnsatisfiable: DoNotSchedule
+  topologySpreadConstraints: []
+  # - maxSkew: 1
+  #   topologyKey: topology.kubernetes.io/zone
+  #   whenUnsatisfiable: DoNotSchedule
 
   # -- Deployment strategy to be added to the authentik worker Deployment
   # @default -- `{}` (defaults to global.deploymentStrategy)
-  deploymentStrategy:
-    {}
-    # type: RollingUpdate
-    # rollingUpdate:
-    #   maxSurge: 25%
-    #   maxUnavailable: 25%
+  deploymentStrategy: {}
+  # type: RollingUpdate
+  # rollingUpdate:
+  #   maxSurge: 25%
+  #   maxUnavailable: 25%
 
 serviceAccount:
   # -- Create service account. Needed for managed outposts
@@ -892,58 +862,53 @@ geoip:
 
   # -- Environment variables to pass to the GeoIP containers
   # @default -- `[]` (See [values.yaml])
-  env:
-    []
-    # - name: GEOIPUPDATE_VAR_NAME
-    #   value: VALUE
-    # - name: GEOIPUPDATE_VAR_OTHER
-    #   valueFrom:
-    #     secretKeyRef:
-    #       name: secret-name
-    #       key: secret-key
-    # - name: GEOIPUPDATE_VAR_ANOTHER
-    #   valueFrom:
-    #     configMapKeyRef:
-    #       name: config-map-name
-    #       key: config-map-key
+  env: []
+  # - name: GEOIPUPDATE_VAR_NAME
+  #   value: VALUE
+  # - name: GEOIPUPDATE_VAR_OTHER
+  #   valueFrom:
+  #     secretKeyRef:
+  #       name: secret-name
+  #       key: secret-key
+  # - name: GEOIPUPDATE_VAR_ANOTHER
+  #   valueFrom:
+  #     configMapKeyRef:
+  #       name: config-map-name
+  #       key: config-map-key
 
   # -- envFrom to pass to the GeoIP containers
   # @default -- `[]` (See [values.yaml])
-  envFrom:
-    []
-    # - configMapRef:
-    #     name: config-map-name
-    # - secretRef:
-    #     name: secret-name
+  envFrom: []
+  # - configMapRef:
+  #     name: config-map-name
+  # - secretRef:
+  #     name: secret-name
 
   # -- Additional volumeMounts to the GeoIP containers. Make sure the volumes exists for the server and the worker.
-  volumeMounts:
-    []
-    # - name: custom
-    #   mountPath: /custom
+  volumeMounts: []
+  # - name: custom
+  #   mountPath: /custom
 
   # -- Resource limits and requests for GeoIP containers
-  resources:
-    {}
-    # requests:
-    #   cpu: 100m
-    #   memory: 128Mi
-    # limits:
-    #   memory: 128Mi
+  resources: {}
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # limits:
+  #   memory: 128Mi
 
   # -- GeoIP container-level security context
   # @default -- See [values.yaml]
-  containerSecurityContext:
-    {}
-    # Not all of the following has been tested. Use at your own risk.
-    # runAsNonRoot: true
-    # readOnlyRootFilesystem: true
-    # allowPrivilegeEscalation: false
-    # seccomProfile:
-    #   type: RuntimeDefault
-    # capabilities:
-    #   drop:
-    #     - ALL
+  containerSecurityContext: {}
+  # Not all of the following has been tested. Use at your own risk.
+  # runAsNonRoot: true
+  # readOnlyRootFilesystem: true
+  # allowPrivilegeEscalation: false
+  # seccomProfile:
+  #   type: RuntimeDefault
+  # capabilities:
+  #   drop:
+  #     - ALL
 
 prometheus:
   rules:
@@ -951,9 +916,8 @@ prometheus:
     # -- PrometheusRule namespace
     namespace: ''
     # -- PrometheusRule selector
-    selector:
-      {}
-      # prometheus: kube-prometheus
+    selector: {}
+    # prometheus: kube-prometheus
 
     # -- PrometheusRule labels
     labels: {}

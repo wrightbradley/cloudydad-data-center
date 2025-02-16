@@ -1,3 +1,4 @@
+---
 # Copyright Broadcom, Inc. All Rights Reserved.
 # SPDX-License-Identifier: APACHE-2.0
 
@@ -148,11 +149,11 @@ auth:
   ## @param auth.existingSecret The name of an existing secret with Valkey credentials
   ## NOTE: When it's set, the previous `auth.password` parameter is ignored
   ##
-  existingSecret: 'valkey-auth'
+  existingSecret: 'valkey-auth' # pragma: allowlist secret
   ## @param auth.existingSecretPasswordKey Password key to be retrieved from existing secret
   ## NOTE: ignored unless `auth.existingSecret` parameter is set
   ##
-  existingSecretPasswordKey: 'password'
+  existingSecretPasswordKey: 'password' # pragma: allowlist secret
   ## @param auth.usePasswordFiles Mount credentials as files instead of using an environment variable
   ##
   usePasswordFiles: false
@@ -1983,10 +1984,7 @@ metrics:
           description: Valkey instance {{ "{{ $labels.instance }}" }} is down
       - alert: ValkeyMemoryHigh
         expr: >
-          valkey_memory_used_bytes{service="{{ template "common.names.fullname" . }}-metrics"} * 100
-          /
-          valkey_memory_max_bytes{service="{{ template "common.names.fullname" . }}-metrics"}
-          > 90
+          valkey_memory_used_bytes{service="{{ template "common.names.fullname" . }}-metrics"} * 100 / valkey_memory_max_bytes{service="{{ template "common.names.fullname" . }}-metrics"} > 90
         for: 2m
         labels:
           severity: error

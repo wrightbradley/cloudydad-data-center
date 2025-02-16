@@ -1,3 +1,4 @@
+---
 name: invidious
 
 image:
@@ -37,14 +38,13 @@ ingress:
   tls:
     - secretName: invidious-tls #pragma: allowlist secret
 
-resources:
-  {}
-  # requests:
-  #   cpu: 100m
-  #   memory: 64Mi
-  # limits:
-  #   cpu: 800m
-  #   memory: 512Mi
+resources: {}
+# requests:
+#   cpu: 100m
+#   memory: 64Mi
+# limits:
+#   cpu: 800m
+#   memory: 512Mi
 
 deploymentLabels: {}
 

@@ -1,3 +1,4 @@
+---
 image:
   repository: ghcr.io/gethomepage/homepage
   tag: v0.10.9
@@ -6,12 +7,12 @@ image:
 enableRbac: true
 
 extraClusterRoles:
-  # - apiGroups:
-  #   - some-group
-  #   resources:
-  #   - some-resource
-  #   verbs:
-  #   - get
+# - apiGroups:
+#   - some-group
+#   resources:
+#   - some-resource
+#   verbs:
+#   - get
 
 serviceAccount:
   # Specify a different service account name. When blank it will default to the release

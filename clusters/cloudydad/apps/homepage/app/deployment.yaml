@@ -1,3 +1,4 @@
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -66,6 +67,6 @@ spec:
             name: homepage
         - name: homepage-secret-config
           secret:
-            secretName: homepage-secret-config
+            secretName: homepage-secret-config # pragma: allowlist secret
         - name: logs
           emptyDir: {}

@@ -1,3 +1,4 @@
+---
 ## This chart relies on the common library chart from bjw-s
 ## You can find it at https://github.com/bjw-s/helm-charts/tree/main/charts/library/common
 ## Refer there for more detail about the supported values
@@ -6,11 +7,11 @@
 
 env:
   REDIS_HOSTNAME: '{{ printf "%s-redis-master" .Release.Name }}'
-  DB_HOSTNAME: "{{ .Release.Name }}-postgresql"
-  DB_USERNAME: "{{ .Values.postgresql.global.postgresql.auth.username }}"
-  DB_DATABASE_NAME: "{{ .Values.postgresql.global.postgresql.auth.database }}"
+  DB_HOSTNAME: '{{ .Release.Name }}-postgresql'
+  DB_USERNAME: '{{ .Values.postgresql.global.postgresql.auth.username }}'
+  DB_DATABASE_NAME: '{{ .Values.postgresql.global.postgresql.auth.database }}'
   # -- You should provide your own secret outside of this helm-chart and use `postgresql.global.postgresql.auth.existingSecret` to provide credentials to the postgresql instance
-  DB_PASSWORD: "{{ .Values.postgresql.global.postgresql.auth.password }}"
+  DB_PASSWORD: '{{ .Values.postgresql.global.postgresql.auth.password }}'
   IMMICH_MACHINE_LEARNING_URL: '{{ printf "http://%s-machine-learning:3003" .Release.Name }}'
 
 image:
@@ -30,12 +31,12 @@ immich:
   # ref: https://immich.app/docs/install/config-file/
   #
   configuration: {}
-    # trash:
-    #   enabled: false
-    #   days: 30
-    # storageTemplate:
-    #   enabled: true
-    #   template: "{{y}}/{{y}}-{{MM}}-{{dd}}/{{filename}}"
+  # trash:
+  #   enabled: false
+  #   days: 30
+  # storageTemplate:
+  #   enabled: true
+  #   template: "{{y}}/{{y}}-{{MM}}-{{dd}}/{{filename}}"
 
 # Dependencies
 
@@ -50,9 +51,9 @@ postgresql:
   global:
     postgresql:
       auth:
-        username: immich
-        database: immich
-        password: immich
+        username: immich # pragma: allowlist secret
+        database: immich # pragma: allowlist secret
+        password: immich # pragma: allowlist secret
   primary:
     containerSecurityContext:
       readOnlyRootFilesystem: false
@@ -81,11 +82,11 @@ server:
       enabled: false
       annotations:
         # proxy-body-size is set to 0 to remove the body limit on file uploads
-        nginx.ingress.kubernetes.io/proxy-body-size: "0"
+        nginx.ingress.kubernetes.io/proxy-body-size: '0'
       hosts:
         - host: immich.local
           paths:
-            - path: "/"
+            - path: '/'
       tls: []
 
 machine-learning:
@@ -103,4 +104,3 @@ machine-learning:
       type: emptyDir
       accessMode: ReadWriteMany
       # storageClass: your-class
-

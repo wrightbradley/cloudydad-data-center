@@ -1,6 +1,6 @@
+---
 # These plans are adapted from work by Dax McDonald (https://github.com/daxmc99) and Hussein Galal (https://github.com/galal-hussein)
 # in support of Rancher v2 managed k3s upgrades. See Also: https://rancher.com/docs/k3s/latest/en/upgrades/automated/
----
 apiVersion: upgrade.cattle.io/v1
 kind: Plan
 metadata:
@@ -13,8 +13,8 @@ spec:
   channel: https://update.k3s.io/v1-release/channels/v1.31
   nodeSelector:
     matchExpressions:
-      - { key: node.kubernetes.io/instance-type, operator: In, values: ['k3s'] }
-      - { key: node-role.kubernetes.io/control-plane, operator: Exists }
+      - {key: node.kubernetes.io/instance-type, operator: In, values: ['k3s']}
+      - {key: node-role.kubernetes.io/control-plane, operator: Exists}
   tolerations:
     - key: 'CriticalAddonsOnly'
       operator: 'Exists'
@@ -47,8 +47,8 @@ spec:
   channel: https://update.k3s.io/v1-release/channels/v1.31
   nodeSelector:
     matchExpressions:
-      - { key: node.kubernetes.io/instance-type, operator: In, values: ['k3s'] }
-      - { key: node-role.kubernetes.io/control-plane, operator: DoesNotExist }
+      - {key: node.kubernetes.io/instance-type, operator: In, values: ['k3s']}
+      - {key: node-role.kubernetes.io/control-plane, operator: DoesNotExist}
   serviceAccountName: system-upgrade
   tolerations:
     - key: 'CriticalAddonsOnly'
