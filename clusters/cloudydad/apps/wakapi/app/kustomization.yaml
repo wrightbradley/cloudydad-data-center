@@ -8,6 +8,7 @@ resources:
   - ./sealed-wakapi-secret-values.yaml
   - ./wakapi-helm-release.yaml
   - ./wakapi-certificate.yaml
+  - ./ingress-redirect.yaml
 configMapGenerator:
   - name: wakapi-values
     files:
