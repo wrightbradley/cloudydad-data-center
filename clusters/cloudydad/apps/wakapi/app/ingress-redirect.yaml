@@ -1,0 +1,38 @@
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: wakatime-redirect
+  namespace: wakapi
+spec:
+  redirectRegex:
+    permanent: true
+    regex: ^/api(/.*)?$
+    replacement: https://wakapi.cloudydad.world/api$1
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: wakatime-redirect
+  namespace: wakapi
+spec:
+  entryPoints:
+    - web
+  routes:
+    - kind: Rule
+      match: Host(`api.wakatime.com`) && PathPrefix(`/api`)
+      middlewares:
+        - name: wakatime-redirect
+      services:
+        - name: wakatime-redirect
+          port: 443
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: wakatime-redirect
+  namespace: wakapi
+spec:
+  type: ExternalName
+  externalName: wakapi.cloudydad.world
+  ports:
+    - port: 443
