@@ -16,6 +16,7 @@ resources:
   - ./gatus.yaml
   - ./grafana.yaml
   - ./immich.yaml
+  - ./invidious.yaml
   - ./jetstack.yaml
   - ./kube-vip.yaml
   - ./opentelemetry.yaml

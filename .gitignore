@@ -866,3 +866,5 @@ clusters/cloudydad/observability/uptime-kuma/app/uptime-kuma-secret-values.yaml
 clusters/cloudydad/apps/immich/app/immich-secret-values.yaml
 clusters/cloudydad/infrastructure/database/cloudnative-pg/app/create-wakapi.sql
 clusters/cloudydad/apps/wakapi/app/wakapi-secret-values.yaml
+clusters/cloudydad/apps/invidious/app/invidious-secret-values.yaml
+clusters/cloudydad/infrastructure/database/cloudnative-pg/app/create-invidious.sql
