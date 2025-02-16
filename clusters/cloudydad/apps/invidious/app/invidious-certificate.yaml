@@ -1,0 +1,12 @@
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: invidious
+spec:
+  secretName: invidious-tls #pragma: allowlist secret
+  dnsNames:
+    - 'invidious.cloudydad.world'
+  issuerRef:
+    name: letsencrypt
+    kind: ClusterIssuer

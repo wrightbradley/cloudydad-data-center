@@ -1,0 +1,16 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: invidious
+resources:
+  - ./invidious-namespace.yaml
+  - ./sealed-invidious-secret-values.yaml
+  - ./invidious-helm-release.yaml
+  - ./invidious-certificate.yaml
+configMapGenerator:
+  - name: invidious-values
+    files:
+      - values.yaml=invidious-values.yaml
+configurations:
+  - kustomizeconfig.yaml

@@ -5,4 +5,5 @@ kind: Kustomization
 resources:
   - ./homepage/kustomization.yaml
   - ./immich/kustomization.yaml
+  - ./invidious/kustomization.yaml
   - ./wakapi/kustomization.yaml

@@ -28,6 +28,7 @@ spec:
             - 'grafana.cloudydad.world'
             - 'homepage.cloudydad.world'
             - 'immich.cloudydad.world'
+            - 'invidious.cloudydad.world'
             - 'podinfo.cloudydad.world'
             - 'uptime-kuma.cloudydad.world'
             - 'vmagent.cloudydad.world'
