@@ -29,8 +29,8 @@ spec:
   concurrency: 1
   nodeSelector:
     matchExpressions:
-      - { key: node.kubernetes.io/instance-type, operator: In, values: ['k3s'] }
-      - { key: node-role.kubernetes.io/control-plane, operator: Exists }
+      - {key: node.kubernetes.io/instance-type, operator: In, values: ['k3s']}
+      - {key: node-role.kubernetes.io/control-plane, operator: Exists}
   tolerations:
     - key: 'CriticalAddonsOnly'
       operator: 'Exists'
