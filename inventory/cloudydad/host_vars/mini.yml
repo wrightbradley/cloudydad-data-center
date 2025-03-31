@@ -2,3 +2,4 @@
 hostname: mini
 ethernet_id: enp1s0f0
 ethernet_mac: 0c:4d:e9:c9:4f:e0
+flannel_iface: enp1s0f0

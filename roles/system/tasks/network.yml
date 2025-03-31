@@ -11,49 +11,170 @@
     name: '{{ system_timezone }}'
   when: system_timezone is defined
 
-# TODO: update to use nmcli
-- name: Set facts for primary network interface
+- name: Configure network with NetworkManager
   when: "'k3s_cluster' in group_names"
   block:
-    - name: Gather necessary network facts
+    - name: Get updates
+      ansible.builtin.apt:
+        update_cache: true
+        autoclean: true
+        autoremove: true
+        cache_valid_time: 86400
+
+    - name: Ensure NetworkManager is installed
+      ansible.builtin.apt:
+        name: network-manager
+
+    - name: Ensure NetworkManager is enabled and started
+      ansible.builtin.systemd:
+        name: NetworkManager
+        enabled: true
+        state: started
+
+    - name: Ensure only loopback is configured in /etc/network/interfaces
+      ansible.builtin.copy:
+        dest: /etc/network/interfaces
+        content: |
+          # This file managed by Ansible
+          # The loopback network interface
+          auto lo
+          iface lo inet loopback
+
+          # All other interfaces managed by NetworkManager
+        mode: '0644'
+        owner: 'root'
+        group: 'root'
+      register: interfaces_file
+
+    - name: List all available network interfaces
+      ansible.builtin.command: ls -1 /sys/class/net
+      register: available_interfaces
+      changed_when: false
+
+    - name: Debug available interfaces
+      debug:
+        var: available_interfaces.stdout_lines
+
+    - name: Identify actual physical interface
+      set_fact:
+        physical_interfaces: "{{ available_interfaces.stdout_lines | difference(['lo', 'cni0', 'flannel.1', 'docker0']) | select('match', '^(en|eth|wl|ww|lan0)') | list }}"
+
+    - name: Debug physical interfaces
+      debug:
+        var: physical_interfaces
+
+    - name: Set default interface
+      set_fact:
+        default_interface: "{{ physical_interfaces[0] }}"
+      when: physical_interfaces | length > 0
+
+    - name: Debug interface MAC address
+      debug:
+        var: default_interface
+      when: default_interface is defined
+
+    - name: Gather network facts
       setup:
         gather_subset:
           - network
-
-    - name: Identify the default route interface
-      command: ip route show default
-      register: default_route
-      check_mode: false
-
-    - name: Set fact for the default route interface
-      set_fact:
-        default_interface: '{{ default_route.stdout.split()[4] }}'
-
-    - name: Print the default route interface
-      debug:
-        msg: 'Default route interface is {{ default_interface }}'
+      when: default_interface is defined
 
     - name: Set fact for the default route interface MAC address
       set_fact:
         interface_mac: "{{ ansible_facts[default_interface]['macaddress'] }}"
+      when: default_interface is defined
 
-    - name: Print the default route interface MAC address
+    - name: Debug interface MAC address
       debug:
-        msg: 'Default route interface MAC address is {{ interface_mac }}'
+        var: interface_mac
+      when: interface_mac is defined
 
-    - name: Set a persistent and common network interface name
-      copy:
-        dest: /etc/udev/rules.d/10-persistent-net.rules
-        mode: '0644'
+    - name: Get existing connection details
+      ansible.builtin.shell: nmcli -t -f NAME connection show
+      register: nmcli_connections
+      changed_when: false
+      when: default_interface is defined
+
+    - name: Ensure persistent network rules file doesn't exist
+      ansible.builtin.file:
+        path: /etc/udev/rules.d/10-persistent-net.rules
+        state: absent
+
+    - name: Debug all facts used in nmcli configuration
+      debug:
+        msg: |
+          Connection name: lan0
+          Default Interface name: {{ default_interface }}
+          MAC address: {{ interface_mac }}
+          IPv4 address: {{ ansible_facts[default_interface]['ipv4']['address'] }}
+          Gateway: {{ ansible_default_ipv4.gateway }}
+          DNS servers: {{ ansible_dns.nameservers | join(',') }}
+      when: default_interface is defined
+
+    - name: Configure persistent interface with nmcli
+      community.general.nmcli:
+        conn_name: lan0
+        type: ethernet
+        ifname: "{{ default_interface }}"
+        mac: "{{ interface_mac }}"
+        state: present
+        autoconnect: true
+        method4: auto
+      register: nmcli_result
+      when: default_interface is defined
+
+    - name: Check if reboot is required
+      set_fact:
+        reboot_required: "{{ (connection_deleted is defined and connection_deleted is changed) or (nmcli_result is defined and nmcli_result is changed) or (interfaces_file is defined and interfaces_file is changed) }}"
+
+    - name: Reboot if connections were modified
+      ansible.builtin.reboot:
+        msg: "Rebooting to apply network interface changes"
+        connect_timeout: 5
+        reboot_timeout: 300
+        pre_reboot_delay: 0
+        post_reboot_delay: 30
+        test_command: uptime
+      when: reboot_required | bool
+
+    - name: Validate network connection exists
+      community.general.nmcli:
+        conn_name: lan0
+        state: present
+      check_mode: true
+      register: nmcli_validation
+      failed_when: false
+      changed_when: false
+      when: default_interface is defined
+
+    - name: Wait for network interface to be ready with IP
+      ansible.builtin.wait_for:
+        timeout: 60
+      register: network_ready
+      until: >
+        ansible_facts[default_interface] is defined and  ansible_facts[default_interface]['ipv4'] is defined and  ansible_facts[default_interface]['ipv4']['address'] is defined
+      retries: 5
+      delay: 10
+      when: default_interface is defined
+
+    - name: Collect network configuration details
+      ansible.builtin.shell: |
+        echo "Connection details:"
+        nmcli connection show lan0
+        echo "Interface details:"
+        ip addr show {{ default_interface }}
+      register: network_details
+      changed_when: false
+      when:
+        - default_interface is defined
+        - not ip_validation.failed | default(false)
+      ignore_errors: true
+
+    - name: Ensure search domain is not defined in /etc/resolv.conf
+      ansible.builtin.copy:
+        dest: /etc/NetworkManager/dispatcher.d/10-no-search
+        src: etc/NetworkManager/dispatcher.d/10-no-search
+        mode: '0755'
         owner: 'root'
         group: 'root'
-        content: |
-          SUBSYSTEM=="net", ACTION=="add", ATTR{address}=="{{interface_mac}}", NAME="lan0"
-
-    - name: Configure network interfaces
-      copy:
-        dest: /etc/network/interfaces
-        src: etc/network/interfaces
-        mode: '0644'
-        owner: 'root'
-        group: 'root'
+      notify: Restart NetworkManager
