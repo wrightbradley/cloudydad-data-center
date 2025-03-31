@@ -1,3 +1,6 @@
 ---
 hostname: rpi07
+ethernet_id: eth0
+ethernet_mac: dc:a6:32:b1:bd:67
 k3s_master_taint: true
+flannel_iface: eth0

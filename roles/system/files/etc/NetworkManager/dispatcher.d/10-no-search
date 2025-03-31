@@ -1,0 +1,6 @@
+#!/bin/bash
+# This file managed by Ansible
+
+if [ "$2" = "up" ] || [ "$2" = "dhcp4-change" -o "$2" = "dhcp6-change" ]; then
+  sed -i '/^search /d' /etc/resolv.conf
+fi
