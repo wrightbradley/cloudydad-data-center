@@ -1,0 +1,101 @@
+---
+- name: Pre tasks
+  hosts: all
+  pre_tasks:
+    - name: Verify Ansible is version 2.11 or above. (If this fails you may need to update Ansible)
+      assert:
+        that: "ansible_version.full is version_compare('2.11', '>=')"
+        msg: "Ansible is out of date."
+- name: Gracefully update Debian-based systems
+  hosts: all
+  gather_facts: true
+  become: true
+  vars:
+    # Maximum time to wait for system to come back online after reboot
+    reboot_timeout: 600
+    # Reboot only when needed
+    reboot_if_needed: true
+    # Set to false if you want to skip kernel updates
+    update_kernel: true
+    # Set to false to prevent automatic reboot
+    allow_reboot: true
+  tasks:
+    - name: Check if system is Debian-based
+      ansible.builtin.fail:
+        msg: "This playbook only works on Debian-based systems"
+      when: ansible_facts['os_family'] != "Debian"
+
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: true
+        cache_valid_time: 3600
+
+    - name: Check for pending security updates
+      ansible.builtin.shell: apt-get --just-print upgrade | grep -i security
+      register: security_updates
+      changed_when: false
+      failed_when: false
+      check_mode: false
+
+    - name: Perform security updates first
+      ansible.builtin.apt:
+        upgrade: dist
+        force_apt_get: true
+        update_cache: true
+        only_upgrade: true
+        install_recommends: false
+        cache_valid_time: 3600
+      register: security_upgrade
+      when: security_updates.stdout_lines | length > 0
+
+    - name: Perform all system upgrades
+      ansible.builtin.apt:
+        upgrade: dist
+        force_apt_get: true
+        update_cache: true
+        autoclean: true
+        autoremove: true
+      register: apt_upgrade
+
+    - name: Remove unused packages
+      ansible.builtin.apt:
+        autoremove: true
+        purge: true
+      register: apt_autoremove
+
+    - name: Check if reboot is required
+      ansible.builtin.stat:
+        path: /var/run/reboot-required
+      register: reboot_required_file
+
+    - name: Set reboot fact
+      ansible.builtin.set_fact:
+        reboot_needed: "{{ reboot_required_file.stat.exists or (security_upgrade is defined and security_upgrade.changed) or (apt_upgrade is defined and apt_upgrade.changed and update_kernel) }}"
+
+    - name: Reboot system if required
+      ansible.builtin.reboot:
+        msg: "System reboot triggered by Ansible after package updates"
+        connect_timeout: 5
+        reboot_timeout: "{{ reboot_timeout }}"
+        pre_reboot_delay: 15
+        post_reboot_delay: 30
+        test_command: uptime
+      when:
+        - reboot_needed | bool
+        - allow_reboot | bool
+        - reboot_if_needed | bool
+
+    - name: Check system status after update
+      ansible.builtin.command: apt-get -s upgrade
+      register: post_update_check
+      changed_when: false
+
+    - name: Report update status
+      ansible.builtin.debug:
+        msg: |
+          Update Summary:
+          - Security updates applied: {{ security_updates.stdout_lines | length if security_updates.stdout is defined else 0 }}
+          - Packages upgraded: {{ apt_upgrade.changed if apt_upgrade.changed is defined else false }}
+          - Packages removed: {{ apt_autoremove.changed if apt_autoremove.changed is defined else false }}
+          - System rebooted: {{ reboot_needed | bool and allow_reboot | bool and reboot_if_needed | bool }}
+          - Pending updates: {{ post_update_check.stdout_lines | select('search', 'Inst') | list | length }}
