@@ -10,7 +10,7 @@ metadata:
     k3s-upgrade: server
 spec:
   concurrency: 1 # Batch size (roughly maps to maximum number of unschedulable nodes)
-  channel: https://update.k3s.io/v1-release/channels/v1.31
+  channel: https://update.k3s.io/v1-release/channels/v1.32
   nodeSelector:
     matchExpressions:
       - {key: node.kubernetes.io/instance-type, operator: In, values: ['k3s']}
@@ -44,7 +44,7 @@ metadata:
     k3s-upgrade: agent
 spec:
   concurrency: 2 # Batch size (roughly maps to maximum number of unschedulable nodes)
-  channel: https://update.k3s.io/v1-release/channels/v1.31
+  channel: https://update.k3s.io/v1-release/channels/v1.32
   nodeSelector:
     matchExpressions:
       - {key: node.kubernetes.io/instance-type, operator: In, values: ['k3s']}
