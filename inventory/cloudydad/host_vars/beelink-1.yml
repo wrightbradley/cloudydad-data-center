@@ -3,3 +3,5 @@ hostname: beelink-1
 ethernet_id: enp1s0
 ethernet_mac: e8:ff:1e:d7:36:cf
 flannel_iface: enp1s0
+extra_args: >-
+  {{ '--flannel-iface=' + flannel_iface if calico_iface is not defined and cilium_iface is not defined else '' }} --node-ip={{ k3s_node_ip }} --kubelet-arg enforce-node-allocatable="pods" --kubelet-arg system-reserved="cpu=500m,memory=1Gi,ephemeral-storage=10Gi" --kubelet-arg kube-reserved="cpu=500m,memory=1Gi,ephemeral-storage=5Gi" --kubelet-arg eviction-hard="memory.available<1Gi,nodefs.available<10%" --kubelet-arg kube-api-qps=20 --kubelet-arg kube-api-burst=30

@@ -4,3 +4,5 @@ ethernet_id: enx00e04c6818f1
 ethernet_mac: 00:e0:4c:68:18:f1
 k3s_master_taint: false
 flannel_iface: enx00e04c6818f1
+extra_args: >-
+  {{ '--flannel-iface=' + flannel_iface if calico_iface is not defined and cilium_iface is not defined else '' }} --node-ip={{ k3s_node_ip }} --kubelet-arg enforce-node-allocatable="pods" --kubelet-arg system-reserved="cpu=500m,memory=1Gi,ephemeral-storage=10Gi" --kubelet-arg kube-reserved="cpu=500m,memory=1Gi,ephemeral-storage=5Gi" --kubelet-arg eviction-hard="memory.available<1Gi,nodefs.available<10%" --kubelet-arg kube-api-qps=20 --kubelet-arg kube-api-burst=30
