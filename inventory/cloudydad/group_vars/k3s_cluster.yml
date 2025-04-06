@@ -57,8 +57,8 @@ k3s_node_ip: "{{ ansible_facts[(cilium_iface | default(calico_iface | default(fl
 # k3s_master_taint: "{{ true if groups['node'] | default([]) | length >= 1 else false }}"
 
 # these arguments are recommended for servers as well as agents:
-extra_args: >-
-  {{ '--flannel-iface=' + flannel_iface if calico_iface is not defined and cilium_iface is not defined else '' }} --node-ip={{ k3s_node_ip }}
+# extra_args: >-
+#   {{ '--flannel-iface=' + flannel_iface if calico_iface is not defined and cilium_iface is not defined else '' }} --node-ip={{ k3s_node_ip }}
 # --enforce-node-allocatable="pods"
 # --system-reserved="cpu=300m,memory=5Mi,ephemeral-storage=1Gi"
 # --kube-reserved="cpu=200m,memory=5Mi,ephemeral-storage=1Gi"
@@ -69,7 +69,7 @@ extra_args: >-
 extra_server_args: >-
   {{ extra_args }} {{ '--node-taint node-role.kubernetes.io/master=true:NoSchedule' if k3s_master_taint else '' }} {% if calico_iface is defined or cilium_iface is defined %} --flannel-backend=none --disable-network-policy --cluster-cidr={{ cluster_cidr | default('10.52.0.0/16') }} {% endif %} --tls-san {{ apiserver_endpoint }} --disable servicelb --disable traefik
 extra_agent_args: >-
-  {{ extra_args }} #magic___^_^___line
+  {{ extra_args }}
 # image tag for kube-vip
 kube_vip_tag_version: v0.8.2
 
