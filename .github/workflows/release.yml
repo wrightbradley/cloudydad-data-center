@@ -62,7 +62,7 @@ jobs:
           git checkout main
           git pull origin main
       - name: Generate a release note
-        uses: orhun/git-cliff-action@4.4.2
+        uses: orhun/git-cliff-action@v4.4.2
         id: git-cliff-release
         with:
           config: cliff.toml
@@ -71,7 +71,7 @@ jobs:
           OUTPUT: RELEASE.md
           GITHUB_REPO: ${{ github.repository }}
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@2.2.0
+        uses: softprops/action-gh-release@v2.2.0
         with:
           body_path: RELEASE.md
           tag_name: '${{ steps.git-cliff-release.outputs.version }}'
