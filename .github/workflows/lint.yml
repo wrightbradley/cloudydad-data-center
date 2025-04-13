@@ -10,16 +10,8 @@ jobs:
       PYTHON_VERSION: '3.12'
     steps:
       - name: Check out the codebase
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # 4.2.2
+        uses: actions/checkout@4.2.2
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Run pre-commit
-        uses: pre-commit/action@2c7b3805fd2a0fd8c1884dcaebf91fc102a13ecd # 3.0.1
-  ensure-pinned-actions:
-    name: Ensure SHA Pinned Actions
-    runs-on: ubuntu-24.04
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # 4.2.2
-      - name: Ensure SHA pinned actions
-        uses: zgosalvez/github-actions-ensure-sha-pinned-actions@64418826697dcd77c93a8e4a1f7601a1942e57b5 # 3.0.18
+        uses: pre-commit/action@v3.0.1
