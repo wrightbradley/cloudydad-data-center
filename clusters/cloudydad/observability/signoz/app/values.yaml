@@ -396,7 +396,7 @@ clickhouse:
       # -- Clickhouse Operator image repository to use.
       repository: altinity/clickhouse-operator
       # -- Clickhouse Operator image tag.
-      tag: 0.21.2
+      tag: 0.25.0
       # -- Clickhouse Operator image pull policy.
       pullPolicy: IfNotPresent
     # -- Image Registry Secret Names for Clickhouse Operator.
