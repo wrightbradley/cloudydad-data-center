@@ -35,7 +35,7 @@ markdown==3.3.7
     #   pymdown-extensions
 markdown-inline-graphviz-extension==1.1.2
     # via mkdocs-techdocs-core
-markupsafe==2.1.5
+markupsafe==3.0.2
     # via
     #   jinja2
     #   mkdocs
