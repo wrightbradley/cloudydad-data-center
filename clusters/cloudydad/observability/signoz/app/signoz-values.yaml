@@ -1207,7 +1207,7 @@ schemaMigrator:
   image:
     registry: docker.io
     repository: signoz/signoz-schema-migrator
-    tag: 0.111.27
+    tag: 0.111.38
     pullPolicy: IfNotPresent
   args:
     - '--up='
