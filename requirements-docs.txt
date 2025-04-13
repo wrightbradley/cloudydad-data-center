@@ -74,7 +74,7 @@ pathspec==0.12.1
     # via mkdocs
 plantuml-markdown==3.10.4
     # via mkdocs-techdocs-core
-platformdirs==4.2.2
+platformdirs==4.3.7
     # via mkdocs-get-deps
 pygments==2.19.1
     # via
