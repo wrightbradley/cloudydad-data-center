@@ -522,7 +522,7 @@ clickhouse:
         # -- Metrics Exporter image repository to use.
         repository: altinity/metrics-exporter
         # -- Metrics Exporter image tag.
-        tag: 0.21.2
+        tag: 0.25.0
         # -- Metrics Exporter image pull policy.
         pullPolicy: IfNotPresent
 ## External clickhouse configuration
