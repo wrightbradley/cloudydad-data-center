@@ -271,7 +271,7 @@ clickhouse:
       image:
         registry: docker.io
         repository: busybox
-        tag: 1.35
+        tag: 1.37
         pullPolicy: IfNotPresent
       command:
         - /bin/sh
@@ -627,7 +627,7 @@ queryService:
       image:
         registry: docker.io
         repository: busybox
-        tag: 1.35
+        tag: 1.37
         pullPolicy: IfNotPresent
       command:
         delay: 5
@@ -646,7 +646,7 @@ queryService:
       image:
         registry: docker.io
         repository: busybox
-        tag: 1.35
+        tag: 1.37
         pullPolicy: IfNotPresent
       args: []
       command: []
@@ -833,7 +833,7 @@ frontend:
       image:
         registry: docker.io
         repository: busybox
-        tag: 1.35
+        tag: 1.37
         pullPolicy: IfNotPresent
       command:
         delay: 5
@@ -1004,7 +1004,7 @@ alertmanager:
       image:
         registry: docker.io
         repository: busybox
-        tag: 1.35
+        tag: 1.37
         pullPolicy: IfNotPresent
       command:
         delay: 5
@@ -1234,7 +1234,7 @@ schemaMigrator:
       image:
         registry: docker.io
         repository: busybox
-        tag: 1.35
+        tag: 1.37
         pullPolicy: IfNotPresent
       command:
         delay: 5
@@ -1368,7 +1368,7 @@ otelCollector:
       image:
         registry: docker.io
         repository: busybox
-        tag: 1.35
+        tag: 1.37
         pullPolicy: IfNotPresent
       command:
         delay: 5
@@ -1887,7 +1887,7 @@ otelCollectorMetrics:
       image:
         registry: docker.io
         repository: busybox
-        tag: 1.35
+        tag: 1.37
         pullPolicy: IfNotPresent
       command:
         delay: 5
