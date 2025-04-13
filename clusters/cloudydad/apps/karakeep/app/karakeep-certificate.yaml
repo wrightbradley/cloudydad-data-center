@@ -1,0 +1,12 @@
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: karakeep
+spec:
+  secretName: karakeep-tls #pragma: allowlist secret
+  dnsNames:
+    - 'karakeep.cloudydad.world'
+  issuerRef:
+    name: letsencrypt
+    kind: ClusterIssuer

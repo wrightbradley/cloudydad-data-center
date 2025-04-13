@@ -1,0 +1,9 @@
+---
+apiVersion: v1
+data:
+  HOARDER_VERSION: release
+  KARAKEEP_VERSION: release
+  NEXTAUTH_URL: http://localhost:3000
+kind: ConfigMap
+metadata:
+  name: karakeep-configuration
