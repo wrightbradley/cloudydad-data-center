@@ -562,7 +562,7 @@ queryService:
   image:
     registry: docker.io
     repository: signoz/query-service
-    tag: 0.72.0
+    tag: 0.76.2
     pullPolicy: IfNotPresent
   # -- Image Registry Secret Names for Query-Service
   # If set, this has higher precedence than the root level or global value of imagePullSecrets.
