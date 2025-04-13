@@ -5,6 +5,88 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.7] - 2025-04-13
+## What's Changed
+
+### <!-- 0 -->🚀 Features
+
+- Add authentik  by @wrightbradley - ([8cbdf92](8cbdf9210cd7543de9a9aec42f5a3b38204293a2))
+- Add support for configuring routes for different networks for tailscale  by @wrightbradley - ([e1fd52e](e1fd52e9a20f545a57f1136f562732bbe25851f8))
+- Add cloudflared tunnel for authentik  by @wrightbradley - ([a6df512](a6df512faa7fd3527b18255fd06e3af82838922b))
+- Configure authentik oauth for grafana  by @wrightbradley - ([cd24fb5](cd24fb5fb7e19d29fb582efdeb804f561f642556))
+- Add system-upgrade-controller  by @wrightbradley - ([6b5c14b](6b5c14b3060564cd8498174026e3644b43219b4e))
+- Improve reliability of authentik  by @wrightbradley - ([081c01e](081c01eeba8f8fdcd24c676fde2ace409d9d2a01))
+- Add valkey  by @wrightbradley - ([9eb4d98](9eb4d98eeda71626239d582ad32288d24f74693b))
+- Add immich  by @wrightbradley - ([9d73918](9d739185b663f75b7a5161b5a207c75067cef590))
+- Upgrade vm-k8s-stack to 0.33.2  by @wrightbradley - ([058ec10](058ec10c40dc7fb79e9deff7166d7656357b2868))
+- Add bjw-s helm repo  by @wrightbradley - ([1644c26](1644c2672102c902d4117fcefe7ef07885c6eba4))
+- Add homepage  by @wrightbradley - ([50d46a3](50d46a3e60235a82027461929ff830ca18867c1b))
+- Add wakapi  by @wrightbradley - ([89fd355](89fd355c8644937e10090796cbd10b582f1961f0))
+- Configure wakatime redirect  by @wrightbradley - ([8f67d24](8f67d2495ffa96031ad61cb1e8cb7b221b20d0c0))
+- Add invidious  by @wrightbradley - ([df98de5](df98de507f44db3b49d80872c6c8d477fb048b6a))
+- Add signoz  by @wrightbradley - ([5e88c6e](5e88c6e820268893394f373e7cb35314492c50e0))
+- Add update playbook  by @wrightbradley - ([5717d72](5717d72aae6c43ffc8fd5fa7f8959c8655b1507e))
+- Upgrade to k3s 1.32  by @wrightbradley - ([1cc3bab](1cc3bab0f8af62e0151da6a007f006fd8956e9d4))
+- Add tags for k3s-service file changes  by @wrightbradley - ([b7d26eb](b7d26eb621a9021e06a6ff378f2c5db01bc4f2d9))
+- Add karakeep  by @wrightbradley - ([38f9ec6](38f9ec685d25193eed2890f8a6229154425a6d55))
+
+### <!-- 1 -->🐛 Bug Fixes
+
+- Disable scraping of services built into k3s  by @wrightbradley - ([f040e76](f040e76581c4f2bab8f0821dd568db7a137a641b))
+- Deprecated apis for flux resources  by @wrightbradley - ([9d5bb3c](9d5bb3cc2e44e2f3d5a6f52fd635c8bd1dddeb54))
+- Add basic auth for metrics scrape for uptime-kuma  by @wrightbradley - ([2889310](28893109131d98b94f0db26bf6dca2605e2377f5))
+- Schedule uptime-kuma on rpi07 node for stability  by @wrightbradley - ([b880084](b8800847577a85715173f2d5b3e12b1ca2b65f96))
+- Allow csi nodes to be scheduled on master nodes  by @wrightbradley - ([7756a49](7756a49a9985282865b6318b02f89b8cae7c56c3))
+- Root username for postgres  by @wrightbradley - ([2e4c24a](2e4c24af2034197a6d43e7b6fa952fd32259fa12))
+- Disable tailscale as it interferes more than it helps  by @wrightbradley - ([befc35a](befc35ae99264f868ef7d8d16fa1028dc9de7b47))
+- Increase storage for postgres cluster  by @wrightbradley - ([3ab1945](3ab1945a0bdcf16c0f55268037903b4d62a392e2))
+- Adjust memory limits for democratic-csi  by @wrightbradley - ([5923a23](5923a231385db3959ec5910f5e91de507fc879a3))
+- Increase storage for victoria-metrics  by @wrightbradley - ([ca74109](ca7410931d647caf99c3095eb5a1e28285560a4b))
+- Increase storage for cloudnative-pg cluster  by @wrightbradley - ([6e8f826](6e8f826814ea2dc81054400a2ba83171d6773883))
+- Network configuration  by @wrightbradley - ([7c241df](7c241dfa5638e837934826582c479e73be8e8167))
+- Set memory limits for democratic-csi  by @wrightbradley - ([67cf3e3](67cf3e3c77652b1e6fda247370bfc7997589a79e))
+- Tune reserved resources for k3s  by @wrightbradley - ([95bc8f9](95bc8f922fcfb2b0e03743d1201d95b21c36356d))
+- Add v to GH Action tags  by @wrightbradley in [#100](https://github.com/wrightbradley/cloudydad-data-center/pull/100) - ([410d11a](410d11ada2c6e669825cba72093f9bf03fb49d2b))
+- Add v to GitHub Actions tags  by @wrightbradley in [#137](https://github.com/wrightbradley/cloudydad-data-center/pull/137) - ([7a34fc3](7a34fc3b27f90b2853650e96595f606aba6e88d6))
+
+### <!-- 12 -->💼 Other
+
+- Add renovate.json  by @renovate[bot] in [#95](https://github.com/wrightbradley/cloudydad-data-center/pull/95) - ([c49bf1e](c49bf1e0542ca6eae6381a4620799cae4e2a0cb8))
+
+### <!-- 4 -->⚡ Performance
+
+- Tune resource requests and limits based on krr recommendations  by @wrightbradley - ([add225c](add225cc819044ab6471a803ac8aefb825e398e1))
+- Reduce resource usage by immich  by @wrightbradley - ([35dff70](35dff7026568b39dbb30971d39a8a044b887d3df))
+- Reduce resources for trivy  by @wrightbradley - ([032b6eb](032b6eb4a93d7bbf850b83aa811231c5e90a3f85))
+- Tune resources to avoid oom events  by @wrightbradley - ([a30d310](a30d31051c7bdacd4a0f5ac3b53baedde9b558cf))
+
+### <!-- 5 -->🎨 Styling
+
+- Address lint issues  by @wrightbradley - ([c7c2c5d](c7c2c5dcf6b9ceddeca72612e9a2acb7bd2f4a8c))
+
+### <!-- 7 -->📚 Documentation
+
+- Release 0.1.6 [skip ci]  by @github-actions[bot] - ([dcd356e](dcd356e35356936cf5a11126d574dd6ca545c7f4))
+
+### <!-- 8 -->🧹 Miscellaneous Tasks
+
+- Update remote address for remote host  by @wrightbradley - ([65436be](65436bed9d991c22c5c12ab5e44d2ce22112ee80))
+- Disable unused apps  by @wrightbradley - ([d648a1b](d648a1b15c7f9d18951fb8ac06c062a6f7c93fee))
+- Disable trivy-operator  by @wrightbradley - ([bde4398](bde439804e4d3fd2079f52d33cef4f5442d7ebbf))
+- Reduce vm-k8s-stack operator to 1 replica  by @wrightbradley - ([ebb634b](ebb634bfef05f2579da1125b82b5ae06c77ad0fc))
+- Increase memory for cloudnative-pg  by @wrightbradley - ([cb76bfb](cb76bfb45d15bbb1d56f28a81b9cf359923c7598))
+- Disable signoz temporarily  by @wrightbradley - ([60d0885](60d08852c7b7d3140df5dee8c864b16fb3ddb746))
+
+### <!-- 9 -->🤖 CI
+
+- Improve config for renovate management  by @wrightbradley in [#96](https://github.com/wrightbradley/cloudydad-data-center/pull/96) - ([762342a](762342a55eccf245c4655fe08ed16b97266e0d5a))
+
+
+## New Contributors
+* @renovate[bot] made their first contribution in [#97](https://github.com/wrightbradley/cloudydad-data-center/pull/97)
+
+**Full Changelog**: https://github.com/wrightbradley/cloudydad-data-center/compare/0.1.6...0.1.7
+
 ## [0.1.6] - 2024-12-23
 ## What's Changed
 
