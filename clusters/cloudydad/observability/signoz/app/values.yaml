@@ -1187,7 +1187,7 @@ alertmanager:
     ##
     image:
       repository: jimmidyson/configmap-reload
-      tag: v0.5.0
+      tag: v0.9.0
       pullPolicy: IfNotPresent
     # containerPort: 9533
 
