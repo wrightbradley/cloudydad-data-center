@@ -27,6 +27,7 @@
     owner: root
     group: root
     mode: '0755'
+  tags: k3s-service
 
 - name: Manage k3s service
   ansible.builtin.systemd:
