@@ -9,6 +9,7 @@ resources:
   - ./sealed-karakeep-secrets.yaml
   - ./chrome-svc.yaml
   - ./karakeep-cm.yaml
+  - ./karakeep-ingress.yaml
   - ./karakeep-pvc.yaml
   - ./karakeep-svc.yaml
   - ./meilisearch-pvc.yaml
