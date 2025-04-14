@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.8] - 2025-04-14
+## What's Changed
+
+### <!-- 1 -->🐛 Bug Fixes
+
+- Enable karakeep app  by @wrightbradley in [#193](https://github.com/wrightbradley/cloudydad-data-center/pull/193) - ([93d503e](93d503e4ba8c29c168336d8da09ce87cd3e0fce7))
+
+### <!-- 8 -->🧹 Miscellaneous Tasks
+
+- Migrate config .github/renovate.json5  by @renovate[bot] in [#173](https://github.com/wrightbradley/cloudydad-data-center/pull/173) - ([28bef16](28bef167c0cf6cd139da519fb969bc311122e321))
+
+### <!-- 9 -->🤖 CI
+
+- Configure renovate and release behavior  by @wrightbradley in [#157](https://github.com/wrightbradley/cloudydad-data-center/pull/157) - ([b432786](b432786257bbd60553358d97f3ae822e23efb2a8))
+
+
+**Full Changelog**: https://github.com/wrightbradley/cloudydad-data-center/compare/0.1.7...0.1.8
+
 ## [0.1.7] - 2025-04-13
 ## What's Changed
 
@@ -67,6 +85,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### <!-- 7 -->📚 Documentation
 
 - Release 0.1.6 [skip ci]  by @github-actions[bot] - ([dcd356e](dcd356e35356936cf5a11126d574dd6ca545c7f4))
+- Release 0.1.7 [skip ci]  by @github-actions[bot] - ([e4f89bf](e4f89bfc73fd56c647d8459963bad68c7c0e26e6))
 
 ### <!-- 8 -->🧹 Miscellaneous Tasks
 
@@ -81,9 +100,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improve config for renovate management  by @wrightbradley in [#96](https://github.com/wrightbradley/cloudydad-data-center/pull/96) - ([762342a](762342a55eccf245c4655fe08ed16b97266e0d5a))
 
-
-## New Contributors
-* @renovate[bot] made their first contribution in [#97](https://github.com/wrightbradley/cloudydad-data-center/pull/97)
 
 **Full Changelog**: https://github.com/wrightbradley/cloudydad-data-center/compare/0.1.6...0.1.7
 
