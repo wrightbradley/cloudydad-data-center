@@ -6,4 +6,5 @@ resources:
   - ./homepage/kustomization.yaml
   - ./immich/kustomization.yaml
   - ./invidious/kustomization.yaml
+  - ./karakeep/kustomization.yaml
   - ./wakapi/kustomization.yaml
