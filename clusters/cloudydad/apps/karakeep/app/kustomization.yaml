@@ -6,6 +6,7 @@ namespace: karakeep
 resources:
   - ./karakeep-namespace.yaml
   - ./karakeep-certificate.yaml
+  - ./sealed-karakeep-secrets.yaml
   - ./chrome-svc.yaml
   - ./karakeep-cm.yaml
   - ./karakeep-pvc.yaml
