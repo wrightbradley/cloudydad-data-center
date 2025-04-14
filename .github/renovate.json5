@@ -1,94 +1,55 @@
 {
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:recommended",
-  ],
-  // Global settings
-  "labels": ["dependencies"],
-  "schedule": ["every weekend"],
-  "prHourlyLimit": 5,
-  "prConcurrentLimit": 10,
-  "rangeStrategy": "auto",
-
-  // Enable managers for all specified technologies
-  "enabledManagers": [
-    "ansible",
-    "github-actions",
-    "pip_requirements",
-    "helm-requirements",
-    "helm-values",
-    "kustomize",
-    "terraform",
-    "flux"
-  ],
-
-  // Ansible settings
-  "ansible": {
-    "fileMatch": ["roles/requirements\\.ya?ml$", "requirements\\.ya?ml$"]
+  $schema: "https://docs.renovatebot.com/renovate-schema.json",
+  extends: ["config:recommended"],
+  labels: ["dependencies"],
+  schedule: ["every weekend"],
+  prHourlyLimit: 5,
+  prConcurrentLimit: 10,
+  rangeStrategy: "auto",
+  enabledManagers: ["ansible", "github-actions", "pip_requirements", "helm-requirements", "helm-values", "kustomize", "terraform", "flux"],
+  ansible: {
+    fileMatch: ["roles/requirements\\.ya?ml$", "requirements\\.ya?ml$"],
   },
-
-  // GitHub Actions settings
   "github-actions": {
-    "fileMatch": ["\\.github/workflows/.*\\.ya?ml$"],
-    "pinDigests": true
+    fileMatch: ["\\.github/workflows/.*\\.ya?ml$"],
+    pinDigests: true,
   },
-
-  // Python/pip settings
-  "pip_requirements": {
-    "fileMatch": ["requirements.*\\.txt$", "requirements\\.ya?ml$"]
+  pip_requirements: {
+    fileMatch: ["requirements.*\\.txt$", "requirements\\.ya?ml$"],
   },
-
-  // Helm settings
   "helm-requirements": {
-    "fileMatch": ["Chart\\.yaml$", "requirements\\.yaml$"]
+    fileMatch: ["Chart\\.yaml$", "requirements\\.yaml$"],
   },
   "helm-values": {
-    "fileMatch": ["values.*\\.yaml$"]
+    fileMatch: ["values.*\\.yaml$"],
   },
-
-  // Kustomize settings
-  "kustomize": {
-    "fileMatch": ["kustomization\\.ya?ml$"]
+  kustomize: {
+    fileMatch: ["kustomization\\.ya?ml$"],
   },
-
-  // Terraform settings
-  "terraform": {
-    "commitMessageTopic": "Terraform {{depName}} dependency",
-    "fileMatch": [
-      "\\.tf$",
-      "\\.tfvars$"
-    ]
+  terraform: {
+    commitMessageTopic: "Terraform {{depName}} dependency",
+    fileMatch: ["\\.tf$", "\\.tfvars$"],
   },
-
-  // Flux settings
-  "flux": {
-    "fileMatch": [
-      "clusters/.+\\.ya?ml$",
-      ".*\\.gotmpl$",
-      ".*\\.ya?ml$"
-    ]
+  flux: {
+    fileMatch: ["clusters/.+\\.ya?ml$", ".*\\.gotmpl$", ".*\\.ya?ml$"],
   },
-
-  // Package rules for specific technologies
-  "packageRules": [
+  packageRules: [
     {
-      "matchDatasources": ["terraform-provider"],
-      "groupName": "terraform providers",
-      "schedule": ["after 10pm on the first day of the month"]
+      matchDatasources: ["terraform-provider"],
+      groupName: "terraform providers",
+      schedule: ["after 10pm on the first day of the month"],
     },
     {
-      "matchPackagePatterns": ["^fluxcd/"],
-      "groupName": "flux packages"
+      groupName: "flux packages",
+      matchPackageNames: ["/^fluxcd//"],
     },
     {
-      "matchManagers": ["github-actions"],
-      "groupName": "github actions dependencies"
-    }
+      matchManagers: ["github-actions"],
+      groupName: "github actions dependencies",
+    },
   ],
-
-  // Vulnerability alerts
-  "vulnerabilityAlerts": {
-    "enabled": true,
-    "labels": ["security"]
-  }
+  vulnerabilityAlerts: {
+    enabled: true,
+    labels: ["security"],
+  },
 }
