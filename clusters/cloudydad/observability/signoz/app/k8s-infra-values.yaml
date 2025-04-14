@@ -366,7 +366,7 @@ otelAgent:
   image:
     registry: docker.io
     repository: otel/opentelemetry-collector-contrib
-    tag: 0.109.0
+    tag: 0.123.0
     pullPolicy: IfNotPresent
 
   # -- Image Registry Secret Names for OtelAgent.
@@ -729,7 +729,7 @@ otelDeployment:
   image:
     registry: docker.io
     repository: otel/opentelemetry-collector-contrib
-    tag: 0.109.0
+    tag: 0.123.0
     pullPolicy: IfNotPresent
 
   # -- Image Registry Secret Names for OtelDeployment.
