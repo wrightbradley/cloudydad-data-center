@@ -12,7 +12,7 @@ spec:
         kind: HelmRepository
         name: gatus
         namespace: flux-system
-      version: '1.1.0'
+      version: '1.2.0'
   interval: 50m
   releaseName: gatus
   targetNamespace: gatus
