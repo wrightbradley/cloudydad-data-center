@@ -2479,7 +2479,7 @@ operator:
     # @schema
     override: ~
     repository: 'quay.io/cilium/operator'
-    tag: 'v1.16.3'
+    tag: 'v1.17.2'
     # operator-generic-digest
     genericDigest: ''
     # operator-azure-digest
