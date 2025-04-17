@@ -1,0 +1,121 @@
+---
+- name: K3s Cluster Maintenance and Server Shutdown
+  hosts: localhost
+  gather_facts: false
+  vars:
+    target_server: "nas.cloudydad.world"
+    ssh_user: "bwright"
+    ssh_key: "/root/.ssh/key"
+    log_file: "/var/log/k3s-maintenance.log"
+    kubeconfig: "/etc/rancher/k3s/k3s.yaml"
+
+  tasks:
+    - name: Create timestamp
+      ansible.builtin.set_fact:
+        timestamp: "{{ lookup('pipe', 'date +%Y-%m-%d\\ %H:%M:%S') }}"
+
+    - name: Start logging
+      ansible.builtin.lineinfile:
+        path: "{{ log_file }}"
+        line: "--- Maintenance started at {{ timestamp }} ---"
+        create: true
+        mode: '0644'
+
+    - name: Get list of nodes
+      kubernetes.core.k8s_info:
+        kind: Node
+        kubeconfig: "{{ kubeconfig }}"
+      register: nodes_info
+
+    - name: Cordon all nodes in K3s cluster
+      kubernetes.core.k8s:
+        name: "{{ item.metadata.name }}"
+        kind: Node
+        kubeconfig: "{{ kubeconfig }}"
+        state: present
+        definition:
+          spec:
+            unschedulable: true
+      with_items: "{{ nodes_info.resources }}"
+      register: cordon_result
+
+    - name: Log cordon result
+      ansible.builtin.lineinfile:
+        path: "{{ log_file }}"
+        line: "Cordon completed successfully for all nodes"
+        owner: root
+        group: root
+        mode: 0644
+        create: true
+
+    - name: Execute CNPG fencing command
+      ansible.builtin.command:
+        cmd: kubectl cnpg fencing on postgres-cluster -n cloudnative-pg "*"
+      environment:
+        KUBECONFIG: "{{ kubeconfig }}"
+      register: fencing_result
+      changed_when: fencing_result.rc == 0
+      failed_when: fencing_result.rc != 0
+
+    - name: Log fencing result
+      ansible.builtin.lineinfile:
+        path: "{{ log_file }}"
+        line: "Fencing completed: {{ fencing_result.stdout }}"
+      when: fencing_result.rc == 0
+
+    - name: Log fencing error
+      ansible.builtin.lineinfile:
+        path: "{{ log_file }}"
+        line: "Fencing failed with error: {{ fencing_result.stderr }}"
+      when: fencing_result.rc != 0
+
+    - name: Drain all nodes
+      kubernetes.core.k8s_drain:
+        name: "{{ item.metadata.name }}"
+        kubeconfig: "{{ kubeconfig }}"
+        delete_options:
+          delete_emptydir_data: true
+          ignore_daemonsets: true
+          force: true
+      with_items: "{{ nodes_info.resources }}"
+      register: drain_result
+
+    - name: Pause for 5 minutes after drain
+      ansible.builtin.pause:
+        seconds: 300
+
+    - name: Log drain result
+      ansible.builtin.lineinfile:
+        path: "{{ log_file }}"
+        line: "Drain completed successfully for all nodes"
+        owner: root
+        group: root
+        mode: 0644
+        create: true
+
+    - name: Shutdown NAS server
+      community.general.shutdown:
+        delay: 60
+        msg: "Shut down initiated by Ansible. Automated maitenance"
+      delegate_to: "{{ target_server }}"
+      remote_user: "{{ ssh_user }}"
+      become: true
+      vars:
+        ansible_ssh_private_key_file: "{{ ssh_key }}"
+      async: 1
+      poll: 0
+
+    - name: Check if NAS server is shutdown
+      ansible.builtin.wait_for:
+        host: "{{ target_server }}"
+        port: 22
+        timeout: 120
+        state: absent
+      delegate_to: localhost
+      ignore_errors: true
+      register: shutdown_check
+
+    - name: Log shutdown status
+      ansible.builtin.lineinfile:
+        path: "{{ log_file }}"
+        line: "NAS server shutdown status: {{ shutdown_check }}"

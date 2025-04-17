@@ -1,0 +1,87 @@
+---
+- name: Post K3s Cluster Maintenance
+  hosts: localhost
+  gather_facts: false
+  vars:
+    target_server: "nas.cloudydad.world"
+    ssh_user: "bwright"
+    ssh_key: "/root/.ssh/key"
+    log_file: "/var/log/k3s-maintenance.log"
+    kubeconfig: "/etc/rancher/k3s/k3s.yaml"
+
+  tasks:
+    - name: Get list of nodes
+      kubernetes.core.k8s_info:
+        kind: Node
+        kubeconfig: "{{ kubeconfig }}"
+      register: nodes_info
+
+    - name: Uncordon all nodes in K3s cluster
+      kubernetes.core.k8s:
+        name: "{{ item.metadata.name }}"
+        kind: Node
+        kubeconfig: "{{ kubeconfig }}"
+        state: present
+        definition:
+          spec:
+            unschedulable: false
+      with_items: "{{ nodes_info.resources }}"
+      register: uncordon_result
+
+    - name: Log uncordon result
+      ansible.builtin.lineinfile:
+        path: "{{ log_file }}"
+        line: "Uncordon completed successfully for all nodes"
+        owner: root
+        group: root
+        mode: 0644
+        create: true
+
+    - name: Remove CNPG fencing
+      ansible.builtin.command:
+        cmd: kubectl cnpg fencing off postgres-cluster -n cloudnative-pg "*"
+      environment:
+        KUBECONFIG: "{{ kubeconfig }}"
+      register: fencing_result
+      changed_when: fencing_result.rc == 0
+      failed_when: fencing_result.rc != 0
+
+    - name: Log fencing removal result
+      ansible.builtin.lineinfile:
+        path: "{{ log_file }}"
+        line: "Fencing removal completed: {{ fencing_result.stdout }}"
+        owner: root
+        group: root
+        mode: 0644
+        create: true
+      when: fencing_result.rc == 0
+
+    - name: Log fencing removal error
+      ansible.builtin.lineinfile:
+        path: "{{ log_file }}"
+        line: "Fencing removal failed with error: {{ fencing_result.stderr }}"
+        owner: root
+        group: root
+        mode: 0644
+        create: true
+      when: fencing_result.rc != 0
+
+    - name: Remove shutdown status from log
+      ansible.builtin.lineinfile:
+        path: "{{ log_file }}"
+        state: absent
+        regexp: "NAS server shutdown status:"
+        owner: root
+        group: root
+        mode: 0644
+        create: true
+
+    - name: Remove maintenance started message from log
+      ansible.builtin.lineinfile:
+        path: "{{ log_file }}"
+        state: absent
+        regexp: "--- Maintenance started at"
+        owner: root
+        group: root
+        mode: 0644
+        create: true
