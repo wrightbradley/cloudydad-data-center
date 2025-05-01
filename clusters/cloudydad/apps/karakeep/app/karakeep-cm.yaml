@@ -7,6 +7,12 @@ data:
   CRAWLER_FULL_PAGE_ARCHIVE: "true"
   CRAWLER_VIDEO_DOWNLOAD: "true"
   DISABLE_SIGNUPS: "true"
+  OLLAMA_BASE_URL: https://ollama.cloudydad.world
+  INFERENCE_TEXT_MODEL: llama3.2:3b
+  INFERENCE_IMAGE_MODEL: llava-phi3:3.8b
+  EMBEDDING_TEXT_MODEL: ""
+  INFERENCE_JOB_TIMEOUT_SEC: "600"
+  INFERENCE_FETCH_TIMEOUT_SEC: "600"
 kind: ConfigMap
 metadata:
   name: karakeep-configuration
