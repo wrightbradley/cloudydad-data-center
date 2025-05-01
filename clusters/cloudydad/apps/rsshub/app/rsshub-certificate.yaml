@@ -1,0 +1,12 @@
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: rsshub
+spec:
+  secretName: rsshub-tls #pragma: allowlist secret
+  dnsNames:
+    - 'rsshub.cloudydad.world'
+  issuerRef:
+    name: letsencrypt
+    kind: ClusterIssuer

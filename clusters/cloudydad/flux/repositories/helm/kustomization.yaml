@@ -20,6 +20,7 @@ resources:
   - ./opentelemetry.yaml
   - ./podinfo.yaml
   - ./reloader.yaml
+  - ./rssnext.yaml
   - ./sealed-secrets.yaml
   - ./signoz.yaml
   - ./snapshot-controller.yaml

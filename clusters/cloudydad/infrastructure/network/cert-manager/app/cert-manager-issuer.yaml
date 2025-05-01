@@ -30,6 +30,7 @@ spec:
             - 'karakeep.cloudydad.world'
             - 'ollama.cloudydad.world'
             - 'podinfo.cloudydad.world'
+            - 'rsshub.cloudydad.world'
             - 'signoz.cloudydad.world'
             - 'uptime-kuma.cloudydad.world'
             - 'vmagent.cloudydad.world'
