@@ -1,17 +1,17 @@
 ---
 ## This chart relies on the common library chart from bjw-s
-## You can find it at https://github.com/bjw-s/helm-charts/tree/main/charts/library/common
+## You can find it at https://github.com/bjw-s-labs/helm-charts/tree/923ef40a39520979c98f354ea23963ee54f54433/charts/library/common
 ## Refer there for more detail about the supported values
 
 # These entries are shared between all the Immich components
 
 env:
   REDIS_HOSTNAME: '{{ printf "%s-redis-master" .Release.Name }}'
-  DB_HOSTNAME: '{{ .Release.Name }}-postgresql'
-  DB_USERNAME: '{{ .Values.postgresql.global.postgresql.auth.username }}'
-  DB_DATABASE_NAME: '{{ .Values.postgresql.global.postgresql.auth.database }}'
+  DB_HOSTNAME: "{{ .Release.Name }}-postgresql"
+  DB_USERNAME: "{{ .Values.postgresql.global.postgresql.auth.username }}"
+  DB_DATABASE_NAME: "{{ .Values.postgresql.global.postgresql.auth.database }}"
   # -- You should provide your own secret outside of this helm-chart and use `postgresql.global.postgresql.auth.existingSecret` to provide credentials to the postgresql instance
-  DB_PASSWORD: '{{ .Values.postgresql.global.postgresql.auth.password }}'
+  DB_PASSWORD: "{{ .Values.postgresql.global.postgresql.auth.password }}"
   IMMICH_MACHINE_LEARNING_URL: '{{ printf "http://%s-machine-learning:3003" .Release.Name }}'
 
 image:
@@ -47,13 +47,13 @@ postgresql:
   enabled: false
   image:
     repository: tensorchord/pgvecto-rs
-    tag: pg14-v0.2.0
+    tag: pg14-v0.2.0@sha256:739cdd626151ff1f796dc95a6591b55a714f341c737e27f045019ceabf8e8c52
   global:
     postgresql:
       auth:
-        username: immich # pragma: allowlist secret
-        database: immich # pragma: allowlist secret
-        password: immich # pragma: allowlist secret
+        username: immich
+        database: immich
+        password: immich
   primary:
     containerSecurityContext:
       readOnlyRootFilesystem: false
@@ -82,11 +82,11 @@ server:
       enabled: false
       annotations:
         # proxy-body-size is set to 0 to remove the body limit on file uploads
-        nginx.ingress.kubernetes.io/proxy-body-size: '0'
+        nginx.ingress.kubernetes.io/proxy-body-size: "0"
       hosts:
         - host: immich.local
           paths:
-            - path: '/'
+            - path: "/"
       tls: []
 
 machine-learning:
@@ -104,3 +104,4 @@ machine-learning:
       type: emptyDir
       accessMode: ReadWriteMany
       # storageClass: your-class
+
