@@ -1,0 +1,15 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: rsshub
+resources:
+  - ./rsshub-namespace.yaml
+  - ./rsshub-helm-release.yaml
+  - ./rsshub-certificate.yaml
+configMapGenerator:
+  - name: rsshub-values
+    files:
+      - values.yaml=rsshub-values.yaml
+configurations:
+  - kustomizeconfig.yaml
