@@ -5,7 +5,7 @@
 
 # These entries are shared between all the Immich components
 image:
-  tag: v1.123.0
+  tag: v1.132.3
 
 immich:
   metrics:
@@ -22,11 +22,17 @@ immich:
   #
   configuration: {}
   # trash:
-  #   enabled: true
+  #   enabled: false
   #   days: 30
   # storageTemplate:
   #   enabled: true
-  #   template: '{{y}}/{{y}}-{{MM}}-{{dd}}/{{filename}}'
+  #   template: "{{y}}/{{y}}-{{MM}}-{{dd}}/{{filename}}"
+
+redis:
+  enabled: false
+  architecture: standalone
+  auth:
+    enabled: false
 
 # Immich components
 server:
