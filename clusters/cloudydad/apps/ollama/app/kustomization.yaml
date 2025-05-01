@@ -1,0 +1,15 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: ollama
+resources:
+  - ./ollama-namespace.yaml
+  - ./ollama-helm-release.yaml
+  - ./ollama-certificate.yaml
+configMapGenerator:
+  - name: ollama-values
+    files:
+      - values.yaml=ollama-values.yaml
+configurations:
+  - kustomizeconfig.yaml

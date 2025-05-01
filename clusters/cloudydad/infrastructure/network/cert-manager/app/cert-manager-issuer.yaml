@@ -28,6 +28,7 @@ spec:
             - 'homepage.cloudydad.world'
             - 'immich.cloudydad.world'
             - 'karakeep.cloudydad.world'
+            - 'ollama.cloudydad.world'
             - 'podinfo.cloudydad.world'
             - 'signoz.cloudydad.world'
             - 'uptime-kuma.cloudydad.world'

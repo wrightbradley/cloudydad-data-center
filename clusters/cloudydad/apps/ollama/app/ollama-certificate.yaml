@@ -1,0 +1,12 @@
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: ollama
+spec:
+  secretName: ollama-tls #pragma: allowlist secret
+  dnsNames:
+    - 'ollama.cloudydad.world'
+  issuerRef:
+    name: letsencrypt
+    kind: ClusterIssuer
