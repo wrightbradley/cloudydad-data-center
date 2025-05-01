@@ -16,6 +16,7 @@ resources:
   - ./immich.yaml
   - ./jetstack.yaml
   - ./kube-vip.yaml
+  - ./ollama.yaml
   - ./opentelemetry.yaml
   - ./podinfo.yaml
   - ./reloader.yaml
