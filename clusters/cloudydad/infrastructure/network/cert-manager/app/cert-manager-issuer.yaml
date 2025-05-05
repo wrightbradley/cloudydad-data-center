@@ -25,7 +25,6 @@ spec:
             - 'cloudydad.world'
             - 'goldilocks.cloudydad.world'
             - 'grafana.cloudydad.world'
-            - 'homepage.cloudydad.world'
             - 'immich.cloudydad.world'
             - 'karakeep.cloudydad.world'
             - 'ollama.cloudydad.world'
