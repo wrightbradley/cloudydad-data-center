@@ -5,12 +5,55 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.9] - 2025-05-05
+## What's Changed
+
+### <!-- 0 -->🚀 Features
+
+- Configure karakeep archive settings  by @wrightbradley - ([d35042a](d35042a049547924a1e167540b3e68ccc5cf8017))
+- Add ansible maintenance playbooks  by @wrightbradley - ([868f531](868f53197b82680020f4e6f05536cbf598c88b91))
+- Add ollama  by @wrightbradley - ([d30aa6e](d30aa6edd363fd77d32667a6b7dade45971db220))
+- Leverage ollama models  by @wrightbradley - ([4266889](4266889398b18045eb6f28cc76dafc946db86ce5))
+- Add rsshub  by @wrightbradley - ([ce53f3d](ce53f3db4d2f83e8a38fd8f59cee935820f620e4))
+- Upgrade authentik to 2025.4.0  by @wrightbradley - ([84ebc87](84ebc876828bddfd5e86a8d93c61f9c7a2cd7cc0))
+- Upgrade immich to v1.132.3  by @wrightbradley - ([9ec1185](9ec118504d4258a2dcbc2a82c4bb77d8e753b507))
+
+### <!-- 1 -->🐛 Bug Fixes
+
+- Add karakeep secrets  by @wrightbradley - ([41a2b12](41a2b120b46cbd81bb999b8f0547b1e65a8643da))
+- Migrate LB service to Ingress for karakeep  by @wrightbradley - ([20e985e](20e985e5e373cf66a71a8063c5b29d61dff2ee69))
+- Helm repo url for bjw-s  by @wrightbradley - ([1106fff](1106fff78fd47a1204403c2180d037dd48d1562a))
+- Provide nameservers for cert-manager  by @wrightbradley - ([e0ab838](e0ab838c72ff442fbe56a59fa987956621f54d53))
+
+### <!-- 12 -->💼 Other
+
+- Add scripts  by @wrightbradley - ([8968700](8968700715df30243ae34d2577da275f9de7d6b3))
+
+### <!-- 8 -->🧹 Miscellaneous Tasks
+
+- Remove unused helm repos and apps  by @wrightbradley - ([6dd0658](6dd06587bcde137e7eec4a0b66fcb59095fbf5f0))
+- Increase storage for vm-k8s-stack  by @wrightbradley - ([63560ce](63560ce2ffc7197007d2cf881db8afa2076cdcfa))
+- Migrate to valkey redis for authentik  by @wrightbradley - ([a472d01](a472d01d0430a2705cd13c3fde5f5646c1dd7190))
+- Improve resource reqs/limits  by @wrightbradley - ([41ff37e](41ff37ed3fefdd3d456b2e37c8b4871967245500))
+- Remove homepage app  by @wrightbradley - ([d6fbdb9](d6fbdb9531dab73ded6f3b745b357ac74f6e2b5e))
+
+### <!-- 9 -->🤖 CI
+
+- Update and run pre-commit  by @wrightbradley in [#196](https://github.com/wrightbradley/cloudydad-data-center/pull/196) - ([4e46cea](4e46cea2d963a9113ba2fbb2c8c97c9792ac28d4))
+
+
+**Full Changelog**: https://github.com/wrightbradley/cloudydad-data-center/compare/0.1.8...0.1.9
+
 ## [0.1.8] - 2025-04-14
 ## What's Changed
 
 ### <!-- 1 -->🐛 Bug Fixes
 
 - Enable karakeep app  by @wrightbradley in [#193](https://github.com/wrightbradley/cloudydad-data-center/pull/193) - ([93d503e](93d503e4ba8c29c168336d8da09ce87cd3e0fce7))
+
+### <!-- 7 -->📚 Documentation
+
+- Release 0.1.8 [skip ci]  by @github-actions[bot] - ([28d6156](28d6156ba71b85810e0ac030938184954bd24a6b))
 
 ### <!-- 8 -->🧹 Miscellaneous Tasks
 
