@@ -53,7 +53,7 @@ postgresql:
       auth:
         username: immich
         database: immich
-        password: immich
+        password: immich #pragma: allowlist secret
   primary:
     containerSecurityContext:
       readOnlyRootFilesystem: false
@@ -104,4 +104,3 @@ machine-learning:
       type: emptyDir
       accessMode: ReadWriteMany
       # storageClass: your-class
-

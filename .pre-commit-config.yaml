@@ -37,17 +37,17 @@ repos:
         name: Detect secrets
         exclude: molecule/|.*sealed.*
   - repo: https://github.com/gitleaks/gitleaks
-    rev: v8.21.2
+    rev: v8.25.1
     hooks:
       - id: gitleaks
   ##############################################################################
   ################################ YAML Checks #################################
   - repo: https://github.com/google/yamlfmt
-    rev: v0.14.0
+    rev: v0.16.0
     hooks:
       - id: yamlfmt
   - repo: https://github.com/adrienverge/yamllint
-    rev: v1.35.1
+    rev: v1.37.1
     hooks:
       - id: yamllint
         args: [-c=.yamllint]
@@ -61,5 +61,5 @@ repos:
     rev: v0.10.0.1
     hooks:
       - id: shellcheck
-        exclude: roles/system/files/etc/update-motd.d/
+        exclude: roles/system/files/etc/update-motd.d/|scripts/.*
 ##############################################################################

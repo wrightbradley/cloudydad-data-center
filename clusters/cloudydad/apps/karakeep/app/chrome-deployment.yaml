@@ -31,4 +31,3 @@ spec:
               memory: 348Mi
             limits:
               memory: 348Mi
-
