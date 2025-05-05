@@ -24,6 +24,12 @@ spec:
                 name: karakeep-configuration
           image: getmeili/meilisearch:v1.11.1
           name: meilisearch
+          resources:
+            requests:
+              cpu: 10m
+              memory: 191Mi
+            limits:
+              memory: 191Mi
           volumeMounts:
             - mountPath: /meili_data
               name: meilisearch

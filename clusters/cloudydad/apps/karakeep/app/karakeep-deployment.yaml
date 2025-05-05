@@ -29,6 +29,12 @@ spec:
           image: ghcr.io/karakeep-app/karakeep:release
           imagePullPolicy: Always
           name: web
+          resources:
+            requests:
+              cpu: 688m
+              memory: 1097Mi
+            limits:
+              memory: 1097Mi
           ports:
             - containerPort: 3000
           volumeMounts:

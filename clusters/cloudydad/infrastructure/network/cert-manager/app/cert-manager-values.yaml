@@ -303,7 +303,7 @@ extraEnv: []
 # For more information, see [Resource Management for Pods and Containers](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/).
 resources:
   requests:
-    cpu: 10m
+    cpu: 230m
     memory: 100Mi
   limits:
     memory: 100Mi
@@ -783,7 +783,7 @@ webhook:
   # For more information, see [Resource Management for Pods and Containers](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/).
   resources:
     requests:
-      cpu: 10m
+      cpu: 95m
       memory: 100Mi
     limits:
       memory: 100Mi

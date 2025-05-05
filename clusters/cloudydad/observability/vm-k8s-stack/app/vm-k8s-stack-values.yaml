@@ -280,10 +280,10 @@ vmsingle:
           storage: 100Gi
     resources:
       limits:
-        memory: 1717Mi
+        memory: 2Gi
       requests:
-        memory: 1717Mi
-        cpu: 240m
+        memory: 2Gi
+        cpu: 2
   ingress:
     # -- Enable deployment of ingress for server component
     enabled: true

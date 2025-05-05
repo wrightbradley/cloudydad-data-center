@@ -343,10 +343,10 @@ route:
 
 resources:
   requests:
-    cpu: 262m
-    memory: 356Mi
+    cpu: 252m
+    memory: 309Mi
   limits:
-    memory: 356Mi
+    memory: 309Mi
 
 ## Node labels for pod assignment
 ## ref: https://kubernetes.io/docs/user-guide/node-selection/
@@ -1002,10 +1002,10 @@ sidecar:
   imagePullPolicy: IfNotPresent
   resources:
     requests:
-      cpu: 66m
-      memory: 150Mi
+      cpu: 40m
+      memory: 170Mi
     limits:
-      memory: 150Mi
+      memory: 170Mi
   securityContext:
     allowPrivilegeEscalation: false
     capabilities:
