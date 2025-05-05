@@ -20,4 +20,3 @@ spec:
                   name: web
   tls:
     - secretName: karakeep-tls #pragma: allowlist secret
-
