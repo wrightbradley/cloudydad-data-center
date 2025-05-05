@@ -26,10 +26,10 @@ spec:
             - run
           resources:
             requests:
-              cpu: 100m
+              cpu: 10m
               memory: 100Mi
             limits:
-              memory: 200Mi
+              memory: 100Mi
           livenessProbe:
             httpGet:
               # Cloudflared has a /ready endpoint which returns 200 if and only if

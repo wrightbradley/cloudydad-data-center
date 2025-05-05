@@ -46,6 +46,7 @@ server:
       cpu: 1
     limits:
       memory: 2Gi
+      cpu: 1
   ingress:
     main:
       enabled: true
@@ -70,6 +71,7 @@ machine-learning:
       cpu: 1
     limits:
       memory: 2Gi
+      cpu: 1
   env:
     TRANSFORMERS_CACHE: /cache
   persistence:

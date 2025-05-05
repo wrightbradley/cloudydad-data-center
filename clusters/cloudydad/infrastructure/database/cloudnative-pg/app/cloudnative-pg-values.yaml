@@ -130,10 +130,10 @@ service:
 
 resources:
   limits:
-    memory: 113Mi
+    memory: 122Mi
   requests:
-    cpu: 10m
-    memory: 113Mi
+    cpu: 29m
+    memory: 122Mi
 
 # -- Nodeselector for the operator to be installed.
 nodeSelector: {}

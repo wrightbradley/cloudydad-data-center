@@ -25,3 +25,10 @@ spec:
             - --hide-scrollbars
           image: gcr.io/zenika-hub/alpine-chrome:123
           name: chrome
+          resources:
+            requests:
+              cpu: 10m
+              memory: 348Mi
+            limits:
+              memory: 348Mi
+

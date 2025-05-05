@@ -339,10 +339,10 @@ server:
   # -- Resource limits and requests for the authentik server
   resources:
     requests:
-      cpu: 300m
-      memory: 1Gi
+      cpu: 582m
+      memory: 1175Mi
     limits:
-      memory: 1Gi
+      memory: 1175Mi
 
   # authentik server container ports
   containerPorts:
@@ -768,10 +768,10 @@ worker:
   # -- Resource limits and requests for the authentik worker
   resources:
     requests:
-      cpu: 300m
-      memory: 625Mi
+      cpu: 461m
+      memory: 670Mi
     limits:
-      memory: 625Mi
+      memory: 670Mi
 
   # -- Host Network for authentik worker pods
   hostNetwork: false
