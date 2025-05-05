@@ -3,9 +3,8 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - ./homepage/kustomization.yaml
   - ./immich/kustomization.yaml
   - ./karakeep/kustomization.yaml
-  - ./rsshub/kustomization.yaml
   - ./ollama/kustomization.yaml
+  - ./rsshub/kustomization.yaml
   - ./wakapi/kustomization.yaml
