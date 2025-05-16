@@ -1,0 +1,13 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: ntfy
+resources:
+  - ./ntfy-namespace.yaml
+  - ./ntfy-certificate.yaml
+  - ./ntfy-pvc.yaml
+  - ./ntfy-svc.yaml
+  - ./ntfy-ingress.yaml
+  - ./ntfy-configmap.yaml
+  - ./ntfy-deployment.yaml
