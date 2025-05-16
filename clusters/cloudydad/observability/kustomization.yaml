@@ -8,6 +8,7 @@ resources:
   # - ./goldilocks/kustomization.yaml
   - ./grafana/kustomization.yaml
   - ./node-problem-detector/kustomization.yaml
+  - ./ntfy/kustomization.yaml
   - ./otel-collector/kustomization.yaml
   # - ./trivy-operator/kustomization.yaml
   # - ./signoz/kustomization.yaml

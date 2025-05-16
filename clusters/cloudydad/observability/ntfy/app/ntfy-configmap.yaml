@@ -1,0 +1,10 @@
+---
+# https://kubernetes.io/docs/concepts/configuration/configmap/
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: server-config
+data:
+  server.yml: |
+    cache-file: "/var/cache/ntfy/cache.db"
+    attachment-cache-dir: "/var/cache/ntfy/attachments"

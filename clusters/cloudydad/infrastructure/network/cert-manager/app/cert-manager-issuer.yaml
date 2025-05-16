@@ -27,6 +27,7 @@ spec:
             - 'grafana.cloudydad.world'
             - 'immich.cloudydad.world'
             - 'karakeep.cloudydad.world'
+            - 'ntfy.cloudydad.world'
             - 'ollama.cloudydad.world'
             - 'podinfo.cloudydad.world'
             - 'rsshub.cloudydad.world'
