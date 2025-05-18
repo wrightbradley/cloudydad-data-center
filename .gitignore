@@ -868,3 +868,4 @@ clusters/cloudydad/infrastructure/database/cloudnative-pg/app/create-wakapi.sql
 clusters/cloudydad/apps/wakapi/app/wakapi-secret-values.yaml
 clusters/cloudydad/apps/invidious/app/invidious-secret-values.yaml
 clusters/cloudydad/infrastructure/database/cloudnative-pg/app/create-invidious.sql
+clusters/cloudydad/infrastructure/database/cloudnative-pg/app/create-n8n.sql

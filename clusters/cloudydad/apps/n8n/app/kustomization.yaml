@@ -1,0 +1,16 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: n8n
+resources:
+  - ./n8n-namespace.yaml
+  - ./sealed-n8n-secret.yaml
+  - ./n8n-helm-release.yaml
+  - ./n8n-certificate.yaml
+configMapGenerator:
+  - name: n8n-values
+    files:
+      - values.yaml=n8n-values.yaml
+configurations:
+  - kustomizeconfig.yaml

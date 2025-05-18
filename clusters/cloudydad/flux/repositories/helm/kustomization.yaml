@@ -16,6 +16,7 @@ resources:
   - ./immich.yaml
   - ./jetstack.yaml
   - ./kube-vip.yaml
+  - ./n8n.yaml
   - ./ollama.yaml
   - ./opentelemetry.yaml
   - ./prometheus-community.yaml

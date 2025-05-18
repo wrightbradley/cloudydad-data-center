@@ -1,0 +1,18 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/all.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: n8n
+  namespace: flux-system
+spec:
+  path: ./clusters/cloudydad/apps/n8n/app
+  targetNamespace: n8n
+  dependsOn:
+    - name: infrastructure
+  sourceRef:
+    kind: GitRepository
+    name: cloudydad-data-center
+  prune: true
+  wait: true
+  interval: 10m
