@@ -18,6 +18,7 @@ resources:
   - ./kube-vip.yaml
   - ./ollama.yaml
   - ./opentelemetry.yaml
+  - ./prometheus-community.yaml
   - ./podinfo.yaml
   - ./reloader.yaml
   - ./rssnext.yaml
