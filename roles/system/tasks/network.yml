@@ -170,10 +170,19 @@
         - not ip_validation.failed | default(false)
       ignore_errors: true
 
-    - name: Ensure search domain is not defined in /etc/resolv.conf
+    - name: Ensure NetworkManager does not manage /etc/resolv.conf
       ansible.builtin.copy:
-        dest: /etc/NetworkManager/dispatcher.d/10-no-search
-        src: etc/NetworkManager/dispatcher.d/10-no-search
+        dest: /etc/NetworkManager/conf.d/90-dns-none.conf
+        src: etc/NetworkManager/conf.d/90-dns-none.conf
+        mode: '0755'
+        owner: 'root'
+        group: 'root'
+      notify: Restart NetworkManager
+
+    - name: Configure /etc/resolv.conf
+      ansible.builtin.copy:
+        dest: /etc/resolv.conf
+        src: etc/resolv.conf
         mode: '0755'
         owner: 'root'
         group: 'root'

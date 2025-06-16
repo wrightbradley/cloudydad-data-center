@@ -87,19 +87,23 @@ ollama:
     #  - mistral
     pull:
       # - gemma2:2b
+      # - hf.co/google/gemma-3n-E4B-it-litert-preview
+      - gemma3:4b
       # - nomic-embed-text
       # - snowflake-arctic-embed:335m
       # - gemma2
-      - llama3.2:3b
-      - llava-phi3:3.8b
+      # - llama3.2:3b
+      # - llava-phi3:3.8b
 
     # -- List of models to load in memory at container startup
     # run:
     #  - llama2
     #  - mistral
     run:
-      - llama3.2:3b
-      - llava-phi3:3.8b
+      - gemma3:4b
+      # - hf.co/google/gemma-3n-E4B-it-litert-preview
+      # - llama3.2:3b
+      # - llava-phi3:3.8b
 
     # -- List of models to create at container startup, there are two options
     # 1. Create a raw model
@@ -215,13 +219,12 @@ ingress:
 resources:
   # -- Pod requests
   requests:
-    memory: 6Gi
+    memory: 5Gi
     cpu: 1
 
   # -- Pod limit
   limits:
     memory: 12Gi
-    cpu: 4
 
 # Configure extra options for liveness probe
 # ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes

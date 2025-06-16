@@ -6,6 +6,7 @@ resources:
   - ./immich/kustomization.yaml
   - ./karakeep/kustomization.yaml
   - ./ollama/kustomization.yaml
-  - ./rsshub/kustomization.yaml
   - ./tailscale/kustomization.yaml
+  - ./n8n/kustomization.yaml
+  # - ./rsshub/kustomization.yaml
   - ./wakapi/kustomization.yaml
