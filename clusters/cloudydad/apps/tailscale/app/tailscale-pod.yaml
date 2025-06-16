@@ -1,0 +1,28 @@
+# pod.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: tailscale-jumphost
+  labels:
+    app: tailscale-jumphost
+spec:
+  containers:
+  - name: tailscale
+    image: tailscale/tailscale:latest
+    env:
+    - name: TS_USERSPACE
+      value: "false"
+    - name: TS_AUTH_KEY
+      value: "tskey-auth-kLeQMF3kKv11CNTRL-jv8e77nnXS8TWuuKWpMGS8wgLfzpJYT1"
+    - name: TS_EXTRA_ARGS
+      value: --advertise-routes=172.18.0.0/16 --ssh
+    - name: TS_ACCEPT_DNS
+      value: "false"
+    securityContext:
+      privileged: true
+      capabilities:
+        add:
+        - NET_ADMIN
+        - NET_RAW
+    # Keep the container running after tailscaled starts
+    command: ["/bin/sh", "-c", "tailscaled & sleep infinity"]

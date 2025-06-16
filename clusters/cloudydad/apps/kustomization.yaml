@@ -7,4 +7,5 @@ resources:
   - ./karakeep/kustomization.yaml
   - ./ollama/kustomization.yaml
   - ./rsshub/kustomization.yaml
+  - ./tailscale/kustomization.yaml
   - ./wakapi/kustomization.yaml
