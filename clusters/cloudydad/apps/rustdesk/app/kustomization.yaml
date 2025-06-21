@@ -1,0 +1,13 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: rustdesk
+resources:
+  - ./rustdesk-namespace.yaml
+  - ./rustdesk-certificate.yaml
+  - ./rustdesk-cm.yaml
+  - ./rustdesk-ingress.yaml
+  - ./rustdesk-pvc.yaml
+  - ./rustdesk-svc.yaml
+  - ./rustdesk-deployment.yaml

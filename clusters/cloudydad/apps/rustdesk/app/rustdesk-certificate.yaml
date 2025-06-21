@@ -1,0 +1,12 @@
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: rustdesk
+spec:
+  secretName: rustdesk-tls #pragma: allowlist secret
+  dnsNames:
+    - 'rustdesk.cloudydad.world'
+  issuerRef:
+    name: letsencrypt
+    kind: ClusterIssuer
