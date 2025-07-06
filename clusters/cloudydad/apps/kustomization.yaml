@@ -8,4 +8,5 @@ resources:
   - ./ollama/kustomization.yaml
   # - ./rsshub/kustomization.yaml
   - ./n8n/kustomization.yaml
+  - ./rustdesk/kustomization.yaml
   - ./wakapi/kustomization.yaml
