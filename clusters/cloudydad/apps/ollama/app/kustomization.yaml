@@ -6,10 +6,14 @@ namespace: ollama
 resources:
   - ./ollama-namespace.yaml
   - ./ollama-helm-release.yaml
+  - ./ollama-qwen2-vl-helm-release.yaml
   - ./ollama-certificate.yaml
 configMapGenerator:
   - name: ollama-values
     files:
       - values.yaml=ollama-values.yaml
+  - name: ollama-qwen2-vl-values
+    files:
+      - values.yaml=ollama-qwen2-vl-values.yaml
 configurations:
   - kustomizeconfig.yaml

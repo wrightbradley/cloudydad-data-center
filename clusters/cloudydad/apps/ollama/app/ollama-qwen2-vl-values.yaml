@@ -67,7 +67,7 @@ ollama:
     # If 'ollama.gpu.enabled', default value is nvidia
     # If set to 'amd', this will add 'rocm' suffix to image tag if 'image.tag' is not override
     # This is due cause AMD and CPU/CUDA are different images
-    type: "nvidia"
+    type: 'nvidia'
 
     # -- Specify the number of GPU
     # If you use MIG section below then this parameter is ignored
@@ -96,13 +96,11 @@ ollama:
     #  - llama2
     #  - mistral
     pull:
-      # - hf.co/janhq/Jan-v1-4B-Q4_K_M.gguf
-      # - hf.co/janhq/Jan-v1-4B-Q8_0.gguf
+      - hf.co/bartowski/Qwen2-VL-2B-Instruct-GGUF:Qwen2-VL-2B-Instruct-Q6_K_L.gguf
       # - gemma3n:e4b
       # - gemma2:2b
       # - hf.co/google/gemma-3n-E4B-it-litert-preview
-      # - gemma3n:e2b
-      - gemma3:4b
+      # - gemma3:4b
       # - nomic-embed-text
       # - snowflake-arctic-embed:335m
       # - gemma2
@@ -114,11 +112,9 @@ ollama:
     #  - llama2
     #  - mistral
     run:
-      # - hf.co/janhq/Jan-v1-4B-Q4_K_M.gguf
-      # - hf.co/janhq/Jan-v1-4B-Q8_0.gguf
-      # - gemma3n:e2b
+      - hf.co/bartowski/Qwen2-VL-2B-Instruct-GGUF:Qwen2-VL-2B-Instruct-Q6_K_L.gguf
       # - gemma3n:e4b
-      - gemma3:4b
+      # - gemma3:4b
       # - hf.co/google/gemma-3n-E4B-it-litert-preview
       # - llama3.2:3b
       # - llava-phi3:3.8b
