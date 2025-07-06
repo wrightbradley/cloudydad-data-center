@@ -32,6 +32,7 @@ spec:
             - 'ollama.cloudydad.world'
             - 'podinfo.cloudydad.world'
             - 'rsshub.cloudydad.world'
+            - 'rustdesk.cloudydad.world'
             - 'signoz.cloudydad.world'
             - 'uptime-kuma.cloudydad.world'
             - 'vmagent.cloudydad.world'

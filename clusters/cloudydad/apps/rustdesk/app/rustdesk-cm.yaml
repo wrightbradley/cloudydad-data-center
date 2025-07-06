@@ -1,0 +1,10 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: rustdesk-config
+data:
+  RELAY: rustdesk.cloudydad.world
+  ENCRYPTED_ONLY: "1"
+  #KEY_PUB:
+  #KEY_PRIV:

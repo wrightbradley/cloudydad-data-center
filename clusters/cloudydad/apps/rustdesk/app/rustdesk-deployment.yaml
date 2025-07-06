@@ -1,0 +1,37 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rustdesk-deploy
+  labels:
+    app: rustdesk-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rustdesk-app
+  template:
+    metadata:
+      labels:
+        app: rustdesk-app
+    spec:
+      containers:
+        - name: rustdesk-container
+          image: rustdesk/rustdesk-server-s6:1.1.10-3
+          envFrom:
+            - configMapRef:
+                name: rustdesk-config
+          resources: {}
+          ports:
+            - containerPort: 21115
+            - containerPort: 21116
+            - containerPort: 21118
+            - containerPort: 21117
+            - containerPort: 21119
+          volumeMounts:
+            - name: rustdesk-data
+              mountPath: /data
+      volumes:
+        - name: rustdesk-data
+          persistentVolumeClaim:
+            claimName: rustdesk-data-pvc
