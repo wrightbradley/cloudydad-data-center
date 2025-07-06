@@ -88,7 +88,8 @@ ollama:
     pull:
       # - gemma2:2b
       # - hf.co/google/gemma-3n-E4B-it-litert-preview
-      - gemma3:4b
+      # - gemma3:4b
+      - gemma3n:e4b
       # - nomic-embed-text
       # - snowflake-arctic-embed:335m
       # - gemma2
@@ -100,7 +101,8 @@ ollama:
     #  - llama2
     #  - mistral
     run:
-      - gemma3:4b
+      # - gemma3:4b
+      - gemma3n:e4b
       # - hf.co/google/gemma-3n-E4B-it-litert-preview
       # - llama3.2:3b
       # - llava-phi3:3.8b
@@ -219,12 +221,12 @@ ingress:
 resources:
   # -- Pod requests
   requests:
-    memory: 5Gi
-    cpu: 1
+    memory: 8Gi
+    cpu: 2
 
   # -- Pod limit
   limits:
-    memory: 12Gi
+    memory: 8Gi
 
 # Configure extra options for liveness probe
 # ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
