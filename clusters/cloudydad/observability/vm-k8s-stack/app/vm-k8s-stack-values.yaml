@@ -296,7 +296,7 @@ vmsingle:
         - ReadWriteOnce
       resources:
         requests:
-          storage: 100Gi
+          storage: 150Gi
     resources:
       limits:
         memory: 2Gi
