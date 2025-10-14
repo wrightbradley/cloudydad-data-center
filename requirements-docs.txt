@@ -9,7 +9,9 @@ certifi==2025.1.31
 charset-normalizer==3.4.4
     # via requests
 click==8.1.8
-    # via mkdocs
+    # via
+    #   mkdocs
+    #   mkdocs-material
 colorama==0.4.6
     # via mkdocs-material
 csscompressor==0.9.5
@@ -20,11 +22,6 @@ htmlmin2==0.1.13
     # via mkdocs-minify-plugin
 idna==3.10
     # via requests
-importlib-metadata==8.7.0
-    # via
-    #   markdown
-    #   mkdocs
-    #   mkdocs-get-deps
 jinja2==3.1.6
     # via
     #   mkdocs
@@ -61,17 +58,17 @@ mkdocs==1.6.1
     #   mkdocs-techdocs-core
 mkdocs-get-deps==0.2.0
     # via mkdocs
-mkdocs-material==9.6.8
+mkdocs-material==9.6.19
     # via mkdocs-techdocs-core
 mkdocs-material-extensions==1.3.1
     # via mkdocs-material
 mkdocs-minify-plugin==0.8.0
     # via -r requirements-docs.in
-mkdocs-monorepo-plugin==1.1.0
+mkdocs-monorepo-plugin==1.1.2
     # via mkdocs-techdocs-core
 mkdocs-redirects==1.2.2
     # via mkdocs-techdocs-core
-mkdocs-techdocs-core==1.5.4
+mkdocs-techdocs-core==1.6.0
     # via -r requirements-docs.in
 packaging==24.2
     # via mkdocs
@@ -83,11 +80,11 @@ plantuml-markdown==3.11.1
     # via mkdocs-techdocs-core
 platformdirs==4.3.7
     # via mkdocs-get-deps
-pygments==2.19.1
+pygments==2.19.2
     # via
     #   mkdocs-material
     #   mkdocs-techdocs-core
-pymdown-extensions==10.14.3
+pymdown-extensions==10.16.1
     # via
     #   mkdocs-material
     #   mkdocs-techdocs-core
@@ -117,5 +114,3 @@ urllib3==2.5.0
     # via requests
 watchdog==6.0.0
     # via mkdocs
-zipp==3.23.0
-    # via importlib-metadata
