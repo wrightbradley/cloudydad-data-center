@@ -1,2 +1,11 @@
 ---
 hostname: rpi05
+ethernet_id: eth0
+ethernet_mac: b8:27:eb:42:93:4a
+# rpi05 has very limited resources. Do NOT allow non-master workloads to run here.
+# This ensures only control plane/system pods (with tolerations) can be scheduled.
+k3s_master_taint: true
+flannel_iface: eth0
+extra_args: >-
+  {{ '--flannel-iface=' + flannel_iface if calico_iface is not defined and cilium_iface is not defined else '' }} --node-ip={{ k3s_node_ip }} --node-label exclude-storage=true --kubelet-arg enforce-node-allocatable="pods" --kubelet-arg system-reserved="cpu=100m,memory=128Mi,ephemeral-storage=1Gi" --kubelet-arg kube-reserved="cpu=100m,memory=128Mi,ephemeral-storage=1Gi" --kubelet-arg eviction-hard="memory.available<100Mi,nodefs.available<10%" --kubelet-arg kube-api-qps=20 --kubelet-arg kube-api-burst=30
+default_interface: eth0

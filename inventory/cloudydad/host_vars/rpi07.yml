@@ -6,3 +6,4 @@ k3s_master_taint: true
 flannel_iface: eth0
 extra_args: >-
   {{ '--flannel-iface=' + flannel_iface if calico_iface is not defined and cilium_iface is not defined else '' }} --node-ip={{ k3s_node_ip }} --kubelet-arg enforce-node-allocatable="pods" --kubelet-arg system-reserved="cpu=200m,memory=512Mi,ephemeral-storage=3Gi" --kubelet-arg kube-reserved="cpu=200m,memory=512Mi,ephemeral-storage=2Gi" --kubelet-arg eviction-hard="memory.available<512Mi,nodefs.available<15%" --kubelet-arg kube-api-qps=20 --kubelet-arg kube-api-burst=30
+default_interface: eth0

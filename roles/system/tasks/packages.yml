@@ -59,9 +59,9 @@
         group: root
         mode: '0644'
 
-    - name: Enable and check multipath-tools service
+    - name: Enable and check multipathd service
       systemd:
-        name: multipath-tools
+        name: multipathd
         daemon_reload: true
         state: restarted
         enabled: true
