@@ -57,15 +57,19 @@
 
     - name: Identify actual physical interface
       set_fact:
-        physical_interfaces: "{{ available_interfaces.stdout_lines | difference(['lo', 'cni0', 'flannel.1', 'docker0']) | select('match', '^(en|eth|wl|ww|lan0)') | list }}"
+        physical_interfaces: "{{ available_interfaces.stdout_lines | difference(['lo', 'cni0', 'flannel.1', 'docker0']) | select('match', '^(en|eth|ww|lan0)') | reject('match', '^wl') | list }}"
 
     - name: Debug physical interfaces
       debug:
         var: physical_interfaces
 
-    - name: Set default interface
+    - name: Debug default interface
+      debug:
+        var: default_interface
+
+    - name: Set default interface from host_vars if defined, else use first physical interface
       set_fact:
-        default_interface: "{{ physical_interfaces[0] }}"
+        default_interface: "{{ default_interface | default(physical_interfaces[0]) }}"
       when: physical_interfaces | length > 0
 
     - name: Debug interface MAC address
@@ -106,9 +110,9 @@
           Connection name: lan0
           Default Interface name: {{ default_interface }}
           MAC address: {{ interface_mac }}
-          IPv4 address: {{ ansible_facts[default_interface]['ipv4']['address'] }}
-          Gateway: {{ ansible_default_ipv4.gateway }}
-          DNS servers: {{ ansible_dns.nameservers | join(',') }}
+          IPv4 address: {{ ansible_facts[default_interface]['ipv4']['address'] | default('N/A') }}
+          Gateway: {{ ansible_default_ipv4.gateway | default('N/A') }}
+          DNS servers: {{ (ansible_dns.nameservers | join(',')) | default('N/A') }}
       when: default_interface is defined
 
     - name: Configure persistent interface with nmcli

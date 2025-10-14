@@ -1,5 +1,5 @@
 ---
-k3s_version: v1.31.2+k3s1
+k3s_version: v1.32.9+k3s1
 systemd_dir: /etc/systemd/system
 
 # interface which will be used for flannel
@@ -51,7 +51,14 @@ apiserver_endpoint: 172.18.255.253
 # The IP on which the node is reachable in the cluster.
 # Here, a sensible default is provided, you can still override
 # it for each of your hosts, though.
-k3s_node_ip: "{{ ansible_facts[(cilium_iface | default(calico_iface | default(flannel_iface)))]['ipv4']['address'] }}"
+k3s_node_ip: >-
+  {{
+    (
+      ansible_facts[(cilium_iface | default(calico_iface | default(flannel_iface)))]
+      if ansible_facts[(cilium_iface | default(calico_iface | default(flannel_iface)))] is defined
+      else {}
+    ).get('ipv4', {}).get('address', 'N/A')
+  }}
 
 # Disable the taint manually by setting: k3s_master_taint = false
 # k3s_master_taint: "{{ true if groups['node'] | default([]) | length >= 1 else false }}"
