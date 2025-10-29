@@ -12,7 +12,7 @@ spec:
         kind: HelmRepository
         name: signoz
         namespace: flux-system
-      version: '0.70.0'
+      version: '0.99.0'
   interval: 50m
   releaseName: signoz
   targetNamespace: signoz
