@@ -82,8 +82,8 @@ machine-learning:
     pullPolicy: IfNotPresent
   resources:
     requests:
-      memory: 2Gi
-      cpu: 1
+      memory: 256Mi
+      cpu: 100m
     limits:
       memory: 2Gi
       cpu: 1
@@ -96,4 +96,4 @@ machine-learning:
       # Optional: Set this to pvc to avoid downloading the ML models every start.
       type: pvc
       accessMode: ReadWriteOnce
-      # storageClass:
+      storageClass: truenas-iscsi-csi
