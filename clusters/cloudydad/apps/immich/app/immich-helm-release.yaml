@@ -12,7 +12,7 @@ spec:
         kind: HelmRepository
         name: immich
         namespace: flux-system
-      version: "0.10.1"
+      version: "0.10.3"
   interval: 30m
   releaseName: immich
   targetNamespace: immich
