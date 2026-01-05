@@ -870,3 +870,4 @@ clusters/cloudydad/apps/invidious/app/invidious-secret-values.yaml
 clusters/cloudydad/infrastructure/database/cloudnative-pg/app/create-invidious.sql
 clusters/cloudydad/infrastructure/database/cloudnative-pg/app/create-n8n.sql
 nix/keys/
+clusters/cloudydad/apps/solidtime/setup.md
