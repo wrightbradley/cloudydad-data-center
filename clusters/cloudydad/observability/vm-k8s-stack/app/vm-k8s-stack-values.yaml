@@ -713,9 +713,9 @@ vmalert:
     externalLabels: {}
     resources:
       limits:
-        memory: 100Mi
+        memory: 500Mi
       requests:
-        memory: 100Mi
+        memory: 500Mi
         cpu: 29m
 
   # -- (object) Extra VMAlert annotation templates
