@@ -1,0 +1,173 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nix-dev-env
+  labels:
+    app: nix-dev-env
+  namespace: nix-dev
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: nix-dev-env
+  template:
+    metadata:
+      labels:
+        app: nix-dev-env
+    spec:
+      nodeSelector:
+        kubernetes.io/hostname: beelink-1
+      containers:
+        - name: nix-dev
+          image: ghcr.io/nixos/nix:latest
+          command: ["bash", "-c"]
+          args:
+            - |
+              set -e
+              export PATH=/nix/var/nix/profiles/default/bin:$PATH
+              export HOME=/home/developer
+
+              echo "Enabling nix experimental features..."
+              mkdir -p /etc/nix
+              echo "experimental-features = nix-command flakes" > /etc/nix/nix.conf
+
+              echo "Setting up SSH host keys..."
+              mkdir -p /etc/ssh
+              if [ ! -f /etc/ssh/ssh_host_rsa_key ]; then
+                echo "Generating SSH host keys..."
+                ssh-keygen -A
+                chmod 600 /etc/ssh/ssh_host_*_key
+                chmod 644 /etc/ssh/ssh_host_*.pub
+              fi
+
+              echo "Activating Home Manager..."
+              if [ -f /home/developer/flake/flake.nix ]; then
+                cd /home/developer/flake
+
+                if [ ! -d /home/developer/.local/state/nix/profiles/home-manager ]; then
+                  echo "First activation - running home-manager..."
+                  nix --extra-experimental-features 'nix-command flakes' run home-manager/master -- switch --flake .#developer || echo "Activation failed, continuing"
+                else
+                  echo "Home Manager already activated"
+                fi
+              fi
+
+              echo "Installing tmux, gotty, and openssh via nix..."
+              nix-env -iA nixpkgs.tmux nixpkgs.gotty nixpkgs.openssh || true
+
+              echo "Updating PATH to include installed packages..."
+              # Source the nix profile to get updated PATH
+              if [ -e /root/.nix-profile/etc/profile.d/nix.sh ]; then
+                . /root/.nix-profile/etc/profile.d/nix.sh
+              fi
+              export PATH=/root/.nix-profile/bin:$PATH
+
+              echo "Starting services..."
+              mkdir -p /run/sshd
+              # Create minimal sshd_config if it doesn't exist
+              if [ ! -f /etc/ssh/sshd_config ]; then
+                echo "Creating sshd_config..."
+                cat > /etc/ssh/sshd_config <<'SSHD_EOF'
+              Port 2222
+              PermitRootLogin yes
+              PubkeyAuthentication yes
+              AuthorizedKeysFile /home/developer/.ssh/authorized_keys
+              PasswordAuthentication no
+              Subsystem sftp /nix/var/nix/profiles/default/libexec/sftp-server
+              SSHD_EOF
+              fi
+              /nix/var/nix/profiles/default/bin/sshd -D -e -p 2222 &
+              SSH_PID=$!
+
+              echo "Starting Gotty..."
+              echo "Checking gotty location..."
+              which gotty || echo "gotty not in PATH"
+              ls -la /root/.nix-profile/bin/ | head -20 || echo "profile bin not found"
+
+              exec gotty \
+                --permit-write \
+                --reconnect \
+                --ws-origin=.* \
+                --title-format="Cloudydad Nix Dev - {{ .Command }}" \
+                /bin/sh -c "export HOME=/home/developer; cd /home/developer/workspace; exec /bin/sh"
+          env:
+            - name: HOME
+              value: /home/developer
+            - name: SHELL
+              value: /bin/sh
+            - name: NIX_PATH
+              value: /nix/var/nix/profiles/default
+          ports:
+            - containerPort: 8080
+              name: gotty
+            - containerPort: 2222
+              name: ssh
+          volumeMounts:
+            - name: workspace
+              mountPath: /home/developer/workspace
+            - name: flake
+              mountPath: /home/developer/flake
+            - name: config
+              mountPath: /home/developer/.config
+              subPath: config
+            - name: config
+              mountPath: /home/developer/.local/share
+              subPath: local-share
+            - name: config
+              mountPath: /etc/ssh
+              subPath: ssh-host-keys
+            - name: ssh-keys
+              mountPath: /home/developer/.ssh/authorized_keys
+              subPath: ssh-public-key
+              readOnly: true
+          securityContext:
+            runAsUser: 0
+            capabilities:
+              add:
+                - SYS_ADMIN
+          resources:
+            requests:
+              cpu: 750m
+              memory: 1Gi
+            limits:
+              cpu: 1500m
+              memory: 2Gi
+          startupProbe:
+            httpGet:
+              path: /
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 30
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8080
+            periodSeconds: 60
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8080
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+      volumes:
+        - name: workspace
+          persistentVolumeClaim:
+            claimName: nix-dev-workspace
+        - name: config
+          persistentVolumeClaim:
+            claimName: nix-dev-config
+        - name: flake
+          configMap:
+            name: nix-dev-flake
+        - name: ssh-keys
+          secret:
+            secretName: nix-dev-ssh-keys # pragma: allowlist secret
+            defaultMode: 0644

@@ -10,3 +10,4 @@ resources:
   - ./n8n/kustomization.yaml
   - ./rustdesk/kustomization.yaml
   - ./wakapi/kustomization.yaml
+  - ./nix-dev/kustomization.yaml

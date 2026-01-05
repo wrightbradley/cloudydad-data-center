@@ -1,0 +1,13 @@
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: nix-dev
+  namespace: nix-dev
+spec:
+  secretName: nix-dev-tls #pragma: allowlist secret
+  dnsNames:
+    - dev.cloudydad.world
+  issuerRef:
+    name: letsencrypt
+    kind: ClusterIssuer

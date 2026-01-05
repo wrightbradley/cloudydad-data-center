@@ -23,6 +23,7 @@ spec:
             - 'authentik.cloudydad.world'
             - 'cloudydad.life'
             - 'cloudydad.world'
+            - 'dev.cloudydad.world'
             - 'goldilocks.cloudydad.world'
             - 'grafana.cloudydad.world'
             - 'immich.cloudydad.world'

@@ -1,0 +1,190 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nix-dev-flake
+  namespace: nix-dev
+data:
+  flake.nix: |
+    {
+      description = "Cloudydad Nix Development Environment - Fish + nvim + TMUX";
+
+      inputs = {
+        nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+        home-manager.url = "github:nix-community/home-manager/release-24.05";
+      };
+
+      outputs = { self, nixpkgs, home-manager }:
+        let
+          system = "x86_64-linux";
+          pkgs = nixpkgs.legacyPackages.${system};
+        in
+        {
+          homeConfigurations.developer = home-manager.lib.homeManagerConfiguration {
+            inherit pkgs;
+            modules = [
+              ./home.nix
+            ];
+          };
+        };
+    }
+  home.nix: |
+    { config, pkgs, lib, ... }:
+
+    {
+      home.stateVersion = "24.05";
+      home.username = "developer";
+      home.homeDirectory = "/home/developer";
+
+      home.packages = with pkgs; [
+        git
+        lazygit
+        gh
+        fish
+        starship
+        tmux
+        neovim
+        nodejs_22
+        pnpm
+        python312
+        lua
+        go
+        ripgrep
+        fd
+        fzf
+        curl
+        wget
+        jq
+        mise
+        eza
+        bat
+        bottom
+        htop
+        autojump
+        fira-code-fonts
+      ];
+
+      programs.fish = {
+        enable = true;
+        interactiveShellInit = ''
+          set -g fish_greeting
+          set -gx EDITOR nvim
+          set -gx GIT_EDITOR nvim
+          set -gx KUBECONFIG "$HOME/.kube/config"
+          set -gx KUBE_EDITOR nvim
+          set -gx NODE_OPTIONS "--no-deprecation --max-old-space-size=4096"
+          set -gx PAGER delta
+          set -gx XDG_CONFIG_HOME "$HOME/.config"
+
+          fish_add_path -gP $HOME/.cargo/bin $HOME/bin $HOME/.local/bin /usr/local/sbin
+
+          command -q zoxide && zoxide init fish | source
+          command -q mise && mise activate fish | source
+          command -q starship && starship init fish | source
+          command -q direnv && direnv hook fish | source
+        '';
+      };
+
+      programs.git.enable = true;
+      programs.starship.enable = true;
+      programs.tmux.enable = true;
+      programs.mise.enable = true;
+
+      programs.fzf = {
+        enable = true;
+        enableFishIntegration = true;
+      };
+
+      home.activation.clone-nvim-config = lib.hm.dag.entryAfter ["linkGeneration"] ''
+        NVIM_DIR="$HOME/.config/nvim"
+        NVIM_REPO="https://github.com/wrightbradley/nvim.git"
+
+        if [ ! -d "$NVIM_DIR" ]; then
+          echo "Cloning nvim config from $NVIM_REPO to $NVIM_DIR"
+          ${pkgs.git}/bin/git clone --depth 1 "$NVIM_REPO" "$NVIM_DIR"
+        elif [ -z "$(ls -A $NVIM_DIR 2>/dev/null)" ]; then
+          echo "nvim directory exists but is empty, recloning..."
+          rm -rf "$NVIM_DIR"
+          ${pkgs.git}/bin/git clone --depth 1 "$NVIM_REPO" "$NVIM_DIR"
+        else
+          echo "nvim config already exists at $NVIM_DIR"
+        fi
+      '';
+
+      home.file.".config/fish/conf.d/alias.fish" = {
+        text = ''
+          # ls Aliases
+          alias ls='eza --group-directories-first'
+          alias l='ll -a'
+          alias lr='ll -T'
+          alias lx='ll -sextension'
+          alias lk='ll -ssize'
+          alias lt='ll -smodified'
+          alias lc='ll -schanged'
+
+          # Navigation
+          alias ..='cd ..'
+          alias ...='cd ../..'
+          alias ....='cd ../../..'
+          alias .....='cd ../../../..'
+
+          # File Operations
+          alias cp='cp -iv'
+          alias mv='mv -iv'
+          alias rm='rm -iv'
+          alias mkdir='mkdir -p'
+
+          # Viewing/Editing
+          alias cat='bat'
+          alias vi='nvim'
+          alias vim='nvim'
+          alias view='nvim -R'
+
+          # Tmux
+          alias t='tmux'
+          alias ta='tmux a -t'
+          alias tn='tmux new -t'
+
+          # Git
+          alias grep='rg'
+          alias cdiff='delta'
+
+          # Kubernetes
+          alias kgn='kubectl get nodes -o wide'
+          alias kgp='kubectl get pods -o wide'
+          alias kgd='kubectl get deployment -o wide'
+          alias kgs='kubectl get svc -o wide'
+
+          function kpnr
+            kubectl get pods -A --field-selector=status.phase!=Running | grep -v Complete
+          end
+
+          function kgca
+            kubectl get pods --all-namespaces -o jsonpath="{.items[*].spec.containers[*].image}" | tr -s '[[:space:]]' '\n' | sort | uniq -c
+          end
+
+          function docker
+            if command -q nerdctl && nerdctl info >/dev/null 2>&1
+              set cntrCmd nerdctl
+            else
+              set cntrCmd docker
+            end
+            for var in $argv
+              if test $var = docker
+                continue
+              end
+              set cntrCmd $cntrCmd $var
+            end
+            command $cntrCmd
+          end
+
+          function tf
+            if test -f terragrunt.hcl
+              terragrunt $argv
+            else
+              terraform $argv
+            end
+          end
+        '';
+      };
+    }
