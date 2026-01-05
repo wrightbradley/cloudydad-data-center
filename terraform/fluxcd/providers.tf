@@ -21,3 +21,17 @@ provider "kubernetes" {
   config_path    = "~/.kube/config"
   config_context = var.kubernetes_context
 }
+
+terraform {
+  required_providers {
+    flux = {
+      source = "fluxcd/flux"
+    }
+    github = {
+      source = "integrations/github"
+    }
+    kubernetes = {
+      source = "hashicorp/kubernetes"
+    }
+  }
+}
