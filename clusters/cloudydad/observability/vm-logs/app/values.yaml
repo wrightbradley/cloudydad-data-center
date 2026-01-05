@@ -52,7 +52,7 @@ server:
   enabled: true
   image:
     # -- Image registry
-    registry: ""
+    registry: quay.io
     # -- Image repository
     repository: victoriametrics/victoria-logs
     # -- Image tag
