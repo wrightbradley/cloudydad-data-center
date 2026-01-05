@@ -8,30 +8,30 @@
   rangeStrategy: "auto",
   enabledManagers: ["ansible", "github-actions", "pip_requirements", "helm-requirements", "helm-values", "kustomize", "terraform", "flux"],
   ansible: {
-    fileMatch: ["roles/requirements\\.ya?ml$", "requirements\\.ya?ml$"],
+    managerFilePatterns: ["/roles/requirements\\.ya?ml$/", "/requirements\\.ya?ml$/"],
   },
   "github-actions": {
-    fileMatch: ["\\.github/workflows/.*\\.ya?ml$"],
+    managerFilePatterns: ["/\\.github/workflows/.*\\.ya?ml$/"],
     pinDigests: true,
   },
   pip_requirements: {
-    fileMatch: ["requirements.*\\.txt$", "requirements\\.ya?ml$"],
+    managerFilePatterns: ["/requirements.*\\.txt$/", "/requirements\\.ya?ml$/"],
   },
   "helm-requirements": {
-    fileMatch: ["Chart\\.yaml$", "requirements\\.yaml$"],
+    managerFilePatterns: ["/Chart\\.yaml$/", "/requirements\\.yaml$/"],
   },
   "helm-values": {
-    fileMatch: ["values.*\\.yaml$"],
+    managerFilePatterns: ["/values.*\\.yaml$/"],
   },
   kustomize: {
-    fileMatch: ["kustomization\\.ya?ml$"],
+    managerFilePatterns: ["/kustomization\\.ya?ml$/"],
   },
   terraform: {
     commitMessageTopic: "Terraform {{depName}} dependency",
-    fileMatch: ["\\.tf$", "\\.tfvars$"],
+    managerFilePatterns: ["/\\.tf$/", "/\\.tfvars$/"],
   },
   flux: {
-    fileMatch: ["clusters/.+\\.ya?ml$", ".*\\.gotmpl$", ".*\\.ya?ml$"],
+    managerFilePatterns: ["/clusters/.+\\.ya?ml$/", "/.*\\.gotmpl$/", "/.*\\.ya?ml$/"],
   },
   packageRules: [
     {
