@@ -473,12 +473,17 @@ collectors:
     presets:
       logsCollection:
         enabled: true
+        includeCollectorLogs: true
+        storeCheckpoints: false
+        maxRecombineLogSize: 102400
       kubeletMetrics:
         enabled: false
       hostMetrics:
         enabled: false
       kubernetesAttributes:
         enabled: true
+        extractAllPodLabels: false
+        extractAllPodAnnotations: false
     config:
       receivers:
         otlp:
