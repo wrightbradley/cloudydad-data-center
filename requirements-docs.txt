@@ -87,7 +87,7 @@ pygments==2.19.1
     # via
     #   mkdocs-material
     #   mkdocs-techdocs-core
-pymdown-extensions==10.14.3
+pymdown-extensions==10.16.1
     # via
     #   mkdocs-material
     #   mkdocs-techdocs-core
