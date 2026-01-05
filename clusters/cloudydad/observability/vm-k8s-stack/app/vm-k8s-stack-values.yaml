@@ -713,9 +713,9 @@ vmalert:
     externalLabels: {}
     resources:
       limits:
-        memory: 500Mi
+        memory: 1Gi
       requests:
-        memory: 500Mi
+        memory: 768Mi
         cpu: 29m
 
   # -- (object) Extra VMAlert annotation templates
@@ -812,9 +812,9 @@ vmagent:
       promscrape.dropOriginalLabels: 'true'
     resources:
       limits:
-        memory: 510Mi
+        memory: 1Gi
       requests:
-        memory: 510Mi
+        memory: 768Mi
         cpu: 238m
   # -- (object) VMAgent ingress configuration
   ingress:
