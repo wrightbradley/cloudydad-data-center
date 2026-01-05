@@ -1,0 +1,44 @@
+---
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMRule
+metadata:
+  name: optimized-apiserver-rules
+  namespace: vm-k8s-stack
+  labels:
+    app.kubernetes.io/name: victoria-metrics-k8s-stack
+    app.kubernetes.io/instance: vm-k8s-stack
+spec:
+  groups:
+    - name: apiserver.optimized
+      interval: 30s
+      rules:
+        # Optimized version of heavy 30-day queries with reduced time range (7d instead of 30d)
+        - record: apiserver_request_total:increase1h_optimized
+          expr: increase(apiserver_request_total[1h])
+        - record: apiserver_request_sli_duration_seconds_bucket:increase1h_optimized
+          expr: increase(apiserver_request_sli_duration_seconds_bucket[1h])
+        - alert: APIServerHighErrorRate
+          expr: |
+            sum(
+              rate(apiserver_request_total{job="apiserver",code=~"5.."}[5m])
+            ) /
+            sum(
+              rate(apiserver_request_total{job="apiserver"}[5m])
+            ) > 0.03
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            summary: "API server error rate is high"
+            description: "API server error rate is {{ $value | humanizePercentage }} for the last 5 minutes"
+        - alert: APIServerHighLatency
+          expr: |
+            histogram_quantile(0.99,
+              sum(rate(apiserver_request_duration_seconds_bucket{job="apiserver"}[5m])) by (le, verb)
+            ) > 1
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            summary: "API server 99th percentile latency is high"
+            description: "API server 99th percentile latency is {{ $value }}s for the last 5 minutes"
