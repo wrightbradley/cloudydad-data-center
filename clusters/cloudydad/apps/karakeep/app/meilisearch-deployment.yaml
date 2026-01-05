@@ -27,9 +27,9 @@ spec:
           resources:
             requests:
               cpu: 10m
-              memory: 191Mi
+              memory: 512Mi
             limits:
-              memory: 191Mi
+              memory: 512Mi
           volumeMounts:
             - mountPath: /meili_data
               name: meilisearch
