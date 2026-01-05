@@ -1,0 +1,17 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nix-dev-env
+  labels:
+    app: nix-dev-env
+  namespace: nix-dev
+spec:
+  type: ClusterIP
+  selector:
+    app: nix-dev-env
+  ports:
+    - port: 8080
+      targetPort: 8080
+      name: gotty
+      protocol: TCP

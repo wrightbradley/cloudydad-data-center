@@ -1,0 +1,17 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: nix-dev
+resources:
+  - ./nix-dev-namespace.yaml
+  - ./nix-dev-workspace-pvc.yaml
+  - ./nix-dev-config-pvc.yaml
+  - ./nix-dev-flake.yaml
+  - ./nix-dev-deployment-nixos.yaml
+  - ./nix-dev-ssh-sealed.yaml
+  - ./nix-dev-ssh-service.yaml
+  - ./nix-dev-service.yaml
+  - ./nix-dev-ingress.yaml
+  - ./nix-dev-certificate.yaml
+  - ./nix-dev-authentik-middleware.yaml

@@ -1,0 +1,138 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nix-dev-env
+  labels:
+    app: nix-dev-env
+  namespace: nix-dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nix-dev-env
+  template:
+    metadata:
+      labels:
+        app: nix-dev-env
+    spec:
+      containers:
+        - name: nix-dev
+          image: ubuntu:24.04
+          command: ["/bin/bash", "-c"]
+          args:
+            - |
+              set -e
+
+              echo "Installing Nix..."
+              apt-get update && apt-get install -y curl xz-utils
+              curl -L https://nixos.org/nix/install -o /tmp/install-nix.sh
+              sh /tmp/install-nix.sh --no-daemon --no-modify-profile
+
+              export PATH=/root/.nix-profile/bin:$PATH
+
+              echo "Creating user..."
+              useradd -m -s /root/.nix-profile/bin/bash developer || true
+
+              echo "Setting up SSH..."
+              mkdir -p /home/developer/.ssh
+              chmod 700 /home/developer/.ssh
+
+              if [ -f /etc/ssh/authorized_keys ]; then
+                cp /etc/ssh/authorized_keys /home/developer/.ssh/authorized_keys
+                chmod 600 /home/developer/.ssh/authorized_keys
+                chown developer:developer /home/developer/.ssh/authorized_keys
+              fi
+
+              echo "Installing SSH server..."
+              apt-get install -y openssh-server
+
+              echo "Configuring SSH..."
+              echo "Port 2222" > /etc/ssh/sshd_config.d/custom.conf
+              echo "PermitRootLogin no" >> /etc/ssh/sshd_config.d/custom.conf
+              echo "PasswordAuthentication no" >> /etc/ssh/sshd_config.d/custom.conf
+              echo "PidFile /run/sshd/sshd.pid" >> /etc/ssh/sshd_config.d/custom.conf
+
+              echo "Generating SSH host keys..."
+              ssh-keygen -A
+
+              echo "Activating Home Manager..."
+              if [ -f /home/developer/flake/flake.nix ]; then
+                cd /home/developer/flake
+                su - developer -c "cd /home/developer/flake && /root/.nix-profile/bin/nix run home-manager/master -- switch --flake .#developer" || echo "Home Manager failed, continuing"
+              else
+                echo "No flake found"
+              fi
+
+              echo "Starting SSH daemon..."
+              exec /usr/sbin/sshd -D -e
+          env:
+            - name: HOME
+              value: /home/developer
+            - name: SHELL
+              value: /bin/bash
+            - name: EDITOR
+              value: nvim
+          ports:
+            - containerPort: 2222
+              name: ssh
+          volumeMounts:
+            - name: workspace
+              mountPath: /home/developer/workspace
+            - name: flake
+              mountPath: /home/developer/flake
+            - name: ssh-keys
+              mountPath: /etc/ssh/authorized_keys
+              subPath: ssh-public-key
+              readOnly: true
+          securityContext:
+            runAsUser: 0
+          resources:
+            requests:
+              cpu: 750m
+              memory: 1Gi
+            limits:
+              cpu: 1500m
+              memory: 2Gi
+        - name: gotty
+          image: sorenisanerd/gotty:latest
+          command:
+            - gotty
+            - --permit-write
+            - --reconnect
+            - --ws-origin=.*
+            - --title-format="Cloudydad Nix Dev - {{ .Command }}"
+            - /home/developer
+          env:
+            - name: HOME
+              value: /home/developer
+            - name: SHELL
+              value: /bin/bash
+          ports:
+            - containerPort: 8080
+              name: gotty
+          volumeMounts:
+            - name: workspace
+              mountPath: /home/developer/workspace
+            - name: flake
+              mountPath: /home/developer/flake
+          securityContext:
+            runAsUser: 1000
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: 100m
+              memory: 256Mi
+      volumes:
+        - name: workspace
+          persistentVolumeClaim:
+            claimName: nix-dev-workspace
+        - name: flake
+          configMap:
+            name: nix-dev-flake
+        - name: ssh-keys
+          secret:
+            secretName: nix-dev-ssh-keys # pragma: allowlist secret
+            defaultMode: 0644
