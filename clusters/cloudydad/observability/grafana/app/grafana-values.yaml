@@ -1292,7 +1292,7 @@ revisionHistoryLimit: 10
 imageRenderer:
   deploymentStrategy: {}
   # Enable the image-renderer deployment & service
-  enabled: false
+  enabled: true
   replicas: 1
   autoscaling:
     enabled: false
@@ -1396,7 +1396,10 @@ imageRenderer:
     # Enable a NetworkPolicy to limit outbound traffic to only the created grafana pods
     limitEgress: false
     # Allow additional services to access image-renderer (eg. Prometheus operator when ServiceMonitor is enabled)
-    extraIngressSelectors: []
+    extraIngressSelectors:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: vm-k8s-stack
   resources: {}
   #   limits:
   #     cpu: 100m

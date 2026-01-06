@@ -86,7 +86,13 @@ priorityClassName: system-node-critical
 securityContext:
   privileged: true
 
-resources: {}
+resources:
+  limits:
+    memory: 64Mi
+    cpu: 50m
+  requests:
+    memory: 32Mi
+    cpu: 10m
 
 annotations: {}
 

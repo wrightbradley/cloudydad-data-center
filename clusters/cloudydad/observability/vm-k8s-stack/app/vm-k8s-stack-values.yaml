@@ -50,8 +50,7 @@ defaultDashboards:
   # -- Enable custom dashboards installation
   enabled: true
   defaultTimezone: utc
-  labels:
-    grafana_dashboard: enabled
+  labels: {}
   annotations: {}
   grafanaOperator:
     # -- Create dashboards as CRDs (requires grafana-operator to be installed)
@@ -294,8 +293,7 @@ vmsingle:
       # Increase query timeout from default 30s to 60s to prevent timeout errors
       -search.maxQueryDuration: 60s
       # Optimize memory usage for heavy queries
-      -search.maxConcurrentRequests: 10
-      -search.maxSeriesPerQuery: 1000000
+      -search.maxConcurrentRequests: "10"
       # Reduce slow query logging threshold to focus on truly problematic queries
       -search.logSlowQueryDuration: 10s
     storage:
@@ -713,9 +711,9 @@ vmalert:
     externalLabels: {}
     resources:
       limits:
-        memory: 500Mi
+        memory: 1Gi
       requests:
-        memory: 500Mi
+        memory: 768Mi
         cpu: 29m
 
   # -- (object) Extra VMAlert annotation templates
@@ -812,9 +810,9 @@ vmagent:
       promscrape.dropOriginalLabels: 'true'
     resources:
       limits:
-        memory: 510Mi
+        memory: 1Gi
       requests:
-        memory: 510Mi
+        memory: 768Mi
         cpu: 238m
   # -- (object) VMAgent ingress configuration
   ingress:
@@ -893,6 +891,8 @@ grafana:
     datasources:
       enabled: true
       initDatasources: true
+      label: grafana_datasource
+      labelValue: "1"
     dashboards:
       provider:
         name: default
@@ -901,6 +901,8 @@ grafana:
       defaultFolderName: default
       enabled: true
       multicluster: false
+      label: grafana_dashboard
+      labelValue: "1"
 
   # -- Create datasource configmap even if grafana deployment has been disabled
   forceDeployDatasource: false
@@ -1188,7 +1190,7 @@ coreDns:
 # Component scraping etcd
 kubeEtcd:
   # -- Enabled KubeETCD metrics scraping
-  enabled: true
+  enabled: false
 
   # -- If your etcd is not deployed as a pod, specify IPs it can be found on
   endpoints: []
@@ -1264,7 +1266,7 @@ kubeScheduler:
 # Component scraping kube proxy
 kubeProxy:
   # -- Enable kube proxy metrics scraping
-  enabled: true
+  enabled: false
 
   # -- If your kube proxy is not deployed as a pod, specify IPs it can be found on
   endpoints: []
