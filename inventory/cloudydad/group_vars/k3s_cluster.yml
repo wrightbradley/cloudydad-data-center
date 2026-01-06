@@ -1,5 +1,5 @@
 ---
-k3s_version: v1.32.10+k3s1
+k3s_version: v1.32.11+k3s1
 systemd_dir: /etc/systemd/system
 
 # interface which will be used for flannel
@@ -74,7 +74,7 @@ k3s_node_ip: >-
 # change these to your liking, the only required are: --disable servicelb, --tls-san {{ apiserver_endpoint }}
 # the contents of the if block is also required if using calico or cilium
 extra_server_args: >-
-  {{ extra_args }} {{ '--node-taint node-role.kubernetes.io/master=true:NoSchedule' if k3s_master_taint else '' }} {% if calico_iface is defined or cilium_iface is defined %} --flannel-backend=none --disable-network-policy --cluster-cidr={{ cluster_cidr | default('10.52.0.0/16') }} {% endif %} --tls-san {{ apiserver_endpoint }} --disable servicelb --disable traefik
+  {{ extra_args }} {{ '--node-taint node-role.kubernetes.io/master=true:NoSchedule' if k3s_master_taint else '' }} {% if calico_iface is defined or cilium_iface is defined %} --flannel-backend=none --disable-network-policy --cluster-cidr={{ cluster_cidr | default('10.52.0.0/16') }} {% endif %} --tls-san {{ apiserver_endpoint }} --disable servicelb --disable traefik --kube-apiserver-arg max-requests-inflight=150 --kube-apiserver-arg max-mutating-requests-inflight=75 --kube-apiserver-arg default-watch-cache-size=3000 --kube-apiserver-arg request-timeout=30s --etcd-arg heartbeat-interval=250 --etcd-arg election-timeout=5000 --etcd-arg max-snapshots=5 --etcd-arg snapshot-count=100000 --etcd-arg quota-backend-bytes=2147483648
 extra_agent_args: >-
   {{ extra_args }}
 # image tag for kube-vip
