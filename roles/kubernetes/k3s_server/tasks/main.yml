@@ -146,17 +146,22 @@
   when: etcd_ca_cert.stat is defined and etcd_ca_cert.stat.exists
 
 - name: Parse ETCD certificate expiry date
-  ansible.builtin.set_fact:
-    etcd_cert_days_remaining: "{{ ((etcd_cert_expiry.stdout | to_datetime) - (ansible_date_time.iso8601 | to_datetime)).days }}"
-  when: etcd_cert_expiry.stdout is defined
+  ansible.builtin.shell: |
+    CERT_DATE="{{ etcd_cert_expiry.stdout }}"
+    CURRENT_EPOCH=$(date +%s)
+    CERT_EPOCH=$(date -d "${CERT_DATE}" +%s 2>/dev/null || date -d "${CERT_DATE} GMT" +%s 2>/dev/null)
+    echo $(( (CERT_EPOCH - CURRENT_EPOCH) / 86400 ))
+  register: etcd_cert_days_remaining
+  changed_when: false
   failed_when: false
+  when: etcd_cert_expiry.stdout is defined
 
 - name: Warn about expiring ETCD certificates
   ansible.builtin.debug:
     msg: |
-      WARNING: ETCD certificate on {{ ansible_hostname }} expires on {{ etcd_cert_expiry.stdout }} ({{ etcd_cert_days_remaining }} days)
+      WARNING: ETCD certificate on {{ ansible_hostname }} expires on {{ etcd_cert_expiry.stdout }} ({{ (etcd_cert_days_remaining.stdout | trim) }} days)
       Consider rotating certificates soon!
-  when: etcd_cert_days_remaining is defined and etcd_cert_days_remaining < 30
+  when: etcd_cert_days_remaining.stdout is defined and (etcd_cert_days_remaining.stdout | trim | int) < 30
 
 - name: Verify cluster health for existing nodes
   ansible.builtin.command: k3s kubectl get endpoints kubernetes -n default -o=jsonpath='{.subsets[0].addresses[*].ip}'

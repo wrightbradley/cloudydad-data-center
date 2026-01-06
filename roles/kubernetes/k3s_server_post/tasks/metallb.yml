@@ -113,6 +113,7 @@
     {{ k3s_kubectl_binary | default('k3s kubectl') }} -n metallb-system get {{ item }}
   changed_when: false
   run_once: true
+  failed_when: false
   when: metal_lb_mode == "layer2"
   with_items:
     - IPAddressPool
@@ -123,6 +124,7 @@
     {{ k3s_kubectl_binary | default('k3s kubectl') }} -n metallb-system get {{ item }}
   changed_when: false
   run_once: true
+  failed_when: false
   when: metal_lb_mode == "bgp"
   with_items:
     - IPAddressPool

@@ -10,14 +10,16 @@
     - name: Fetch K3S_TOKEN from Bitwarden
       set_fact:
         k3s_token: "{{ lookup('community.general.bitwarden', '0c769bf1-4a82-4cde-876f-b1a3018171e6', search='id', field='K3S_TOKEN') | first }}"
+      tags: k3s-service
     - name: Fetch user password from Bitwarden
       set_fact:
         user_password: "{{ lookup('community.general.bitwarden', '0c769bf1-4a82-4cde-876f-b1a3018171e6', search='id', field='SYSTEM_PASSWORD_HASHED') | first }}"
+      tags: k3s-service
 
 - name: Bootstrap data center
   hosts: all
   gather_facts: true
-  environment: '{{ proxy_env | default({}) }}'
+  environment: "{{ proxy_env | default({}) }}"
   tags: system
   roles:
     - role: system
@@ -26,7 +28,7 @@
 - name: Prepare k3s nodes
   hosts: k3s_cluster
   gather_facts: true
-  environment: '{{ proxy_env | default({}) }}'
+  environment: "{{ proxy_env | default({}) }}"
   roles:
     - role: prereq
       become: true
@@ -40,32 +42,36 @@
 
 - name: Setup k3s servers
   hosts: master
-  environment: '{{ proxy_env | default({}) }}'
+  environment: "{{ proxy_env | default({}) }}"
   roles:
     - role: k3s_server
       become: true
 
 - name: Setup k3s agents
   hosts: node
-  environment: '{{ proxy_env | default({}) }}'
+  environment: "{{ proxy_env | default({}) }}"
   roles:
     - role: k3s_agent
       become: true
 
 - name: Configure k3s cluster
   hosts: master
-  environment: '{{ proxy_env | default({}) }}'
+  environment: "{{ proxy_env | default({}) }}"
   roles:
     - role: k3s_server_post
       become: true
 
 - name: Storing kubeconfig in the playbook directory
   hosts: master
-  environment: '{{ proxy_env | default({}) }}'
+  environment: "{{ proxy_env | default({}) }}"
   tasks:
-    - name: Copying kubeconfig from {{ hostvars[groups[group_name_master | default('master')][0]]['ansible_hostname'] }}
+    - name: Set first master hostname fact
+      ansible.builtin.set_fact:
+        first_master_hostname: "{{ groups['master'][0] }}"
+
+    - name: Copying kubeconfig from {{ first_master_hostname }}
       ansible.builtin.fetch:
-        src: '{{ ansible_user_dir }}/.kube/config'
+        src: "{{ ansible_user_dir }}/.kube/config"
         dest: ./kubeconfig
         flat: true
-      when: ansible_hostname == hostvars[groups[group_name_master | default('master')][0]]['ansible_hostname']
+      when: inventory_hostname == first_master_hostname
