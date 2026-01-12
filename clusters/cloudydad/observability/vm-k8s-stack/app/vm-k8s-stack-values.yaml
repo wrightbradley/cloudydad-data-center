@@ -4,7 +4,7 @@ global:
   clusterLabel: cluster
   # -- Global license configuration
   license:
-    key: ''
+    key: ""
     keyRef: {}
     # name: secret-license
     # key: license
@@ -13,15 +13,15 @@ global:
     dnsDomain: cluster.local.
 
 # -- Resource full name suffix override
-nameOverride: 'vm'
+nameOverride: "vm"
 # -- Resource full name prefix override
-fullnameOverride: ''
+fullnameOverride: ""
 # -- Tenant to use for Grafana datasources and remote write
-tenant: '0'
+tenant: "0"
 # -- If this chart is used in "Argocd" with "releaseName" field then
 # VMServiceScrapes couldn't select the proper services.
 # For correct working need set value 'argocdReleaseOverride=$ARGOCD_APP_NAME'
-argocdReleaseOverride: ''
+argocdReleaseOverride: ""
 
 # -- VictoriaMetrics Operator dependency chart configuration. More values can be found [here](https://docs.victoriametrics.com/helm/victoriametrics-operator#parameters). Also checkout [here](https://docs.victoriametrics.com/operator/vars) possible ENV variables to configure operator behaviour
 victoria-metrics-operator:
@@ -285,9 +285,9 @@ vmsingle:
   enabled: true
   # -- Full spec for VMSingle CRD. Allowed values describe [here](https://docs.victoriametrics.com/operator/api#vmsinglespec)
   spec:
-    port: '8429'
+    port: "8429"
     # -- Data retention period. Possible units character: h(ours), d(ays), w(eeks), y(ears), if no unit character specified - month. The minimum retention period is 24h. See these [docs](https://docs.victoriametrics.com/single-server-victoriametrics/#retention)
-    retentionPeriod: '2y'
+    retentionPeriod: "2y"
     replicaCount: 1
     extraArgs:
       # Increase query timeout from default 30s to 60s to prevent timeout errors
@@ -317,11 +317,11 @@ vmsingle:
     # -- Ingress extra labels
     labels: {}
     # -- Ingress default path
-    path: ''
+    path: ""
     # -- Ingress path type
     pathType: Prefix
     # -- Ingress controller class name
-    ingressClassName: 'traefik'
+    ingressClassName: "traefik"
 
     # -- Array of host objects
     hosts:
@@ -349,11 +349,11 @@ vmcluster:
   # -- Full spec for VMCluster CRD. Allowed values described [here](https://docs.victoriametrics.com/operator/api#vmclusterspec)
   spec:
     # -- Data retention period. Possible units character: h(ours), d(ays), w(eeks), y(ears), if no unit character specified - month. The minimum retention period is 24h. See these [docs](https://docs.victoriametrics.com/single-server-victoriametrics/#retention)
-    retentionPeriod: '1'
+    retentionPeriod: "1"
     replicationFactor: 2
     vmstorage:
       replicaCount: 2
-      storageDataPath: '/vm-data'
+      storageDataPath: "/vm-data"
       storage:
         volumeClaimTemplate:
           spec:
@@ -367,9 +367,9 @@ vmcluster:
     vmselect:
       # -- Set this value to false to disable VMSelect
       enabled: true
-      port: '8481'
+      port: "8481"
       replicaCount: 2
-      cacheMountPath: '/select-cache'
+      cacheMountPath: "/select-cache"
       extraArgs: {}
       storage:
         volumeClaimTemplate:
@@ -387,7 +387,7 @@ vmcluster:
     vminsert:
       # -- Set this value to false to disable VMInsert
       enabled: true
-      port: '8480'
+      port: "8480"
       replicaCount: 2
       extraArgs: {}
       resources: {}
@@ -412,13 +412,13 @@ vmcluster:
       labels: {}
 
       # -- Ingress controller class name
-      ingressClassName: ''
+      ingressClassName: ""
 
       # -- Ingress path type
       pathType: Prefix
 
       # -- Ingress default path
-      path: ''
+      path: ""
 
       # -- Array of host objects
       hosts: []
@@ -452,7 +452,7 @@ vmcluster:
       labels: {}
 
       # -- Ingress controller class name
-      ingressClassName: ''
+      ingressClassName: ""
 
       # -- Ingress path type
       pathType: Prefix
@@ -491,7 +491,7 @@ vmcluster:
       labels: {}
 
       # -- Ingress controller class name
-      ingressClassName: ''
+      ingressClassName: ""
 
       # -- Ingress path type
       pathType: Prefix
@@ -526,11 +526,11 @@ alertmanager:
   # -- (object) Full spec for VMAlertmanager CRD. Allowed values described [here](https://docs.victoriametrics.com/operator/api#vmalertmanagerspec)
   spec:
     replicaCount: 1
-    port: '9093'
+    port: "9093"
     selectAllByDefault: true
     image:
       tag: v0.28.1
-    externalURL: ''
+    externalURL: ""
     routePrefix: /
     resources:
       limits:
@@ -540,7 +540,7 @@ alertmanager:
         cpu: 10m
 
     # -- (string) If this one defined, it will be used for alertmanager configuration and config parameter will be ignored
-    configSecret: 'alertmanager-config' #pragma: allowlist secret
+    configSecret: "alertmanager-config" #pragma: allowlist secret
   # --
   # @raw
   # enable storing .Values.alertmanager.config in VMAlertmanagerConfig instead of k8s Secret.
@@ -552,13 +552,13 @@ alertmanager:
   # -- (object) Alertmanager configuration
   config:
     templates:
-      - '/etc/vm/configs/**/*.tmpl'
+      - "/etc/vm/configs/**/*.tmpl"
     route:
       # group_by: ["alertgroup", "job"]
       # group_wait: 30s
       # group_interval: 5m
       # repeat_interval: 12h
-      receiver: 'blackhole'
+      receiver: "blackhole"
       ## routes:
       ###################################################
       ## Duplicate code_owner routes to teams
@@ -701,11 +701,11 @@ vmalert:
   remoteWriteVMAgent: true
   # -- (object) Full spec for VMAlert CRD. Allowed values described [here](https://docs.victoriametrics.com/operator/api#vmalertspec)
   spec:
-    port: '8080'
+    port: "8080"
     selectAllByDefault: true
     evaluationInterval: 20s
     extraArgs:
-      http.pathPrefix: '/'
+      http.pathPrefix: "/"
 
     # External labels to add to all generated recording rules and alerts
     externalLabels: {}
@@ -743,7 +743,7 @@ vmalert:
     annotations:
       traefik.ingress.kubernetes.io/router.entrypoints: websecure
     labels: {}
-    path: ''
+    path: ""
     pathType: Prefix
 
     hosts:
@@ -771,18 +771,18 @@ vmauth:
   # * `{{ .vm.read }}` - parsed vmselect, vmsingle or external.vm.read URL
   # * `{{ .vm.write }}` - parsed vminsert, vmsingle or external.vm.write URL
   spec:
-    port: '8427'
+    port: "8427"
     unauthorizedUserAccessSpec:
       # -- Flag, that allows to disable default VMAuth unauthorized user access config
       disabled: false
       discover_backend_ips: true
       url_map:
         - src_paths:
-            - '{{ .vm.read.path }}/.*'
+            - "{{ .vm.read.path }}/.*"
           url_prefix:
             - '{{ urlJoin (omit .vm.read "path") }}/'
         - src_paths:
-            - '{{ .vm.write.path }}/.*'
+            - "{{ .vm.write.path }}/.*"
           url_prefix:
             - '{{ urlJoin (omit .vm.write "path") }}/'
 
@@ -796,7 +796,7 @@ vmagent:
   #- url: http://some-remote-write/api/v1/write
   # -- (object) Full spec for VMAgent CRD. Allowed values described [here](https://docs.victoriametrics.com/operator/api#vmagentspec)
   spec:
-    port: '8429'
+    port: "8429"
     selectAllByDefault: true
     scrapeInterval: 20s
     externalLabels: {}
@@ -804,10 +804,10 @@ vmagent:
     # For example:
     # cluster: cluster-name
     extraArgs:
-      promscrape.streamParse: 'true'
+      promscrape.streamParse: "true"
       # Do not store original labels in vmagent's memory by default. This reduces the amount of memory used by vmagent
       # but makes vmagent debugging UI less informative. See: https://docs.victoriametrics.com/vmagent/#relabel-debug
-      promscrape.dropOriginalLabels: 'true'
+      promscrape.dropOriginalLabels: "true"
     resources:
       limits:
         memory: 1Gi
@@ -824,7 +824,7 @@ vmagent:
     annotations:
       traefik.ingress.kubernetes.io/router.entrypoints: websecure
     labels: {}
-    path: ''
+    path: ""
     pathType: Prefix
 
     hosts:
@@ -953,7 +953,7 @@ grafana:
         matchLabels:
           app.kubernetes.io/name: '{{ include "grafana.name" .Subcharts.grafana }}'
       endpoints:
-        - port: '{{ .Values.grafana.service.portName }}'
+        - port: "{{ .Values.grafana.service.portName }}"
 
 # -- prometheus-node-exporter dependency chart configuration. For possible values check [here](https://github.com/prometheus-community/helm-charts/blob/main/charts/prometheus-node-exporter/values.yaml)
 prometheus-node-exporter:
@@ -989,7 +989,7 @@ prometheus-node-exporter:
           metricRelabelConfigs:
             - action: drop
               source_labels: [mountpoint]
-              regex: '/var/lib/kubelet/pods.+'
+              regex: "/var/lib/kubelet/pods.+"
 # -- kube-state-metrics dependency chart configuration. For possible values check [here](https://github.com/prometheus-community/helm-charts/blob/main/charts/kube-state-metrics/values.yaml)
 kube-state-metrics:
   enabled: true
@@ -1040,14 +1040,14 @@ kubelet:
   vmScrape:
     kind: VMNodeScrape
     spec:
-      scheme: 'https'
+      scheme: "https"
       honorLabels: true
-      interval: '30s'
-      scrapeTimeout: '5s'
+      interval: "30s"
+      scrapeTimeout: "5s"
       tlsConfig:
         insecureSkipVerify: true
         caFile: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-      bearerTokenFile: '/var/run/secrets/kubernetes.io/serviceaccount/token'
+      bearerTokenFile: "/var/run/secrets/kubernetes.io/serviceaccount/token"
       # drop high cardinality label and useless metrics for cadvisor and kubelet
       metricRelabelConfigs:
         - action: labeldrop
@@ -1062,8 +1062,8 @@ kubelet:
           regex: __meta_kubernetes_node_label_(.+)
         - sourceLabels: [__metrics_path__]
           targetLabel: metrics_path
-        - targetLabel: 'job'
-          replacement: 'kubelet'
+        - targetLabel: "job"
+          replacement: "kubelet"
       # ignore timestamps of cadvisor's metrics by default
       # more info here https://github.com/VictoriaMetrics/VictoriaMetrics/issues/4697#issuecomment-1656540535
       honorTimestamps: false
@@ -1121,7 +1121,7 @@ kubeControllerManager:
       jobLabel: jobLabel
       namespaceSelector:
         matchNames:
-          - 'kube-system'
+          - "kube-system"
       endpoints:
         - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
           # bearerTokenSecret:

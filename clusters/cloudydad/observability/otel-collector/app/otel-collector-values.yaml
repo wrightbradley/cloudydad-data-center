@@ -476,6 +476,9 @@ collectors:
         includeCollectorLogs: true
         storeCheckpoints: false
         maxRecombineLogSize: 102400
+      annotationDiscovery:
+        logs:
+          enabled: false
       kubeletMetrics:
         enabled: false
       hostMetrics:
@@ -550,6 +553,9 @@ collectors:
     presets:
       logsCollection:
         enabled: false
+      annotationDiscovery:
+        logs:
+          enabled: false
       kubernetesAttributes:
         enabled: true
       kubernetesEvents:

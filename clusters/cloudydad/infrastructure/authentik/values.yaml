@@ -532,7 +532,7 @@ server:
   ## authentik server metrics service configuration
   metrics:
     # -- deploy metrics service
-    enabled: false
+    enabled: true
     service:
       # -- metrics service type
       type: ClusterIP
