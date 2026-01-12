@@ -548,6 +548,8 @@ collectors:
         cpu: 10m
         memory: 115Mi
     presets:
+      logsCollection:
+        enabled: false
       kubernetesAttributes:
         enabled: true
       kubernetesEvents:

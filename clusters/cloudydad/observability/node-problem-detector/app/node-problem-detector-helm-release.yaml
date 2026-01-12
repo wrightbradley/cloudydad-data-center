@@ -16,6 +16,7 @@ spec:
   interval: 50m
   releaseName: node-problem-detector
   targetNamespace: kube-system
+  timeout: 15m
   install:
     remediation:
       retries: 3
