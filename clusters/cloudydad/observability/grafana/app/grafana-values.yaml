@@ -1397,9 +1397,9 @@ imageRenderer:
     limitEgress: false
     # Allow additional services to access image-renderer (eg. Prometheus operator when ServiceMonitor is enabled)
     extraIngressSelectors:
-    - namespaceSelector:
-        matchLabels:
-          kubernetes.io/metadata.name: vm-k8s-stack
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: vm-k8s-stack
   resources: {}
   #   limits:
   #     cpu: 100m
