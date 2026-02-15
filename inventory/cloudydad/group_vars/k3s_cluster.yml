@@ -63,13 +63,10 @@ k3s_node_ip: >-
 # Disable the taint manually by setting: k3s_master_taint = false
 # k3s_master_taint: "{{ true if groups['node'] | default([]) | length >= 1 else false }}"
 
-# these arguments are recommended for servers as well as agents:
-# extra_args: >-
-#   {{ '--flannel-iface=' + flannel_iface if calico_iface is not defined and cilium_iface is not defined else '' }} --node-ip={{ k3s_node_ip }}
-# --enforce-node-allocatable="pods"
-# --system-reserved="cpu=300m,memory=5Mi,ephemeral-storage=1Gi"
-# --kube-reserved="cpu=200m,memory=5Mi,ephemeral-storage=1Gi"
-# --eviction-hard="memory.available<100Mi,nodefs.available<10%"
+# Base extra_args - hosts can override kubelet resources
+# These are applied to both servers and agents
+extra_args: >-
+  {{ '--flannel-iface=' + flannel_iface if calico_iface is not defined and cilium_iface is not defined else '' }} --node-ip={{ k3s_node_ip }} --kubelet-arg enforce-node-allocatable="pods" {{ ('--kubelet-arg system-reserved="' + kubelet_system_reserved | default('cpu=200m,memory=256Mi,ephemeral-storage=1Gi') + '"') if kubelet_system_reserved is not defined or kubelet_system_reserved }} {{ ('--kubelet-arg kube-reserved="' + kubelet_kube_reserved | default('cpu=200m,memory=256Mi,ephemeral-storage=512Mi') + '"') if kubelet_kube_reserved is not defined or kubelet_kube_reserved }} {{ ('--kubelet-arg eviction-hard="' + kubelet_eviction_hard | default('memory.available<128Mi,nodefs.available<10%') + '"') if kubelet_eviction_hard is not defined or kubelet_eviction_hard }} --kubelet-arg kube-api-qps=20 --kubelet-arg kube-api-burst=30 {{ kubelet_extra_args | default('') }}
 
 # change these to your liking, the only required are: --disable servicelb, --tls-san {{ apiserver_endpoint }}
 # the contents of the if block is also required if using calico or cilium

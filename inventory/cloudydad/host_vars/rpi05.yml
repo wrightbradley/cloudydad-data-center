@@ -1,14 +1,13 @@
 ---
-hostname: rpi05
-ethernet_id: eth0
-ethernet_mac: b8:27:eb:42:93:4a
-# rpi05 has very limited resources. Do NOT allow non-master workloads to run here.
-# This ensures only control plane/system pods (with tolerations) can be scheduled.
-k3s_master_taint: true
+# rpi05 - Raspberry Pi 3B+ (constrained hardware)
 flannel_iface: eth0
-extra_args: >-
-  {{ '--flannel-iface=' + flannel_iface if calico_iface is not defined and cilium_iface is not defined else '' }} --node-ip={{ k3s_node_ip }} --node-label exclude-storage=true --kubelet-arg enforce-node-allocatable="pods" --kubelet-arg system-reserved="cpu=100m,memory=128Mi,ephemeral-storage=1Gi" --kubelet-arg kube-reserved="cpu=100m,memory=128Mi,ephemeral-storage=512Mi" --kubelet-arg eviction-hard="memory.available<128Mi,nodefs.available<10%" --kubelet-arg kube-api-qps=20 --kubelet-arg kube-api-burst=30
-# RPi3B+ master node - override aggressive API server limits for constrained hardware
-extra_server_args: >-
-  {{ extra_args }} {{ '--node-taint node-role.kubernetes.io/master=true:NoSchedule' if k3s_master_taint else '' }} {% if calico_iface is defined or cilium_iface is defined %} --flannel-backend=none --disable-network-policy --cluster-cidr={{ cluster_cidr | default('10.52.0.0/16') }} {% endif %} --tls-san {{ apiserver_endpoint }} --disable servicelb --disable traefik --kube-apiserver-arg max-requests-inflight=100 --kube-apiserver-arg max-mutating-requests-inflight=50 --kube-apiserver-arg default-watch-cache-size=2000 --kube-apiserver-arg request-timeout=30s --etcd-arg heartbeat-interval=250 --etcd-arg election-timeout=5000 --etcd-arg max-snapshots=5 --etcd-arg snapshot-count=100000 --etcd-arg quota-backend-bytes=2147483648
-default_interface: eth0
+k3s_master_taint: true
+
+# Resource allocations for constrained hardware (1GB RAM)
+kubelet_system_reserved: cpu=100m,memory=128Mi,ephemeral-storage=1Gi
+kubelet_kube_reserved: cpu=100m,memory=128Mi,ephemeral-storage=512Mi
+kubelet_eviction_hard: memory.available<128Mi,nodefs.available<10%
+
+# Node labels
+k3s_node_labels:
+  - exclude-storage=true

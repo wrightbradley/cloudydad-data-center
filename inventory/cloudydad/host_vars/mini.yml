@@ -1,7 +1,12 @@
 ---
-hostname: mini
-ethernet_id: enp1s0f0
-ethernet_mac: 0c:4d:e9:c9:4f:e0
+# mini - Mac Mini (x86_64, 16GB RAM)
 flannel_iface: enp1s0f0
-extra_args: >-
-  {{ '--flannel-iface=' + flannel_iface if calico_iface is not defined and cilium_iface is not defined else '' }} --node-ip={{ k3s_node_ip }} --kubelet-arg enforce-node-allocatable="pods" --kubelet-arg system-reserved="cpu=1000m,memory=1Gi,ephemeral-storage=10Gi" --kubelet-arg kube-reserved="cpu=1000m,memory=1Gi,ephemeral-storage=5Gi" --kubelet-arg eviction-hard="memory.available<1Gi,nodefs.available<10%" --kubelet-arg eviction-soft="memory.available<1.5Gi,nodefs.available<15%" --kubelet-arg eviction-soft-grace-period="memory.available=1m,nodefs.available=2m" --kubelet-arg eviction-max-pod-grace-period=30 --kubelet-arg kube-api-qps=50 --kubelet-arg kube-api-burst=100
+
+# Resource allocations for 16GB RAM
+kubelet_system_reserved: cpu=1000m,memory=1Gi,ephemeral-storage=10Gi
+kubelet_kube_reserved: cpu=1000m,memory=1Gi,ephemeral-storage=5Gi
+kubelet_eviction_hard: memory.available<1Gi,nodefs.available<10%
+
+# Additional kubelet args for better performance
+kubelet_extra_args: >-
+  --kubelet-arg eviction-soft="memory.available<1.5Gi,nodefs.available<15%" --kubelet-arg eviction-soft-grace-period="memory.available=1m,nodefs.available=2m" --kubelet-arg eviction-max-pod-grace-period=30 --kubelet-arg kube-api-qps=50 --kubelet-arg kube-api-burst=100

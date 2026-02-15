@@ -1,9 +1,9 @@
 ---
-hostname: rpi07
-ethernet_id: eth0
-ethernet_mac: dc:a6:32:b1:bd:67
-k3s_master_taint: true
+# rpi07 - Raspberry Pi 4 (8GB RAM)
 flannel_iface: eth0
-extra_args: >-
-  {{ '--flannel-iface=' + flannel_iface if calico_iface is not defined and cilium_iface is not defined else '' }} --node-ip={{ k3s_node_ip }} --kubelet-arg enforce-node-allocatable="pods" --kubelet-arg system-reserved="cpu=300m,memory=768Mi,ephemeral-storage=2Gi" --kubelet-arg kube-reserved="cpu=300m,memory=768Mi,ephemeral-storage=1Gi" --kubelet-arg eviction-hard="memory.available<512Mi,nodefs.available<15%" --kubelet-arg kube-api-qps=20 --kubelet-arg kube-api-burst=30
-default_interface: eth0
+k3s_master_taint: true
+
+# Resource allocations for Pi 4 (8GB RAM)
+kubelet_system_reserved: cpu=300m,memory=768Mi,ephemeral-storage=2Gi
+kubelet_kube_reserved: cpu=300m,memory=768Mi,ephemeral-storage=1Gi
+kubelet_eviction_hard: memory.available<512Mi,nodefs.available<15%
