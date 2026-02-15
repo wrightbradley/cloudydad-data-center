@@ -1,10 +1,92 @@
 ---
-- name: Reboot k3s_cluster
+- name: Reboot k3s cluster nodes
   hosts: k3s_cluster
   gather_facts: true
-  tasks:
-    - name: Reboot the nodes (and Wait upto 5 mins max)
+  serial: 1
+  vars_prompt:
+    - name: confirm_reboot
+      prompt: "Are you sure you want to reboot the k3s cluster nodes? Type 'yes' to confirm"
+      private: false
+
+  pre_tasks:
+    - name: Check confirmation
+      ansible.builtin.fail:
+        msg: "Reboot cancelled. You must type 'yes' to confirm."
+      when: confirm_reboot != 'yes'
+
+    - name: Display reboot plan
+      ansible.builtin.debug:
+        msg: |
+          Reboot plan:
+          - Rebooting nodes one at a time (serial: 1)
+          - Waiting for each node to come back online
+          - Verifying k3s service is running before proceeding
+          - Nodes: {{ groups['k3s_cluster'] | join(', ') }}
+
+    - name: Cordon node before reboot
+      ansible.builtin.command: >
+        {{ k3s_kubectl_binary | default('k3s kubectl') }} cordon {{ inventory_hostname }}
+      delegate_to: "{{ groups['master'][0] }}"
       become: true
+      when:
+        - confirm_reboot == 'yes'
+        - inventory_hostname in groups['node'] | default([])
+      changed_when: true
+
+    - name: Drain node before reboot
+      ansible.builtin.command: >
+        {{ k3s_kubectl_binary | default('k3s kubectl') }} drain {{ inventory_hostname }} --ignore-daemonsets --delete-emptydir-data --force --pod-selector='app!=csi-*,app!=kube-vip,k8s-app!=kube-proxy'
+      delegate_to: "{{ groups['master'][0] }}"
+      become: true
+      when:
+        - confirm_reboot == 'yes'
+        - inventory_hostname in groups['node'] | default([])
+      changed_when: true
+
+  tasks:
+    - name: Reboot node
       ansible.builtin.reboot:
-        reboot_command: "{{ custom_reboot_command | default(omit) }}"
-        reboot_timeout: 300
+        reboot_command: "{{ custom_reboot_command | default('/sbin/reboot') }}"
+        reboot_timeout: 600
+        pre_reboot_delay: 5
+        post_reboot_delay: 30
+        test_command: whoami
+      when: confirm_reboot == 'yes'
+
+  post_tasks:
+    - name: Wait for k3s service to be active
+      ansible.builtin.systemd:
+        name: "{{ 'k3s' if inventory_hostname in groups['master'] else 'k3s-node' }}"
+        state: started
+      register: k3s_service
+      until: k3s_service.status.ActiveState == "active"
+      retries: 30
+      delay: 10
+      when: confirm_reboot == 'yes'
+
+    - name: Verify node is Ready
+      ansible.builtin.command: >
+        {{ k3s_kubectl_binary | default('k3s kubectl') }} get node {{ inventory_hostname }} -o jsonpath='{.status.conditions[?(@.type=="Ready")].status}'
+      delegate_to: "{{ groups['master'][0] }}"
+      become: true
+      register: node_ready
+      until: node_ready.stdout == "True"
+      retries: 30
+      delay: 10
+      changed_when: false
+      when: confirm_reboot == 'yes'
+
+    - name: Uncordon node after reboot
+      ansible.builtin.command: >
+        {{ k3s_kubectl_binary | default('k3s kubectl') }} uncordon {{ inventory_hostname }}
+      delegate_to: "{{ groups['master'][0] }}"
+      become: true
+      when:
+        - confirm_reboot == 'yes'
+        - inventory_hostname in groups['node'] | default([])
+      changed_when: true
+
+    - name: Confirm reboot complete
+      ansible.builtin.debug:
+        msg: "Node {{ inventory_hostname }} has been successfully rebooted and is Ready"
+      when: confirm_reboot == 'yes'

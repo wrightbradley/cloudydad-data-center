@@ -1,33 +1,64 @@
 ---
-- name: Download k3s binary x64
+- name: Set k3s architecture
+  ansible.builtin.set_fact:
+    k3s_arch: >-
+      {% if ansible_facts.architecture == 'x86_64' %}amd64 {% elif ansible_facts.architecture == 'aarch64' or (ansible_facts.architecture is search('arm') and ansible_facts.userspace_bits == '64') %}arm64 {% elif ansible_facts.architecture is search('arm') and ansible_facts.userspace_bits == '32' %}arm {% else %}amd64{% endif %} #magic___^_^___line
+- name: Download k3s binary
   ansible.builtin.get_url:
-    url: https://github.com/k3s-io/k3s/releases/download/{{ k3s_version }}/k3s
-    checksum: sha256:https://github.com/k3s-io/k3s/releases/download/{{ k3s_version }}/sha256sum-amd64.txt
+    url: "https://github.com/k3s-io/k3s/releases/download/{{ k3s_version }}/k3s{% if k3s_arch != 'amd64' %}-{{ k3s_arch }}{% endif %}"
+    checksum: "sha256:https://github.com/k3s-io/k3s/releases/download/{{ k3s_version }}/sha256sum-{{ k3s_arch }}.txt"
     dest: /usr/local/bin/k3s
     owner: root
     group: root
-    mode: "0755"
-  when: ansible_facts.architecture == "x86_64"
+    mode: '0755'
+  register: k3s_download
+  until: k3s_download is succeeded
+  retries: 3
+  delay: 5
 
-- name: Download k3s binary arm64
-  ansible.builtin.get_url:
-    url: https://github.com/k3s-io/k3s/releases/download/{{ k3s_version }}/k3s-arm64
-    checksum: sha256:https://github.com/k3s-io/k3s/releases/download/{{ k3s_version }}/sha256sum-arm64.txt
-    dest: /usr/local/bin/k3s
+- name: Verify k3s binary is executable
+  ansible.builtin.file:
+    path: /usr/local/bin/k3s
     owner: root
     group: root
-    mode: "0755"
-  when:
-    - ( ansible_facts.architecture is search("arm") and ansible_facts.userspace_bits == "64" ) or ansible_facts.architecture is search("aarch64")
+    mode: '0755'
+  changed_when: false
 
-- name: Download k3s binary armhf
+- name: Download kubectl binary
   ansible.builtin.get_url:
-    url: https://github.com/k3s-io/k3s/releases/download/{{ k3s_version }}/k3s-armhf
-    checksum: sha256:https://github.com/k3s-io/k3s/releases/download/{{ k3s_version }}/sha256sum-arm.txt
-    dest: /usr/local/bin/k3s
+    url: "https://dl.k8s.io/release/{{ kubectl_version | default('v1.29.0') }}/bin/linux/{{ k3s_arch }}/kubectl"
+    dest: /usr/local/bin/kubectl
     owner: root
     group: root
-    mode: "0755"
-  when:
-    - ansible_facts.architecture is search("arm")
-    - ansible_facts.userspace_bits == "32"
+    mode: '0755'
+  when: kubectl_version is defined
+  register: kubectl_download
+  until: kubectl_download is succeeded
+  retries: 3
+  delay: 5
+
+- name: Download helm binary
+  ansible.builtin.get_url:
+    url: "https://get.helm.sh/helm-{{ helm_version | default('v3.14.0') }}-linux-{{ k3s_arch }}.tar.gz"
+    dest: /tmp/helm-linux-{{ k3s_arch }}.tar.gz
+    owner: root
+    group: root
+    mode: '0644'
+  when: helm_version is defined
+  register: helm_download
+  until: helm_download is succeeded
+  retries: 3
+  delay: 5
+
+- name: Extract helm binary
+  ansible.builtin.unarchive:
+    src: /tmp/helm-linux-{{ k3s_arch }}.tar.gz
+    dest: /usr/local/bin
+    remote_src: true
+    extra_opts:
+      - --strip-components=1
+      - linux-{{ k3s_arch }}/helm
+    owner: root
+    group: root
+    mode: '0755'
+  when: helm_download is succeeded

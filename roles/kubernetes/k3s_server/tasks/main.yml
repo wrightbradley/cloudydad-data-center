@@ -20,6 +20,15 @@
   ansible.builtin.include_tasks: http_proxy.yml
   when: proxy_env is defined
 
+- name: Deploy K3s config.yaml
+  ansible.builtin.template:
+    src: config.yaml.j2
+    dest: /etc/rancher/k3s/config.yaml
+    owner: root
+    group: root
+    mode: '0600'
+  tags: k3s-config
+
 - name: Deploy vip manifest
   ansible.builtin.include_tasks: vip.yml
 
@@ -50,12 +59,6 @@
       delay: 10
       changed_when: false
   always:
-    - name: Save logs of k3s-init.service
-      ansible.builtin.include_tasks: fetch_k3s_init_logs.yml
-      when: log_destination | default(false)
-      vars:
-        log_destination: >-
-          {{ lookup('ansible.builtin.env', 'ANSIBLE_K3S_LOG_DIR', default=False) }}
     - name: Kill the temporary service used for initialization
       ansible.builtin.systemd:
         name: k3s-init
@@ -78,6 +81,30 @@
     daemon_reload: true
     state: restarted
     enabled: true
+
+- name: Harden k3s binary permissions
+  ansible.builtin.file:
+    path: /usr/local/bin/k3s
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Ensure /etc/rancher/k3s has secure permissions
+  ansible.builtin.file:
+    path: /etc/rancher/k3s
+    state: directory
+    owner: root
+    group: root
+    mode: '0700'
+
+- name: Ensure /var/lib/rancher/k3s has secure permissions
+  ansible.builtin.file:
+    path: /var/lib/rancher/k3s
+    state: directory
+    owner: root
+    group: root
+    mode: '0751'
+  tags: permissions
 
 - name: Wait for node-token
   ansible.builtin.wait_for:

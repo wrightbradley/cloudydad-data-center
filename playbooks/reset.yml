@@ -2,15 +2,52 @@
 - name: Reset k3s cluster
   hosts: k3s_cluster
   gather_facts: true
+  serial: 1
+  vars_prompt:
+    - name: confirm_reset
+      prompt: "Are you sure you want to reset the k3s cluster? This will delete all data. Type 'yes' to confirm"
+      private: false
+
+  pre_tasks:
+    - name: Check confirmation
+      ansible.builtin.fail:
+        msg: "Reset cancelled. You must type 'yes' to confirm."
+      when: confirm_reset != 'yes'
+
+    - name: Display reset warning
+      ansible.builtin.debug:
+        msg: |
+          WARNING: Resetting k3s cluster on {{ inventory_hostname }}
+          This will:
+          - Stop all k3s services
+          - Unmount k3s filesystems
+          - Remove all k3s data and configuration
+          - This action cannot be undone!
+
   roles:
     - role: reset
       become: true
-    - role: raspberrypi
-      become: true
-      vars: {state: absent}
+      when: confirm_reset == 'yes'
+
   post_tasks:
-    - name: Reboot and wait for node to come back up
-      become: true
-      ansible.builtin.reboot:
-        reboot_command: "{{ custom_reboot_command | default(omit) }}"
-        reboot_timeout: 3600
+    - name: Wait for node to be reachable
+      ansible.builtin.wait_for:
+        host: "{{ ansible_host }}"
+        port: 22
+        timeout: 300
+        delay: 10
+      delegate_to: localhost
+      become: false
+      when: confirm_reset == 'yes'
+
+    - name: Verify k3s is removed
+      ansible.builtin.command: which k3s
+      register: k3s_check
+      failed_when: k3s_check.rc == 0
+      changed_when: false
+      when: confirm_reset == 'yes'
+
+    - name: Confirm reset complete
+      ansible.builtin.debug:
+        msg: "K3s has been successfully reset on {{ inventory_hostname }}"
+      when: confirm_reset == 'yes'

@@ -1,68 +1,118 @@
 ---
-- name: Disable services
+- name: Stop k3s services
   ansible.builtin.systemd:
     name: '{{ item }}'
     state: stopped
     enabled: false
   failed_when: false
-  with_items:
+  loop:
     - k3s
     - k3s-node
     - k3s-init
 
-- name: RUN pkill -9 -f "k3s/data/[^/]+/bin/containerd-shim-runc"
-  register: pkill_containerd_shim_runc
-  ansible.builtin.command: pkill -9 -f "k3s/data/[^/]+/bin/containerd-shim-runc"
-  changed_when: pkill_containerd_shim_runc.rc == 0
+- name: Kill any remaining k3s processes
+  ansible.builtin.command: pkill -9 -f "k3s"
+  failed_when: false
+  changed_when: true
+
+- name: Kill any remaining containerd-shim processes
+  ansible.builtin.command: pkill -9 -f "containerd-shim"
+  failed_when: false
+  changed_when: true
+
+- name: Get list of mount points
+  ansible.builtin.shell: |
+    set -o pipefail
+    mount | grep -E 'k3s|kubelet|rancher' | awk '{print $3}' || true
+  args:
+    executable: /bin/bash
+  register: mount_points
+  changed_when: false
   failed_when: false
 
-- name: Umount k3s filesystems
-  ansible.builtin.include_tasks: umount_with_children.yml
-  with_items:
-    - /run/k3s
-    - /var/lib/kubelet
-    - /run/netns
-    - /var/lib/rancher/k3s
-    - /var/lib/kubelet/pods
-    - /var/lib/kubelet/plugins
-    - /run/netns/cni-
-  loop_control:
-    loop_var: mounted_fs
+- name: Unmount k3s filesystems
+  ansible.posix.mount:
+    path: '{{ item }}'
+    state: unmounted
+  loop: '{{ mount_points.stdout_lines }}'
+  when: item != ''
+  failed_when: false
 
-- name: Remove service files, binaries and data
+- name: Remove k3s data directories
   ansible.builtin.file:
     name: '{{ item }}'
     state: absent
-  with_items:
+  loop:
     - /usr/local/bin/k3s
+    - /usr/local/bin/kubectl
+    - /usr/local/bin/crictl
+    - /usr/local/bin/ctr
     - '{{ systemd_dir }}/k3s.service'
     - '{{ systemd_dir }}/k3s-node.service'
+    - '{{ systemd_dir }}/k3s-init.service'
     - /etc/rancher/k3s
     - /run/k3s
     - /run/flannel
-    - /etc/rancher/
+    - /run/containerd
     - /var/lib/kubelet
     - /var/lib/rancher/k3s
-    - /var/lib/rancher/
-    - /var/lib/cni/
+    - /var/lib/cni
     - /etc/cni/net.d
+    - /opt/cni
+    - /var/log/pods
+    - /var/log/containers
 
-- name: Remove K3s http_proxy files
+- name: Remove systemd drop-in directories
   ansible.builtin.file:
     name: '{{ item }}'
     state: absent
-  with_items:
-    - '{{ systemd_dir }}/k3s.service.d/http_proxy.conf'
+  loop:
     - '{{ systemd_dir }}/k3s.service.d'
-    - '{{ systemd_dir }}/k3s-node.service.d/http_proxy.conf'
     - '{{ systemd_dir }}/k3s-node.service.d'
-  when: proxy_env is defined
 
-- name: Reload daemon_reload
+- name: Remove k3s network interfaces
+  ansible.builtin.command: ip link delete {{ item }}
+  loop:
+    - flannel.1
+    - flannel-v6.1
+    - cni0
+    - kube-ipvs0
+    - cilium_host
+    - cilium_net
+    - cilium_vxlan
+  failed_when: false
+  changed_when: true
+
+- name: Clean up iptables rules
+  ansible.builtin.command: '{{ item }}'
+  loop:
+    - iptables -F
+    - iptables -X
+    - iptables -t nat -F
+    - iptables -t nat -X
+    - iptables -t mangle -F
+    - iptables -t mangle -X
+    - ip6tables -F
+    - ip6tables -X
+    - ip6tables -t nat -F
+    - ip6tables -t nat -X
+  failed_when: false
+  changed_when: true
+
+- name: Reload systemd daemon
   ansible.builtin.systemd:
     daemon_reload: true
 
-- name: Remove tmp directory used for manifests
+- name: Clean up temporary files
   ansible.builtin.file:
-    path: /tmp/k3s
+    path: '{{ item }}'
     state: absent
+  loop:
+    - /tmp/k3s
+    - /tmp/cilium-linux-*
+
+- name: Reset iptables to legacy if needed (Debian/Ubuntu)
+  ansible.builtin.command: update-alternatives --set iptables /usr/sbin/iptables-legacy
+  when: ansible_os_family == "Debian"
+  failed_when: false
+  changed_when: true

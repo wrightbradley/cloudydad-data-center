@@ -2,12 +2,13 @@
 Description=Lightweight Kubernetes
 Documentation=https://k3s.io
 After=network-online.target
+Wants=network-online.target
 
 [Service]
 Type=notify
-ExecStartPre=-/sbin/modprobe br_netfilter
-ExecStartPre=-/sbin/modprobe overlay
-ExecStart=/usr/local/bin/k3s server {{ server_init_args }} {{ extra_server_args | default("") }}
+EnvironmentFile=-/etc/default/%N
+EnvironmentFile=-/etc/sysconfig/%N
+EnvironmentFile=-/etc/systemd/system/k3s.service.env
 KillMode=process
 Delegate=yes
 # Having non-zero Limit*s causes performance problems due to accounting overhead
@@ -19,6 +20,9 @@ TasksMax=infinity
 TimeoutStartSec=0
 Restart=always
 RestartSec=5s
+ExecStartPre=-/sbin/modprobe br_netfilter
+ExecStartPre=-/sbin/modprobe overlay
+ExecStart=/usr/local/bin/k3s server {{ server_init_args }}
 
 [Install]
 WantedBy=multi-user.target

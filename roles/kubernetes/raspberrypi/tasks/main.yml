@@ -1,68 +1,62 @@
 ---
-- name: Test for raspberry pi /proc/cpuinfo
-  ansible.builtin.command: grep -E "Raspberry Pi|BCM2708|BCM2709|BCM2835|BCM2836" /proc/cpuinfo
-  register: grep_cpuinfo_raspberrypi
+- name: Check if system is a Raspberry Pi via device-tree
+  ansible.builtin.stat:
+    path: /proc/device-tree/model
+  register: device_tree_model_file
+
+- name: Read Raspberry Pi model from device-tree
+  ansible.builtin.slurp:
+    src: /proc/device-tree/model
+  register: device_tree_model
+  when: device_tree_model_file.stat.exists
+
+- name: Check if system is a Raspberry Pi via cpuinfo
+  ansible.builtin.command: grep -E "Raspberry Pi|BCM2708|BCM2709|BCM2835|BCM2836|BCM2837|BCM2711|BCM2712" /proc/cpuinfo
+  register: cpuinfo_raspberrypi
   failed_when: false
   changed_when: false
 
-- name: Test for raspberry pi /proc/device-tree/model
-  ansible.builtin.command: grep -E "Raspberry Pi" /proc/device-tree/model
-  register: grep_device_tree_model_raspberrypi
-  failed_when: false
-  changed_when: false
-
-- name: Set raspberry_pi fact to true
+- name: Set raspberry_pi fact based on detection
   ansible.builtin.set_fact:
     raspberry_pi: true
-  when: grep_cpuinfo_raspberrypi.rc == 0 or grep_device_tree_model_raspberrypi.rc == 0
+    raspberry_pi_model: >-
+      {% if device_tree_model is defined and device_tree_model.content is defined %}
+        {{ device_tree_model.content | b64decode | trim }}
+      {% else %}
+        Raspberry Pi (Unknown Model)
+      {% endif %}
+  when: >
+    (device_tree_model is defined and device_tree_model.content is defined and
+     'Raspberry Pi' in (device_tree_model.content | b64decode)) or
+    cpuinfo_raspberrypi.rc == 0
 
-- name: Set detected_distribution to Raspbian (ARM64 on Raspbian, Debian Buster/Bullseye/Bookworm/Trixie)
-  ansible.builtin.set_fact:
-    detected_distribution: Raspbian
-  vars:
-    allowed_descriptions:
-      - "[Rr]aspbian.*"
-      - Debian.*buster
-      - Debian.*bullseye
-      - Debian.*bookworm
-      - Debian.*trixie
-  when:
-    - ansible_facts.architecture is search("aarch64")
-    - raspberry_pi|default(false)
-    - ansible_facts.lsb.description|default("") is match(allowed_descriptions | join('|'))
+- name: Debug Raspberry Pi detection
+  ansible.builtin.debug:
+    msg: "Detected {{ raspberry_pi_model | default('No Raspberry Pi') }}"
+  when: raspberry_pi | default(false)
 
-- name: Set detected_distribution to Raspbian (ARM64 on Debian Bookworm)
-  ansible.builtin.set_fact:
-    detected_distribution: Raspbian
-  when:
-    - ansible_facts.architecture is search("aarch64")
-    - raspberry_pi|default(false)
-    - ansible_facts.lsb.description|default("") is match("Debian.*bookworm")
-
-- name: Set detected_distribution to Raspbian (ARM64 on Debian Trixie)
+- name: Set detected_distribution to Raspbian
   ansible.builtin.set_fact:
     detected_distribution: Raspbian
   when:
-    - ansible_facts.architecture is search("aarch64")
-    - raspberry_pi|default(false)
-    - ansible_facts.lsb.description|default("") is match("Debian.*trixie")
+    - raspberry_pi | default(false)
+    - ansible_facts.architecture is search('aarch64')
+    - ansible_facts.lsb.description | default('') is match('[Rr]aspbian.*|Debian.*(buster|bullseye|bookworm|trixie)')
 
 - name: Set detected_distribution_major_version
   ansible.builtin.set_fact:
     detected_distribution_major_version: "{{ ansible_facts.lsb.major_release }}"
   when:
-    - detected_distribution | default("") == "Raspbian"
+    - detected_distribution | default('') == 'Raspbian'
 
-- name: Execute OS related tasks on the Raspberry Pi - {{ action_ }}
+- name: Execute OS related tasks on the Raspberry Pi
   ansible.builtin.include_tasks: "{{ item }}"
   with_first_found:
-    - "{{ action_ }}/{{ detected_distribution }}-{{ detected_distribution_major_version }}.yml"
-    - "{{ action_ }}/{{ detected_distribution }}.yml"
-    - "{{ action_ }}/{{ ansible_distribution }}-{{ ansible_distribution_major_version }}.yml"
-    - "{{ action_ }}/{{ ansible_distribution }}.yml"
-    - "{{ action_ }}/default.yml"
+    - "setup/{{ detected_distribution }}-{{ detected_distribution_major_version }}.yml"
+    - "setup/{{ detected_distribution }}.yml"
+    - "setup/{{ ansible_distribution }}-{{ ansible_distribution_major_version }}.yml"
+    - "setup/{{ ansible_distribution }}.yml"
+    - "setup/default.yml"
   vars:
-    action_: >-
-      {% if state == "present" %}setup{% else %}teardown{% endif %}
-  when:
-    - raspberry_pi|default(false)
+    action_: "{% if state == 'present' %}setup{% else %}teardown{% endif %}"
+  when: raspberry_pi | default(false)

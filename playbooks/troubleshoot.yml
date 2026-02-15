@@ -1,0 +1,141 @@
+---
+- name: Troubleshoot k3s cluster
+  hosts: k3s_cluster
+  gather_facts: true
+  vars:
+    debug_output_dir: "./debug-output/{{ ansible_date_time.iso8601 }}"
+
+  tasks:
+    - name: Create debug output directory
+      ansible.builtin.file:
+        path: "{{ debug_output_dir }}"
+        state: directory
+        mode: '0755'
+      delegate_to: localhost
+      become: false
+
+    - name: Gather k3s service status
+      ansible.builtin.systemd:
+        name: "{{ 'k3s' if inventory_hostname in groups['master'] else 'k3s-node' }}"
+      register: k3s_service_status
+      failed_when: false
+
+    - name: Gather k3s logs
+      ansible.builtin.command: journalctl -u {{ 'k3s' if inventory_hostname in groups['master'] else 'k3s-node' }} --no-pager -n 500
+      register: k3s_logs
+      changed_when: false
+      failed_when: false
+
+    - name: Gather node status
+      ansible.builtin.command: k3s kubectl get node {{ inventory_hostname }} -o yaml
+      register: node_status
+      changed_when: false
+      failed_when: false
+      when: inventory_hostname in groups['master']
+
+    - name: Gather pod status
+      ansible.builtin.command: k3s kubectl get pods -A -o wide
+      register: pod_status
+      changed_when: false
+      failed_when: false
+      when: inventory_hostname in groups['master']
+
+    - name: Gather system info
+      ansible.builtin.setup:
+      register: system_facts
+
+    - name: Gather network info
+      ansible.builtin.command: ip addr show
+      register: network_info
+      changed_when: false
+
+    - name: Gather routing info
+      ansible.builtin.command: ip route show
+      register: routing_info
+      changed_when: false
+
+    - name: Gather iptables info
+      ansible.builtin.command: iptables -L -n -v
+      register: iptables_info
+      changed_when: false
+      failed_when: false
+
+    - name: Check disk space
+      ansible.builtin.command: df -h
+      register: disk_space
+      changed_when: false
+
+    - name: Check memory usage
+      ansible.builtin.command: free -h
+      register: memory_usage
+      changed_when: false
+
+    - name: Check for failed systemd units
+      ansible.builtin.command: systemctl --failed --no-pager
+      register: failed_units
+      changed_when: false
+      failed_when: false
+
+    - name: Check k3s config
+      ansible.builtin.slurp:
+        src: /etc/rancher/k3s/config.yaml
+      register: k3s_config_content
+      failed_when: false
+
+    - name: Check containerd status
+      ansible.builtin.command: k3s ctr namespaces list
+      register: containerd_namespaces
+      changed_when: false
+      failed_when: false
+
+    - name: Save debug info to files
+      ansible.builtin.copy:
+        content: |
+          === K3s Service Status ===
+          {{ k3s_service_status | to_nice_json }}
+
+          === K3s Logs ===
+          {{ k3s_logs.stdout | default('N/A') }}
+
+          === Node Status ===
+          {{ node_status.stdout | default('N/A') }}
+
+          === Pod Status ===
+          {{ pod_status.stdout | default('N/A') }}
+
+          === Network Info ===
+          {{ network_info.stdout }}
+
+          === Routing Info ===
+          {{ routing_info.stdout }}
+
+          === IPTables Info ===
+          {{ iptables_info.stdout | default('N/A') }}
+
+          === Disk Space ===
+          {{ disk_space.stdout }}
+
+          === Memory Usage ===
+          {{ memory_usage.stdout }}
+
+          === Failed Systemd Units ===
+          {{ failed_units.stdout }}
+
+          === K3s Config ===
+          {{ k3s_config_content.content | default('') | b64decode }}
+
+          === Containerd Namespaces ===
+          {{ containerd_namespaces.stdout | default('N/A') }}
+        dest: "{{ debug_output_dir }}/{{ inventory_hostname }}-debug.txt"
+      delegate_to: localhost
+      become: false
+
+    - name: Display summary
+      ansible.builtin.debug:
+        msg: |
+          Debug information collected for {{ inventory_hostname }}:
+          - Service Status: {{ k3s_service_status.status.ActiveState | default('unknown') }}
+          - Disk Usage: {{ disk_space.stdout_lines[1].split()[4] | default('unknown') }}
+          - Memory Usage: {{ memory_usage.stdout_lines[1].split()[2] | default('unknown') }}
+          
+          Full debug output saved to: {{ debug_output_dir }}/{{ inventory_hostname }}-debug.txt

@@ -3,11 +3,22 @@
   ansible.posix.selinux:
     state: disabled
   when: ansible_os_family == "RedHat"
+  tags: selinux
+
+- name: Install required packages
+  ansible.builtin.package:
+    name:
+      - curl
+      - ca-certificates
+      - gnupg
+      - iptables
+    state: present
+  tags: packages
 
 - name: Enable IPv4 forwarding
   ansible.posix.sysctl:
     name: net.ipv4.ip_forward
-    value: "1"
+    value: '1'
     state: present
     reload: true
   tags: sysctl
@@ -15,7 +26,7 @@
 - name: Enable IPv6 forwarding
   ansible.posix.sysctl:
     name: net.ipv6.conf.all.forwarding
-    value: "1"
+    value: '1'
     state: present
     reload: true
   tags: sysctl
@@ -23,7 +34,7 @@
 - name: Enable IPv6 router advertisements
   ansible.posix.sysctl:
     name: net.ipv6.conf.all.accept_ra
-    value: "2"
+    value: '2'
     state: present
     reload: true
   tags: sysctl
@@ -32,33 +43,103 @@
   ansible.builtin.copy:
     content: br_netfilter
     dest: /etc/modules-load.d/br_netfilter.conf
-    mode: u=rw,g=,o=
-  when: ansible_os_family == "RedHat"
+    mode: '0644'
+    owner: root
+    group: root
 
-- name: Load br_netfilter
+- name: Load br_netfilter module
   community.general.modprobe:
     name: br_netfilter
     state: present
-  when: ansible_os_family == "RedHat"
 
-- name: Set bridge-nf-call-iptables (just to be sure)
+- name: Load overlay module
+  community.general.modprobe:
+    name: overlay
+    state: present
+
+- name: Add overlay to /etc/modules-load.d/
+  ansible.builtin.copy:
+    content: overlay
+    dest: /etc/modules-load.d/overlay.conf
+    mode: '0644'
+    owner: root
+    group: root
+
+- name: Set bridge-nf-call-iptables
   ansible.posix.sysctl:
     name: "{{ item }}"
-    value: "1"
+    value: '1'
     state: present
     reload: true
-  when: ansible_os_family == "RedHat"
   loop:
     - net.bridge.bridge-nf-call-iptables
     - net.bridge.bridge-nf-call-ip6tables
   tags: sysctl
 
+- name: Add bridge-nf settings to /etc/sysctl.d/
+  ansible.builtin.copy:
+    content: |
+      net.bridge.bridge-nf-call-iptables = 1
+      net.bridge.bridge-nf-call-ip6tables = 1
+    dest: /etc/sysctl.d/99-kubernetes-cri.conf
+    mode: '0644'
+    owner: root
+    group: root
+  notify: reload sysctl
+
 - name: Add /usr/local/bin to sudo secure_path
   ansible.builtin.lineinfile:
-    line: Defaults    secure_path = {{ secure_path[ansible_os_family] }}
-    regexp: Defaults(\s)*secure_path(\s)*=
+    line: 'Defaults    secure_path = {{ secure_path[ansible_os_family] }}'
+    regexp: 'Defaults(\s)*secure_path(\s)*='
     state: present
     insertafter: EOF
     path: /etc/sudoers
-    validate: visudo -cf %s
-  when: ansible_os_family in [ "RedHat", "Suse" ]
+    validate: 'visudo -cf %s'
+  when: ansible_os_family in ["RedHat", "Suse"]
+
+- name: Ensure /etc/rancher/k3s directory exists
+  ansible.builtin.file:
+    path: /etc/rancher/k3s
+    state: directory
+    mode: '0755'
+    owner: root
+    group: root
+
+- name: Ensure /var/lib/rancher/k3s directory exists
+  ansible.builtin.file:
+    path: /var/lib/rancher/k3s
+    state: directory
+    mode: '0755'
+    owner: root
+    group: root
+
+- name: Ensure /run/k3s directory exists
+  ansible.builtin.file:
+    path: /run/k3s
+    state: directory
+    mode: '0755'
+    owner: root
+    group: root
+
+- name: Disable swap
+  ansible.builtin.command: swapoff -a
+  changed_when: true
+  when: ansible_swaptotal_mb > 0
+  tags: swap
+
+- name: Remove swap from /etc/fstab
+  ansible.posix.mount:
+    name: "{{ item }}"
+    fstype: swap
+    state: absent
+  loop: ['none', 'swap']
+  when: ansible_swaptotal_mb > 0
+  tags: swap
+
+- name: Ensure swap stays disabled
+  ansible.posix.sysctl:
+    name: vm.swappiness
+    value: '0'
+    state: present
+    reload: true
+  tags: sysctl
