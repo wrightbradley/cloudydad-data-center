@@ -2,6 +2,7 @@
 - name: Set _kube_vip_bgp_peers fact
   ansible.builtin.set_fact:
     _kube_vip_bgp_peers: "{{ lookup('community.general.merge_variables', '^kube_vip_bgp_peers__.+$', initial_value=kube_vip_bgp_peers, groups=kube_vip_bgp_peers_groups) }}" # yamllint disable-line rule:line-length
+  when: kube_vip_arp or kube_vip_bgp
 
 - name: Create manifests directory on first master
   ansible.builtin.file:
@@ -10,7 +11,7 @@
     owner: root
     group: root
     mode: "0644"
-  when: inventory_hostname == groups[group_name_master | default('master')][0]
+  when: inventory_hostname == groups[group_name_master | default('master')][0] and (kube_vip_arp or kube_vip_bgp)
 
 - name: Download vip rbac manifest to first master
   ansible.builtin.get_url:
@@ -19,7 +20,7 @@
     owner: root
     group: root
     mode: "0644"
-  when: inventory_hostname == groups[group_name_master | default('master')][0]
+  when: inventory_hostname == groups[group_name_master | default('master')][0] and (kube_vip_arp or kube_vip_bgp)
 
 - name: Copy vip manifest to first master
   ansible.builtin.template:
@@ -28,4 +29,4 @@
     owner: root
     group: root
     mode: "0644"
-  when: inventory_hostname == groups[group_name_master | default('master')][0]
+  when: inventory_hostname == groups[group_name_master | default('master')][0] and (kube_vip_arp or kube_vip_bgp)

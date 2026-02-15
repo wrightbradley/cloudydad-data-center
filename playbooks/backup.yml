@@ -1,0 +1,110 @@
+---
+- name: Backup k3s cluster
+  hosts: master
+  gather_facts: true
+  serial: 1
+  vars:
+    backup_dir: "./backups/{{ ansible_date_time('%Y-%m-%d-%H%M%S') }}"
+    snapshot_name: "pre-maintenance-{{ ansible_date_time('%Y%m%d%H%M') }}"
+  vars_prompt:
+    - name: confirm_backup
+      prompt: "This will create an etcd snapshot. Continue? Type 'yes' to confirm"
+      private: false
+
+  pre_tasks:
+    - name: Check confirmation
+      ansible.builtin.fail:
+        msg: "Backup cancelled. You must type 'yes' to confirm."
+      when: confirm_backup != 'yes'
+
+    - name: Create backup directory
+      ansible.builtin.file:
+        path: "{{ backup_dir }}"
+        state: directory
+        mode: '0755'
+      delegate_to: localhost
+      become: false
+
+    - name: Display backup information
+      ansible.builtin.debug:
+        msg: |
+          Creating etcd snapshot: {{ snapshot_name }}
+          Backup directory: {{ backup_dir }}
+          Master nodes: {{ groups['master'] | join(', ') }}
+
+  tasks:
+    - name: Create etcd snapshot on first master
+      when: inventory_hostname == groups[group_name_master | default('master')][0]
+      block:
+        - name: Create etcd snapshot
+          ansible.builtin.command: k3s etcd-snapshot save --name {{ snapshot_name }}
+          register: snapshot_result
+          changed_when: snapshot_result.rc == 0
+          failed_when: snapshot_result.rc != 0
+
+        - name: List etcd snapshots
+          ansible.builtin.command: k3s etcd-snapshot list
+          register: snapshot_list
+          changed_when: false
+
+        - name: Display snapshot result
+          ansible.builtin.debug:
+            msg: "ETCD Snapshot created: {{ snapshot_name }}"
+          when: snapshot_result.rc == 0
+
+        - name: Copy snapshot to local backup directory
+          ansible.builtin.fetch:
+            src: "/var/lib/rancher/k3s/server/db/etcd-snapshots/{{ snapshot_name }}-etcd.tar.gz"
+            dest: "{{ backup_dir }}/{{ inventory_hostname }}-{{ snapshot_name }}-etcd.tar.gz"
+            flat: true
+          failed_when: false
+          when: snapshot_result.rc == 0
+
+    - name: Save cluster info
+      when: inventory_hostname == groups[group_name_master | default('master')][0]
+      block:
+        - name: Get cluster nodes
+          ansible.builtin.command: k3s kubectl get nodes -o wide
+          register: cluster_nodes
+          changed_when: false
+          failed_when: false
+
+        - name: Get cluster pods
+          ansible.builtin.command: k3s kubectl get pods -A -o wide
+          register: cluster_pods
+          changed_when: false
+          failed_when: false
+
+        - name: Save cluster info to file
+          ansible.builtin.copy:
+            content: |
+              === Cluster Backup Info ===
+              Date: {{ ansible_date_time.iso8601 }}
+              Snapshot: {{ snapshot_name }}
+              Nodes:
+              {{ cluster_nodes.stdout | default('N/A') }}
+
+              Pods:
+              {{ cluster_pods.stdout | default('N/A') }}
+            dest: "{{ backup_dir }}/cluster-info.txt"
+          delegate_to: localhost
+          become: false
+
+    - name: Wait for snapshot to complete
+      ansible.builtin.pause:
+        seconds: 5
+
+  post_tasks:
+    - name: Display backup summary
+      ansible.builtin.debug:
+        msg: |
+          Backup complete!
+          Snapshot: {{ snapshot_name }}
+          Location: {{ backup_dir }}/
+
+    - name: List local backup files
+      ansible.builtin.command: ls -la {{ backup_dir }}/
+      register: backup_files
+      changed_when: false
+      delegate_to: localhost
+      become: false

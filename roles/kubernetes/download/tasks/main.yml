@@ -1,8 +1,7 @@
 ---
 - name: Set k3s architecture
   ansible.builtin.set_fact:
-    k3s_arch: >-
-      {% if ansible_facts.architecture == 'x86_64' %}amd64 {% elif ansible_facts.architecture == 'aarch64' or (ansible_facts.architecture is search('arm') and ansible_facts.userspace_bits == '64') %}arm64 {% elif ansible_facts.architecture is search('arm') and ansible_facts.userspace_bits == '32' %}arm {% else %}amd64{% endif %} #magic___^_^___line
+    k3s_arch: "{% if ansible_facts.architecture == 'x86_64' %}amd64{% elif ansible_facts.architecture == 'aarch64' or (ansible_facts.architecture is search('arm') and ansible_facts.userspace_bits == '64') %}arm64{% elif ansible_facts.architecture is search('arm') and ansible_facts.userspace_bits == '32' %}arm{% else %}amd64{% endif %}"
 - name: Download k3s binary
   ansible.builtin.get_url:
     url: "https://github.com/k3s-io/k3s/releases/download/{{ k3s_version }}/k3s{% if k3s_arch != 'amd64' %}-{{ k3s_arch }}{% endif %}"
@@ -61,4 +60,4 @@
     owner: root
     group: root
     mode: '0755'
-  when: helm_download is succeeded
+  when: helm_version is defined and helm_download is succeeded

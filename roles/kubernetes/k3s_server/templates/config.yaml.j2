@@ -37,7 +37,6 @@ etcd-arg:
   - snapshot-count=100000
   - quota-backend-bytes=2147483648
 kubelet-arg:
-  - enforce-node-allocatable=pods
 {% if kubelet_system_reserved is defined %}
   - system-reserved={{ kubelet_system_reserved }}
 {% endif %}

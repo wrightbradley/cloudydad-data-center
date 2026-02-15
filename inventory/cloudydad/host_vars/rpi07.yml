@@ -1,9 +1,16 @@
 ---
 # rpi07 - Raspberry Pi 4 (8GB RAM)
+# Role: k3s master node (added 2026-02-15 as second master for HA)
+# etcd member ID: b9964b8831510039
+
+# Use eth0 for k3s networking
 flannel_iface: eth0
+
+# Master node should not schedule regular workloads
 k3s_master_taint: true
 
 # Resource allocations for Pi 4 (8GB RAM)
+# These match the actual deployed config in /etc/rancher/k3s/config.yaml
 kubelet_system_reserved: cpu=300m,memory=768Mi,ephemeral-storage=2Gi
 kubelet_kube_reserved: cpu=300m,memory=768Mi,ephemeral-storage=1Gi
 kubelet_eviction_hard: memory.available<512Mi,nodefs.available<15%

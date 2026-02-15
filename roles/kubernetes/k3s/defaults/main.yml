@@ -1,0 +1,4 @@
+---
+k3s_kubectl_binary: k3s kubectl
+k3s_create_kubectl_symlink: true
+k3s_create_crictl_symlink: true

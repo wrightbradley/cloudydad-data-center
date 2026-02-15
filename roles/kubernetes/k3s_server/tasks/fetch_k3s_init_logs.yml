@@ -1,0 +1,30 @@
+---
+- name: Save logs of k3s-init.service
+  block:
+    - name: Create log directory
+      ansible.builtin.file:
+        path: "{{ log_destination }}"
+        state: directory
+        mode: '0755'
+      delegate_to: localhost
+      become: false
+
+    - name: Fetch k3s-init service logs
+      ansible.builtin.command: journalctl -u k3s-init --no-pager -n 1000
+      register: k3s_init_logs
+      changed_when: false
+      failed_when: false
+
+    - name: Save logs to file
+      ansible.builtin.copy:
+        content: |
+          === k3s-init logs for {{ inventory_hostname }} ===
+          {{ k3s_init_logs.stdout | default('No logs available') }}
+
+          === Timestamps ===
+          Collected at: {{ ansible_date_time.iso8601 }}
+          Host: {{ inventory_hostname }}
+        dest: "{{ log_destination }}/{{ inventory_hostname }}-k3s-init.log"
+      delegate_to: localhost
+      become: false
+  when: log_destination is defined and log_destination

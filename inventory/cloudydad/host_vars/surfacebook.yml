@@ -2,7 +2,18 @@
 hostname: surfacebook
 ethernet_id: enx00e04c6818f1
 ethernet_mac: 00:e0:4c:68:18:f1
+
+# surfacebook is the primary master node and should allow scheduling for critical workloads
 k3s_master_taint: false
+
+# Use the USB Ethernet adapter for k3s networking
 flannel_iface: enx00e04c6818f1
+
+# Resource allocations for surfacebook (higher resources available)
+kubelet_system_reserved: cpu=400m,memory=768Mi,ephemeral-storage=3Gi
+kubelet_kube_reserved: cpu=400m,memory=768Mi,ephemeral-storage=2Gi
+kubelet_eviction_hard: memory.available<512Mi,nodefs.available<10%
+
+# Higher API QPS/burst for primary master
 extra_args: >-
-  {{ '--flannel-iface=' + flannel_iface if calico_iface is not defined and cilium_iface is not defined else '' }} --node-ip={{ k3s_node_ip }} --kubelet-arg enforce-node-allocatable="pods" --kubelet-arg system-reserved="cpu=400m,memory=768Mi,ephemeral-storage=3Gi" --kubelet-arg kube-reserved="cpu=400m,memory=768Mi,ephemeral-storage=2Gi" --kubelet-arg eviction-hard="memory.available<512Mi,nodefs.available<10%" --kubelet-arg kube-api-qps=50 --kubelet-arg kube-api-burst=100
+  {{ '--flannel-iface=' + flannel_iface if calico_iface is not defined and cilium_iface is not defined else '' }} --node-ip={{ k3s_node_ip }} --kubelet-arg enforce-node-allocatable="pods" --kubelet-arg system-reserved="{{ kubelet_system_reserved }}" --kubelet-arg kube-reserved="{{ kubelet_kube_reserved }}" --kubelet-arg eviction-hard="{{ kubelet_eviction_hard }}" --kubelet-arg kube-api-qps=50 --kubelet-arg kube-api-burst=100

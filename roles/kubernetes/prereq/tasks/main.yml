@@ -85,7 +85,11 @@
     mode: '0644'
     owner: root
     group: root
-  notify: reload sysctl
+  register: bridge_nf_settings
+
+- name: Reload sysctl
+  ansible.builtin.command: sysctl --system
+  when: bridge_nf_settings.changed
 
 - name: Add /usr/local/bin to sudo secure_path
   ansible.builtin.lineinfile:

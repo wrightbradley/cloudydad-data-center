@@ -2,7 +2,8 @@
 k3s_version: v1.32.12+k3s1
 systemd_dir: /etc/systemd/system
 
-# interface which will be used for flannel
+# interface which will be used for flannel (disabled when using cilium or calico)
+# Default is lan0, but can be overridden per-host (e.g., surfacebook uses enx00e04c6818f1, Pis use eth0)
 flannel_iface: lan0
 
 # uncomment calico_iface to use tigera operator/calico cni instead of flannel https://docs.tigera.io/calico/latest/about
@@ -10,27 +11,28 @@ flannel_iface: lan0
 calico_ebpf: false # use eBPF dataplane instead of iptables
 calico_tag: v3.28.0 # calico version tag
 
-# uncomment cilium_iface to use cilium cni instead of flannel or calico
-# ensure v4.19.57, v5.1.16, v5.2.0 or more recent kernel
-# cilium_iface: 'eth0'
-cilium_mode: native # native when nodes on same subnet or using bgp, else set routed
-cilium_tag: v1.16.3 # cilium version tag
-cilium_hubble: true # enable hubble observability relay and ui
+# CILIUM CNI - DISABLED (Failed migration on 2026-02-15, reverted to Flannel)
+# Use cilium cni - ensure v4.19.57, v5.1.16, v5.2.0 or more recent kernel
+# cilium_iface: lan0
+# cilium_mode: native # native when nodes on same subnet or using bgp, else set routed
+# cilium_tag: v1.16.3 # cilium version tag
+# cilium_hubble: true # enable hubble observability relay and ui
 
 # if using calico or cilium, you may specify the cluster pod cidr pool
-cluster_cidr: 10.52.0.0/16
+# cluster_cidr: 10.52.0.0/16  # Only used with Calico/Cilium - Flannel uses default 10.42.0.0/16
 
+# CILIUM BGP - DISABLED (Cilium not in use)
 # enable cilium bgp control plane for lb services and pod cidrs. disables metallb.
-cilium_bgp: false
-
+# cilium_bgp: true
 # bgp parameters for cilium cni. only active when cilium_iface is defined and cilium_bgp is true.
-cilium_bgp_my_asn: "64522"
-cilium_bgp_peer_asn: "64512"
-cilium_bgp_peer_address: 172.18.1.1
-cilium_bgp_lb_cidr: 172.18.252.0/22 # cidr for cilium loadbalancer ipam
+# cilium_bgp_my_asn: "64522"
+# cilium_bgp_peer_asn: "64512"
+# cilium_bgp_peer_address: 172.18.1.1
+# cilium_bgp_lb_cidr: 172.18.252.0/22 # cidr for cilium loadbalancer ipam
 
+# kube-vip is disabled - using HAProxy on OpnSense for control plane VIP
 # enable kube-vip ARP broadcasts
-kube_vip_arp: true
+kube_vip_arp: false
 
 # enable kube-vip BGP peering
 kube_vip_bgp: false
@@ -60,8 +62,9 @@ k3s_node_ip: >-
     ).get('ipv4', {}).get('address', 'N/A')
   }}
 
-# Disable the taint manually by setting: k3s_master_taint = false
-# k3s_master_taint: "{{ true if groups['node'] | default([]) | length >= 1 else false }}"
+# Taint master nodes with NoSchedule by default if there are worker nodes
+# Override per-host in host_vars if needed
+k3s_master_taint: "{{ true if groups['node'] | default([]) | length >= 1 else false }}"
 
 # Base extra_args - hosts can override kubelet resources
 # These are applied to both servers and agents
@@ -90,16 +93,7 @@ metal_lb_type: native
 # metallb mode layer2 or bgp
 metal_lb_mode: layer2
 
-# bgp options
-# metal_lb_bgp_my_asn: "64513"
-# metal_lb_bgp_peer_asn: "64512"
-# metal_lb_bgp_peer_address: "192.168.30.1"
-
-# image tag for metal lb
-metal_lb_speaker_tag_version: v0.14.8
-metal_lb_controller_tag_version: v0.14.8
-
-# metallb ip range for load balancer
+# metallb ip range for LoadBalancer services (Cilium BGP disabled, using MetalLB)
 metal_lb_ip_range: 172.18.252.0-172.18.255.240
 
 # Only enable this if you have set up your own container registry to act as a mirror / pull-through cache

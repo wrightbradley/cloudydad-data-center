@@ -137,5 +137,5 @@
           - Service Status: {{ k3s_service_status.status.ActiveState | default('unknown') }}
           - Disk Usage: {{ disk_space.stdout_lines[1].split()[4] | default('unknown') }}
           - Memory Usage: {{ memory_usage.stdout_lines[1].split()[2] | default('unknown') }}
-          
+
           Full debug output saved to: {{ debug_output_dir }}/{{ inventory_hostname }}-debug.txt
