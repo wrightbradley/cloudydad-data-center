@@ -28,10 +28,11 @@
     group: root
     mode: '0755'
   tags: k3s-service
+  register: k3s_node_service_template
 
 - name: Manage k3s service
   ansible.builtin.systemd:
     name: k3s-node
     daemon_reload: true
-    state: restarted
+    state: '{{ "restarted" if k3s_node_service_template.changed else "started" }}'
     enabled: true

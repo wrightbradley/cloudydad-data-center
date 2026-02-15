@@ -16,7 +16,7 @@
     raspberry_pi: true
   when: grep_cpuinfo_raspberrypi.rc == 0 or grep_device_tree_model_raspberrypi.rc == 0
 
-- name: Set detected_distribution to Raspbian (ARM64 on Raspbian, Debian Buster/Bullseye/Bookworm)
+- name: Set detected_distribution to Raspbian (ARM64 on Raspbian, Debian Buster/Bullseye/Bookworm/Trixie)
   ansible.builtin.set_fact:
     detected_distribution: Raspbian
   vars:
@@ -25,6 +25,7 @@
       - Debian.*buster
       - Debian.*bullseye
       - Debian.*bookworm
+      - Debian.*trixie
   when:
     - ansible_facts.architecture is search("aarch64")
     - raspberry_pi|default(false)
@@ -37,6 +38,14 @@
     - ansible_facts.architecture is search("aarch64")
     - raspberry_pi|default(false)
     - ansible_facts.lsb.description|default("") is match("Debian.*bookworm")
+
+- name: Set detected_distribution to Raspbian (ARM64 on Debian Trixie)
+  ansible.builtin.set_fact:
+    detected_distribution: Raspbian
+  when:
+    - ansible_facts.architecture is search("aarch64")
+    - raspberry_pi|default(false)
+    - ansible_facts.lsb.description|default("") is match("Debian.*trixie")
 
 - name: Set detected_distribution_major_version
   ansible.builtin.set_fact:

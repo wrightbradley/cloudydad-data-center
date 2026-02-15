@@ -21,7 +21,7 @@
     name: k3s-init
     state: stopped
   failed_when: false
-  when: not (k3s_config.stat.exists and node_in_cluster.stdout == ansible_hostname)
+  when: not (k3s_config.stat.exists and node_in_cluster.stdout is defined and node_in_cluster.stdout == ansible_hostname)
 
 # k3s-init won't work if the port is already in use
 - name: Stop k3s
@@ -29,14 +29,14 @@
     name: k3s
     state: stopped
   failed_when: false
-  when: not (k3s_config.stat.exists and node_in_cluster.stdout == ansible_hostname)
+  when: not (k3s_config.stat.exists and node_in_cluster.stdout is defined and node_in_cluster.stdout == ansible_hostname)
 
 - name: Clean previous runs of k3s-init # noqa command-instead-of-module
   # The systemd module does not support "reset-failed", so we need to resort to command.
   ansible.builtin.command: systemctl reset-failed k3s-init
   failed_when: false
   changed_when: false
-  when: not (k3s_config.stat.exists and node_in_cluster.stdout == ansible_hostname)
+  when: not (k3s_config.stat.exists and node_in_cluster.stdout is defined and node_in_cluster.stdout == ansible_hostname)
 
 - name: Deploy K3s http_proxy conf
   ansible.builtin.include_tasks: http_proxy.yml
@@ -58,7 +58,7 @@
   ansible.builtin.command:
     cmd: systemd-run -p RestartSec=2 -p Restart=on-failure --unit=k3s-init k3s server {{ server_init_args }}
     creates: '{{ systemd_dir }}/k3s-init.service'
-  when: not (k3s_config.stat.exists and node_in_cluster.stdout == ansible_hostname)
+  when: not (k3s_config.stat.exists and node_in_cluster.stdout is defined and node_in_cluster.stdout == ansible_hostname)
 
 - name: Verification
   when: false and not ansible_check_mode
@@ -93,14 +93,14 @@
     group: root
     mode: '0644'
   tags: k3s-service
-  when: not (k3s_config.stat.exists and node_in_cluster.stdout == ansible_hostname)
+  when: not (k3s_config.stat.exists and node_in_cluster.stdout is defined and node_in_cluster.stdout == ansible_hostname)
 
 - name: Check if service file needs update
   ansible.builtin.command: diff '{{ systemd_dir }}/k3s.service' '{{ systemd_dir }}/k3s.service.expected'
   register: service_diff
   changed_when: service_diff.rc != 0
   failed_when: false
-  when: k3s_config.stat.exists and node_in_cluster.stdout == ansible_hostname
+  when: k3s_config.stat.exists and node_in_cluster.stdout is defined and node_in_cluster.stdout == ansible_hostname
 
 - name: Update K3s service file if needed
   ansible.builtin.template:
@@ -110,7 +110,7 @@
     group: root
     mode: '0644'
   tags: k3s-service
-  when: service_diff.rc != 0
+  when: service_diff.rc is defined and service_diff.rc != 0
   register: k3s_service_update
 
 - name: Enable and check K3s service
@@ -119,24 +119,24 @@
     daemon_reload: true
     state: started
     enabled: true
-  when: not (k3s_config.stat.exists and node_in_cluster.stdout == ansible_hostname) or (k3s_service_update is defined and k3s_service_update.changed)
+  when: not (k3s_config.stat.exists and node_in_cluster.stdout is defined and node_in_cluster.stdout == ansible_hostname) or (k3s_service_update is defined and k3s_service_update.changed)
 
 - name: Ensure K3s service is running (no restart)
   ansible.builtin.systemd:
     name: k3s
     enabled: true
-  when: k3s_config.stat.exists and node_in_cluster.stdout == ansible_hostname and (k3s_service_update is not defined or not k3s_service_update.changed)
+  when: k3s_config.stat.exists and node_in_cluster.stdout is defined and node_in_cluster.stdout == ansible_hostname and (k3s_service_update is not defined or not k3s_service_update.changed)
 
 - name: Wait for node-token
   ansible.builtin.wait_for:
     path: /var/lib/rancher/k3s/server/node-token
-  when: not (k3s_config.stat.exists and node_in_cluster.stdout == ansible_hostname)
+  when: not (k3s_config.stat.exists and node_in_cluster.stdout is defined and node_in_cluster.stdout == ansible_hostname)
 
 - name: Check ETCD certificates validity for existing nodes
   ansible.builtin.stat:
     path: /var/lib/rancher/k3s/server/tls/etcd/server-ca.crt
   register: etcd_ca_cert
-  when: k3s_config.stat.exists and node_in_cluster.stdout == ansible_hostname
+  when: k3s_config.stat.exists and node_in_cluster.stdout is defined and node_in_cluster.stdout == ansible_hostname
 
 - name: Validate ETCD certificate expiration for existing nodes
   ansible.builtin.shell: set -o pipefail && openssl x509 -in /var/lib/rancher/k3s/server/tls/etcd/server-ca.crt -noout -enddate 2>/dev/null | cut -d= -f2
@@ -168,7 +168,7 @@
   register: cluster_endpoints
   changed_when: false
   failed_when: false
-  when: k3s_config.stat.exists and node_in_cluster.stdout == ansible_hostname
+  when: k3s_config.stat.exists and node_in_cluster.stdout is defined and node_in_cluster.stdout == ansible_hostname
 
 - name: Check ETCD health for existing nodes
   ansible.builtin.shell: |
@@ -176,7 +176,7 @@
   register: etcd_health
   changed_when: false
   failed_when: false
-  when: k3s_config.stat.exists and node_in_cluster.stdout == ansible_hostname
+  when: k3s_config.stat.exists and node_in_cluster.stdout is defined and node_in_cluster.stdout == ansible_hostname
 
 - name: Log cluster status for existing nodes
   ansible.builtin.debug:
@@ -184,7 +184,7 @@
       Node {{ ansible_hostname }} is already part of cluster
       Cluster endpoints: {{ cluster_endpoints.stdout | default('Not accessible') }}
       ETCD status: {{ etcd_health.stdout | default('Not ready') }}
-  when: k3s_config.stat.exists and node_in_cluster.stdout == ansible_hostname
+  when: k3s_config.stat.exists and node_in_cluster.stdout is defined and node_in_cluster.stdout == ansible_hostname
 
 - name: Register node-token file access mode
   ansible.builtin.stat:
