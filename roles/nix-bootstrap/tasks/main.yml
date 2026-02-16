@@ -1,0 +1,53 @@
+---
+# Main orchestration for nix-bootstrap role
+# This role installs Nix, system-manager, and deploys initial configuration
+
+- name: Display bootstrap information
+  ansible.builtin.debug:
+    msg: |
+      Bootstrapping Nix on {{ inventory_hostname }}
+      Architecture: {{ ansible_architecture }}
+      K3s Role: {{ 'server' if 'master' in group_names else 'agent' }}
+      Node IP: {{ k3s_node_ip }}
+
+- name: Install Nix package manager
+  ansible.builtin.include_tasks: install-nix.yml
+  tags:
+    - nix
+    - install
+
+- name: Install system-manager
+  ansible.builtin.include_tasks: install-system-manager.yml
+  tags:
+    - system-manager
+    - install
+
+- name: Set up sops-nix age keys
+  ansible.builtin.include_tasks: setup-sops.yml
+  tags:
+    - sops
+    - secrets
+
+- name: Deploy Nix configuration
+  ansible.builtin.include_tasks: deploy-config.yml
+  tags:
+    - config
+    - deploy
+
+- name: Activate system-manager
+  ansible.builtin.include_tasks: activate.yml
+  tags:
+    - activate
+    - k3s
+
+- name: Bootstrap complete
+  ansible.builtin.debug:
+    msg: |
+      ✓ Nix bootstrap complete for {{ inventory_hostname }}
+
+      Next steps:
+      1. Verify node joined cluster: kubectl get nodes
+      2. Test idempotency: ssh {{ inventory_hostname }} 'system-manager switch --flake {{ nix_system_dir }}'
+      3. Set up deploy-rs for remote deployments
+
+      Age public key: {{ lookup('file', age_pub_file) if age_pub_file is file else 'Run again to see key' }}

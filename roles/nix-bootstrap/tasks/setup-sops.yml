@@ -1,0 +1,87 @@
+---
+- name: Ensure /etc/nix-system directory exists
+  ansible.builtin.file:
+    path: /etc/nix-system
+    state: directory
+    mode: '0755'
+    owner: root
+    group: root
+  become: true
+
+- name: Check if age keys already exist
+  ansible.builtin.stat:
+    path: '{{ age_pub_file }}'
+  register: age_keys_exist
+
+- name: Set up sops-nix age keys
+  when: sops_nix_enabled and not age_keys_exist.stat.exists
+  block:
+    - name: Check if SSH Ed25519 host key exists
+      ansible.builtin.stat:
+        path: /etc/ssh/ssh_host_ed25519_key.pub
+      register: ssh_host_key
+
+    - name: Fail if SSH Ed25519 host key doesn't exist
+      ansible.builtin.fail:
+        msg: 'SSH Ed25519 host key not found. Generate one with: ssh-keygen -t ed25519 -f /etc/ssh/ssh_host_ed25519_key -N ""'
+      when: not ssh_host_key.stat.exists
+
+    - name: Install ssh-to-age tool
+      ansible.builtin.shell: |
+        . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+        nix profile install nixpkgs#ssh-to-age --accept-flake-config
+      args:
+        executable: /bin/bash
+      register: ssh_to_age_install
+      changed_when: "'installed' in ssh_to_age_install.stderr or 'installed' in ssh_to_age_install.stdout"
+
+    - name: Generate age public key from SSH host key
+      ansible.builtin.shell: |
+        . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+        ssh-to-age < /etc/ssh/ssh_host_ed25519_key.pub
+      args:
+        executable: /bin/bash
+      register: age_public_key
+      changed_when: false
+
+    - name: Generate age private key from SSH host key
+      ansible.builtin.shell: |
+        . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+        ssh-to-age -private-key < /etc/ssh/ssh_host_ed25519_key
+      args:
+        executable: /bin/bash
+      register: age_private_key
+      changed_when: false
+      no_log: true
+
+    - name: Save age public key
+      ansible.builtin.copy:
+        content: '{{ age_public_key.stdout }}'
+        dest: '{{ age_pub_file }}'
+        mode: '0644'
+        owner: root
+        group: root
+
+    - name: Save age private key
+      ansible.builtin.copy:
+        content: '{{ age_private_key.stdout }}'
+        dest: '{{ age_key_file }}'
+        mode: '0600'
+        owner: root
+        group: root
+      no_log: true
+
+    - name: Display age public key for sops-nix configuration
+      ansible.builtin.debug:
+        msg: 'Age public key for {{ inventory_hostname }}: {{ age_public_key.stdout }}'
+
+- name: Read existing age public key
+  ansible.builtin.slurp:
+    src: '{{ age_pub_file }}'
+  register: age_pub_content
+  when: age_keys_exist.stat.exists
+
+- name: Display existing age public key
+  ansible.builtin.debug:
+    msg: 'Existing age public key for {{ inventory_hostname }}: {{ age_pub_content.content | b64decode | trim }}'
+  when: age_keys_exist.stat.exists

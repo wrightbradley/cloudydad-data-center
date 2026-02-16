@@ -1,0 +1,83 @@
+---
+- name: Check if k3s is currently managed by Ansible
+  ansible.builtin.systemd:
+    name: '{{ k3s_service_name }}'
+  register: existing_k3s_service
+  failed_when: false
+
+- name: Stop existing Ansible-managed k3s service
+  when: existing_k3s_service.status is defined and existing_k3s_service.status.LoadState == 'loaded'
+  block:
+    - name: Stop k3s service
+      ansible.builtin.systemd:
+        name: '{{ k3s_service_name }}'
+        state: stopped
+      failed_when: false
+
+    - name: Disable Ansible-managed k3s service
+      ansible.builtin.systemd:
+        name: '{{ k3s_service_name }}'
+        enabled: false
+        masked: false
+      failed_when: false
+
+    - name: Remove old Ansible-managed k3s service file
+      ansible.builtin.file:
+        path: '/etc/systemd/system/{{ k3s_service_name }}.service'
+        state: absent
+      become: true
+
+    - name: Reload systemd daemon
+      ansible.builtin.systemd:
+        daemon_reload: true
+      become: true
+
+    - name: Wait for k3s to fully stop
+      ansible.builtin.wait_for:
+        timeout: 10
+      delegate_to: localhost
+      become: false
+
+- name: Initialize flake lock file
+  ansible.builtin.shell: |
+    . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+    cd {{ nix_system_dir }}
+    nix flake update
+  args:
+    executable: /bin/bash
+    creates: '{{ nix_system_dir }}/flake.lock'
+  register: flake_init
+  changed_when: flake_init.rc == 0
+
+- name: Activate system-manager configuration (initial)
+  ansible.builtin.shell: |
+    . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+    cd {{ nix_system_dir }}
+    system-manager switch --flake .
+  args:
+    executable: /bin/bash
+  register: activation_result
+  changed_when: "'Activating' in activation_result.stdout or 'Starting' in activation_result.stdout"
+  failed_when: activation_result.rc != 0
+  environment:
+    NIX_CONFIG: "extra-experimental-features = nix-command flakes"
+
+- name: Display activation result
+  ansible.builtin.debug:
+    msg: '{{ activation_result.stdout_lines }}'
+
+- name: Wait for k3s service to start
+  ansible.builtin.wait_for:
+    timeout: 30
+  delegate_to: localhost
+  become: false
+
+- name: Verify k3s service is running
+  ansible.builtin.systemd:
+    name: '{{ k3s_service_name }}'
+  register: k3s_service_check
+  failed_when: k3s_service_check.status.ActiveState != 'active'
+
+- name: Display k3s service status
+  ansible.builtin.debug:
+    msg: 'K3s service is {{ k3s_service_check.status.ActiveState }} (managed by system-manager)'

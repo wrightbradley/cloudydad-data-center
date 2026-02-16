@@ -83,6 +83,14 @@ docs: install-docs ## Spin up docs site
 site: ## Deploy cloudydad-data-center
 	uvx --from ansible-core ansible-playbook playbooks/site.yml
 
+.PHONY: bootstrap-nix
+bootstrap-nix: ## Bootstrap Nix on cluster nodes (use NODE=rpi05 to limit)
+ifdef NODE
+	uvx --from ansible-core ansible-playbook playbooks/bootstrap-nix.yml --limit $(NODE)
+else
+	uvx --from ansible-core ansible-playbook playbooks/bootstrap-nix.yml
+endif
+
 .PHONY: reset
 reset: ## Reset Kubernetes cluster
 	uvx --from ansible-core ansible-playbook playbooks/reset.yml

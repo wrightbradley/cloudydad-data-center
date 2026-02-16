@@ -1,0 +1,93 @@
+---
+# Fix iscsid service by reverting from Nix management to system management
+# This playbook:
+# 1. Redeploys the updated Nix configuration (without iscsid service)
+# 2. Stops and masks the Nix-managed iscsid service
+# 3. Ensures system open-iscsi package is installed
+# 4. Unmasks and enables the system iscsid service
+# 5. Restarts iscsid to restore iSCSI functionality
+
+- name: Fix iscsid service on all k3s nodes
+  hosts: k3s_cluster
+  gather_facts: true
+  become: true
+
+  tasks:
+    - name: Redeploy Nix configuration with iscsid removed
+      import_role:
+        name: nix-bootstrap
+        tasks_from: deploy-config.yml
+      tags: [nix-config]
+
+    - name: Activate new Nix configuration
+      import_role:
+        name: nix-bootstrap
+        tasks_from: activate.yml
+      tags: [nix-activate]
+
+    - name: Stop Nix-managed iscsid service
+      systemd:
+        name: iscsid
+        state: stopped
+      ignore_errors: true
+      tags: [iscsid-stop]
+
+    - name: Mask Nix-managed iscsid service to prevent auto-start
+      systemd:
+        name: iscsid
+        masked: true
+      tags: [iscsid-mask]
+
+    - name: Ensure system open-iscsi package is installed
+      apt:
+        name: open-iscsi
+        state: present
+        update_cache: false
+      tags: [iscsid-install]
+
+    - name: Unmask system iscsid service
+      systemd:
+        name: iscsid
+        masked: false
+      tags: [iscsid-unmask]
+
+    - name: Remove Nix iscsid service file
+      file:
+        path: /etc/systemd/system/iscsid.service
+        state: absent
+      tags: [iscsid-cleanup]
+
+    - name: Reload systemd daemon
+      systemd:
+        daemon_reload: true
+      tags: [systemd-reload]
+
+    - name: Enable system iscsid service
+      systemd:
+        name: iscsid
+        enabled: true
+      tags: [iscsid-enable]
+
+    - name: Restart iscsid service
+      systemd:
+        name: iscsid
+        state: restarted
+      tags: [iscsid-restart]
+
+    - name: Wait for iscsid to be fully started
+      wait_for:
+        timeout: 10
+      delegate_to: localhost
+      tags: [iscsid-wait]
+
+    - name: Verify iscsid service is running
+      systemd:
+        name: iscsid
+      register: iscsid_status
+      failed_when: iscsid_status.status.ActiveState != 'active'
+      tags: [iscsid-verify]
+
+    - name: Display iscsid service status
+      debug:
+        msg: "iscsid service is {{ iscsid_status.status.ActiveState }} on {{ inventory_hostname }}"
+      tags: [iscsid-verify]

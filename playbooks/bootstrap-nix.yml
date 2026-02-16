@@ -1,0 +1,112 @@
+---
+# Bootstrap Nix on k3s cluster nodes
+# This playbook installs Nix, system-manager, and configures k3s via Nix
+#
+# Usage:
+#   # Bootstrap single node (POC)
+#   ansible-playbook playbooks/bootstrap-nix.yml --limit rpi05
+#
+#   # Bootstrap all worker nodes
+#   ansible-playbook playbooks/bootstrap-nix.yml --limit node
+#
+#   # Bootstrap specific node
+#   ansible-playbook playbooks/bootstrap-nix.yml --limit beelink-1
+
+- name: Pre-flight checks
+  hosts: all
+  gather_facts: true
+  tasks:
+    - name: Verify Ansible is version 2.11 or above
+      ansible.builtin.assert:
+        that: "ansible_version.full is version_compare('2.11', '>=')"
+        msg: 'Ansible is out of date. Please upgrade to 2.11 or higher.'
+
+    - name: Check if node is in k3s_cluster group
+      ansible.builtin.assert:
+        that: "'k3s_cluster' in group_names"
+        msg: 'This playbook should only run on k3s_cluster hosts'
+
+    - name: Display target nodes
+      ansible.builtin.debug:
+        msg: |
+          Bootstrapping Nix on: {{ ansible_play_hosts | join(', ') }}
+          Total nodes: {{ ansible_play_hosts | length }}
+
+    - name: Confirm bootstrap (interactive)
+      ansible.builtin.pause:
+        prompt: |
+
+          ⚠️  WARNING: This will transition {{ ansible_play_hosts | length }} node(s) from Ansible-managed k3s to Nix-managed k3s
+
+          Nodes to be bootstrapped:
+          {{ ansible_play_hosts | join('\n') }}
+
+          This process will:
+          1. Install Nix package manager (multi-user mode)
+          2. Install system-manager
+          3. Generate sops-nix age keys
+          4. Deploy Nix configuration
+          5. Stop Ansible-managed k3s service
+          6. Start Nix-managed k3s service
+
+          Continue? (yes/no)
+      register: confirm
+      when: not (ansible_check_mode | default(false))
+      run_once: true
+
+    - name: Abort if not confirmed
+      ansible.builtin.fail:
+        msg: 'Bootstrap aborted by user'
+      when:
+        - not (ansible_check_mode | default(false))
+        - bootstrap_confirm | default('no') != 'yes'
+        - confirm.user_input | default('no') != 'yes'
+      run_once: true
+
+- name: Bootstrap Nix on k3s nodes
+  hosts: all
+  gather_facts: true
+  become: true
+  serial: 1 # Bootstrap one node at a time for safety
+  roles:
+    - role: nix-bootstrap
+      tags:
+        - nix-bootstrap
+
+- name: Post-bootstrap validation
+  hosts: all
+  gather_facts: false
+  become: true
+  tasks:
+    - name: Wait for k3s service to be fully operational
+      ansible.builtin.systemd:
+        name: "{{ 'k3s' if 'master' in group_names else 'k3s-agent' }}"
+      register: k3s_service
+      until: k3s_service.status.ActiveState == 'active'
+      retries: 10
+      delay: 5
+
+    - name: Check if node joined cluster (agents only)
+      ansible.builtin.command: kubectl get node {{ inventory_hostname }} -o jsonpath='{.status.conditions[?(@.type=="Ready")].status}'
+      register: node_ready
+      delegate_to: "{{ groups['master'][0] }}"
+      until: node_ready.stdout == 'True'
+      retries: 20
+      delay: 10
+      changed_when: false
+      when: "'node' in group_names"
+
+    - name: Display bootstrap summary
+      ansible.builtin.debug:
+        msg: |
+          ✓ {{ inventory_hostname }} successfully bootstrapped!
+
+          K3s service: {{ k3s_service.status.ActiveState }}
+          Managed by: system-manager (Nix)
+          Node status: {{ node_ready.stdout | default('master node') }}
+
+          To make configuration changes:
+          1. Edit {{ nix_system_dir }}/configuration.nix on the node
+          2. Run: system-manager switch --flake {{ nix_system_dir }}
+
+          Or set up deploy-rs for remote deployments from your laptop.

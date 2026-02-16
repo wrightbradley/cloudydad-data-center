@@ -1,0 +1,21 @@
+---
+# Nix installation settings
+nix_version: latest
+nix_install_url: https://nixos.org/nix/install
+nix_daemon_mode: true
+
+# system-manager settings
+system_manager_flake: github:numtide/system-manager
+
+# Nix configuration directories
+nix_system_dir: /etc/nix-system
+nix_config_file: '{{ nix_system_dir }}/configuration.nix'
+
+# sops-nix settings
+sops_nix_enabled: true
+age_key_file: '{{ nix_system_dir }}/age.key'
+age_pub_file: '{{ nix_system_dir }}/age.pub'
+
+# K3s settings (inherited from group_vars if not set)
+k3s_role: agent # Will be overridden by group membership (master/node)
+k3s_service_name: '{{ "k3s" if k3s_role == "server" else "k3s-agent" }}'

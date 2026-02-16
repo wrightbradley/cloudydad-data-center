@@ -1,0 +1,45 @@
+---
+- name: Check if system-manager is already installed
+  ansible.builtin.shell: |
+    . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+    which system-manager
+  args:
+    executable: /bin/bash
+  register: system_manager_installed
+  failed_when: false
+  changed_when: false
+
+- name: Enable Nix flakes and nix-command features
+  ansible.builtin.copy:
+    dest: /etc/nix/nix.conf
+    content: |
+      experimental-features = nix-command flakes
+    mode: '0644'
+  become: true
+  notify: restart nix-daemon
+
+- name: Flush handlers to restart nix-daemon
+  ansible.builtin.meta: flush_handlers
+
+- name: Install system-manager via Nix profile
+  ansible.builtin.shell: |
+    . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+    nix profile install {{ system_manager_flake }} --accept-flake-config
+  args:
+    executable: /bin/bash
+  register: system_manager_install
+  changed_when: "'installed' in system_manager_install.stderr or 'installed' in system_manager_install.stdout"
+  when: system_manager_installed.rc != 0
+
+- name: Verify system-manager installation
+  ansible.builtin.shell: |
+    . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+    system-manager --version
+  args:
+    executable: /bin/bash
+  register: system_manager_version
+  changed_when: false
+
+- name: Display system-manager version
+  ansible.builtin.debug:
+    msg: 'system-manager installed: {{ system_manager_version.stdout }}'
