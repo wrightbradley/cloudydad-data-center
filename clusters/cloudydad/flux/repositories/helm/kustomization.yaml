@@ -12,6 +12,7 @@ resources:
   - ./deliveryhero.yaml
   - ./democratic-csi.yaml
   - ./fairwinds.yaml
+  - ./gitea.yaml
   - ./grafana.yaml
   - ./immich.yaml
   - ./jetstack.yaml

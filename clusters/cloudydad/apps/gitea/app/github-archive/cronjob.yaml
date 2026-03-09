@@ -1,0 +1,133 @@
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: github-archiver
+  namespace: gitea
+  labels:
+    app: github-archiver
+spec:
+  schedule: "0 2 * * *" # Daily at 2:00 AM
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  startingDeadlineSeconds: 3600
+  jobTemplate:
+    spec:
+      activeDeadlineSeconds: 43200 # 12 hours - optimized version should complete much faster but allowing buffer
+      template:
+        metadata:
+          labels:
+            app: github-archiver
+        spec:
+          serviceAccountName: github-archiver
+          restartPolicy: OnFailure
+          initContainers:
+            - name: install-deps
+              image: ghcr.io/astral-sh/uv:python3.12-bookworm-slim
+              command:
+                - uv
+                - pip
+                - install
+                - --no-cache
+                - --target
+                - /app/deps
+                - pyyaml
+                - requests
+                - aiohttp
+              volumeMounts:
+                - name: deps
+                  mountPath: /app/deps
+                - name: uv-cache
+                  mountPath: /.cache/uv
+                - name: tmp
+                  mountPath: /tmp
+              resources:
+                requests:
+                  cpu: 100m
+                  memory: 128Mi
+                limits:
+                  cpu: 500m
+                  memory: 256Mi
+              securityContext:
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                runAsNonRoot: true
+                runAsUser: 1000
+                runAsGroup: 1000
+          containers:
+            - name: archiver
+              image: python:3.12
+              command:
+                - python3
+              args:
+                - /app/archiver.py
+              env:
+                - name: GITEA_URL
+                  value: "http://gitea-http.gitea.svc.cluster.local:3000"
+                - name: GITEA_ORG
+                  value: "GitHub"
+                - name: GITEA_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      name: gitea-archive-token
+                      key: gitea_token
+                - name: GITHUB_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      name: gitea-archive-token
+                      key: github_token
+                - name: PYTHONUNBUFFERED
+                  value: "1"
+                - name: PYTHONPATH
+                  value: "/app/deps"
+                - name: DRY_RUN
+                  value: "false"
+                - name: MAX_CONCURRENT
+                  value: "20"
+                - name: BATCH_SIZE
+                  value: "100"
+              volumeMounts:
+                - name: script
+                  mountPath: /app/archiver.py
+                  subPath: archiver.py
+                  readOnly: true
+                - name: deps
+                  mountPath: /app/deps
+                  readOnly: true
+                - name: tmp
+                  mountPath: /tmp
+                - name: data
+                  mountPath: /data
+              resources:
+                requests:
+                  cpu: 100m
+                  memory: 512Mi
+                limits:
+                  cpu: 1000m
+                  memory: 1Gi
+              securityContext:
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                runAsNonRoot: true
+                runAsUser: 1000
+                runAsGroup: 1000
+          volumes:
+            - name: script
+              configMap:
+                name: github-archiver-script
+                defaultMode: 0755
+            - name: deps
+              emptyDir: {}
+            - name: uv-cache
+              emptyDir: {}
+            - name: tmp
+              emptyDir: {}
+            - name: data
+              persistentVolumeClaim:
+                claimName: github-archiver-data
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+            runAsGroup: 1000
+            fsGroup: 1000

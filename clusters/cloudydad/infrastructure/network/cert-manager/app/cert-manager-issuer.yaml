@@ -24,6 +24,8 @@ spec:
             - 'cloudydad.life'
             - 'cloudydad.world'
             - 'dev.cloudydad.world'
+            - 'gitea.cloudydad.world'
+            - 'git.cloudydad.world'
             - 'goldilocks.cloudydad.world'
             - 'grafana.cloudydad.world'
             - 'immich.cloudydad.world'

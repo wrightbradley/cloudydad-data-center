@@ -7,6 +7,7 @@ resources:
   - ./karakeep/kustomization.yaml
   - ./ollama/kustomization.yaml
   # - ./rsshub/kustomization.yaml
+  - ./gitea/kustomization.yaml
   - ./n8n/kustomization.yaml
   - ./rustdesk/kustomization.yaml
   # - ./wakapi/kustomization.yaml
