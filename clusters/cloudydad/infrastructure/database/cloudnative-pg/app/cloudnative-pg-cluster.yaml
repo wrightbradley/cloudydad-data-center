@@ -3,9 +3,11 @@ apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
   name: postgres-cluster
+  annotations:
+    cnpg.io/skipEmptyWalArchiveCheck: "enabled"
 spec:
   description: 'common postgresql cluster'
-  # imageName: ghcr.io/cloudnative-pg/postgresql:17.0
+  imageName: ghcr.io/cloudnative-pg/postgresql:17.4
   # imagePullSecret is only required if the images are located in a private registry
   # imagePullSecrets:
   #   - name: private_registry_access
@@ -31,6 +33,24 @@ spec:
   enableSuperuserAccess: true
   superuserSecret:
     name: postgres-root
+  bootstrap:
+    recovery:
+      source: clusterBackup
+  externalClusters:
+    - name: clusterBackup
+      barmanObjectStore:
+        destinationPath: s3://cloudnative-pg-backup/
+        endpointURL: https://nas.cloudydad.world:9000
+        serverName: postgres-cluster
+        s3Credentials:
+          accessKeyId:
+            name: minio-credentials
+            key: ACCESS_KEY_ID
+          secretAccessKey:
+            name: minio-credentials
+            key: SECRET_ACCESS_KEY
+        wal:
+          maxParallel: 4
   # Require 5Gi of space per instance using default storage class
   storage:
     storageClass: truenas-iscsi-csi

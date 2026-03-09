@@ -871,3 +871,4 @@ clusters/cloudydad/infrastructure/database/cloudnative-pg/app/create-invidious.s
 clusters/cloudydad/infrastructure/database/cloudnative-pg/app/create-n8n.sql
 nix/keys/
 clusters/cloudydad/apps/solidtime/setup.md
+/clusters/cloudydad/infrastructure/database/cloudnative-pg/scripts
