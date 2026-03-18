@@ -13,23 +13,23 @@ spec:
   channel: https://update.k3s.io/v1-release/channels/v1.32
   nodeSelector:
     matchExpressions:
-      - {key: node.kubernetes.io/instance-type, operator: In, values: ['k3s']}
+      - {key: node.kubernetes.io/instance-type, operator: In, values: ["k3s"]}
       - {key: node-role.kubernetes.io/control-plane, operator: Exists}
   tolerations:
-    - key: 'CriticalAddonsOnly'
-      operator: 'Exists'
-    - key: 'node-role.kubernetes.io/master'
-      operator: 'Exists'
-      effect: 'NoSchedule'
-    - key: 'node-role.kubernetes.io/controlplane'
-      operator: 'Exists'
-      effect: 'NoSchedule'
-    - key: 'node-role.kubernetes.io/control-plane'
-      operator: 'Exists'
-      effect: 'NoSchedule'
-    - key: 'node-role.kubernetes.io/etcd'
-      operator: 'Exists'
-      effect: 'NoExecute'
+    - key: "CriticalAddonsOnly"
+      operator: "Exists"
+    - key: "node-role.kubernetes.io/master"
+      operator: "Exists"
+      effect: "NoSchedule"
+    - key: "node-role.kubernetes.io/controlplane"
+      operator: "Exists"
+      effect: "NoSchedule"
+    - key: "node-role.kubernetes.io/control-plane"
+      operator: "Exists"
+      effect: "NoSchedule"
+    - key: "node-role.kubernetes.io/etcd"
+      operator: "Exists"
+      effect: "NoExecute"
   serviceAccountName: system-upgrade
   cordon: true
   upgrade:
@@ -43,34 +43,49 @@ metadata:
   labels:
     k3s-upgrade: agent
 spec:
-  concurrency: 2 # Batch size (roughly maps to maximum number of unschedulable nodes)
+  concurrency: 1
   channel: https://update.k3s.io/v1-release/channels/v1.32
   nodeSelector:
     matchExpressions:
-      - {key: node.kubernetes.io/instance-type, operator: In, values: ['k3s']}
+      - {key: node.kubernetes.io/instance-type, operator: In, values: ["k3s"]}
       - {key: node-role.kubernetes.io/control-plane, operator: DoesNotExist}
   serviceAccountName: system-upgrade
   tolerations:
-    - key: 'CriticalAddonsOnly'
-      operator: 'Exists'
-    - key: 'node-role.kubernetes.io/master'
-      operator: 'Exists'
-      effect: 'NoSchedule'
-    - key: 'node-role.kubernetes.io/controlplane'
-      operator: 'Exists'
-      effect: 'NoSchedule'
-    - key: 'node-role.kubernetes.io/control-plane'
-      operator: 'Exists'
-      effect: 'NoSchedule'
-    - key: 'node-role.kubernetes.io/etcd'
-      operator: 'Exists'
-      effect: 'NoExecute'
+    - key: "CriticalAddonsOnly"
+      operator: "Exists"
+    - key: "node-role.kubernetes.io/master"
+      operator: "Exists"
+      effect: "NoSchedule"
+    - key: "node-role.kubernetes.io/controlplane"
+      operator: "Exists"
+      effect: "NoSchedule"
+    - key: "node-role.kubernetes.io/control-plane"
+      operator: "Exists"
+      effect: "NoSchedule"
+    - key: "node-role.kubernetes.io/etcd"
+      operator: "Exists"
+      effect: "NoExecute"
+  affinity:
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchExpressions:
+                - key: k3s-upgrade
+                  operator: In
+                  values:
+                    - agent
+            topologyKey: kubernetes.io/hostname
   prepare:
     # Defaults to the same "resolved" tag that is used for the `upgrade` container, NOT `latest`
     image: rancher/k3s-upgrade
-    args: ['prepare', 'k3s-server']
+    args: ["prepare", "k3s-server"]
   drain:
     force: true
-    skipWaitForDeleteTimeout: 60 # 1.18+ (honor pod disruption budgets up to 60 seconds per pod then moves on)
+    disableEviction: false # Respect PDBs and use graceful eviction
+    skipWaitForDeleteTimeout: 300 # Extended from 60s to 300s (5 minutes) to honor PDBs
+    ignoreDaemonSets: true # Don't wait for daemonset pods
+    deleteEmptydirData: true # Allow deletion of pods with emptyDir volumes
   upgrade:
     image: rancher/k3s-upgrade

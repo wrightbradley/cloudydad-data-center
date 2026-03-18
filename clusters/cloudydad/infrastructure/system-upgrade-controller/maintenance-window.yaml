@@ -1,0 +1,84 @@
+---
+# Maintenance Window Controller for k3s System Upgrade
+# Enables upgrades only during Sunday 8PM ET - 12AM ET maintenance window
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: enable-upgrade-window
+  namespace: system-upgrade
+spec:
+  schedule: "0 1 * * 1" # Sunday 8PM ET = Monday 1AM UTC
+  timeZone: "America/New_York"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          serviceAccountName: system-upgrade
+          containers:
+            - name: enable-upgrades
+              image: bitnami/kubectl:latest
+              command:
+                - /bin/sh
+                - -c
+                - |
+                  echo "Enabling k3s upgrades for maintenance window..."
+                  # Remove suspend annotation from Plans to enable upgrades
+                  kubectl annotate plans -n system-upgrade k3s-server k3s-agent \
+                    upgrade.cattle.io/suspend-""
+                  echo "Upgrades enabled for maintenance window (Sunday 8PM ET - 12AM ET)"
+          restartPolicy: OnFailure
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: disable-upgrade-window
+  namespace: system-upgrade
+spec:
+  schedule: "0 5 * * 1" # Sunday 12AM ET = Monday 5AM UTC
+  timeZone: "America/New_York"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          serviceAccountName: system-upgrade
+          containers:
+            - name: disable-upgrades
+              image: bitnami/kubectl:latest
+              command:
+                - /bin/sh
+                - -c
+                - |
+                  echo "Disabling k3s upgrades outside maintenance window..."
+                  # Add suspend annotation to Plans to disable upgrades
+                  kubectl annotate plans -n system-upgrade k3s-server k3s-agent \
+                    upgrade.cattle.io/suspend="true" --overwrite
+                  echo "Upgrades disabled - next window: Sunday 8PM ET - 12AM ET"
+          restartPolicy: OnFailure
+---
+# RBAC for maintenance window controller
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: maintenance-window-controller
+  namespace: system-upgrade
+rules:
+  - apiGroups: ["upgrade.cattle.io"]
+    resources: ["plans"]
+    verbs: ["get", "list", "patch", "update"]
+  - apiGroups: ["upgrade.cattle.io"]
+    resources: ["plans/status"]
+    verbs: ["get", "update", "patch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: maintenance-window-controller-binding
+  namespace: system-upgrade
+subjects:
+  - kind: ServiceAccount
+    name: system-upgrade
+    namespace: system-upgrade
+roleRef:
+  kind: Role
+  name: maintenance-window-controller
+  apiGroup: rbac.authorization.k8s.io

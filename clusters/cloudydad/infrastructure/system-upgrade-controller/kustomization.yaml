@@ -11,3 +11,4 @@ resources:
   - https://github.com/rancher/system-upgrade-controller/releases/download/v0.14.2/crd.yaml
   - ./k3s-upgrade.yaml
   - ./apt-upgrade.yaml
+  - ./maintenance-window.yaml
