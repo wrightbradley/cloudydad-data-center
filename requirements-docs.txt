@@ -20,7 +20,7 @@ htmlmin2==0.1.13
     # via mkdocs-minify-plugin
 idna==3.10
     # via requests
-importlib-metadata==8.7.0
+importlib-metadata==8.9.0
     # via
     #   markdown
     #   mkdocs
