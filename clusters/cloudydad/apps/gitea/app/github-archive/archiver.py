@@ -11,6 +11,7 @@ import os
 import subprocess
 import sys
 import tempfile
+import time
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 from typing import Optional
@@ -28,6 +29,9 @@ ORGANIZATION = os.environ.get("GITEA_ORG", "GitHub")
 DRY_RUN = os.environ.get("DRY_RUN", "false").lower() == "true"
 MAX_CONCURRENT = int(os.environ.get("MAX_CONCURRENT", "20"))
 BATCH_SIZE = int(os.environ.get("BATCH_SIZE", "100"))
+MAX_REPO_PROCESSING_TIME = int(
+    os.environ.get("MAX_REPO_PROCESSING_TIME", "600")
+)  # 10 minutes
 
 # API endpoints
 GITEA_API = f"{GITEA_URL}/api/v1"
@@ -36,6 +40,43 @@ GITHUB_API = "https://api.github.com"
 # Persistence configuration
 DATA_DIR = "/data"
 PROGRESS_FILE = os.path.join(DATA_DIR, "progress.json")
+
+
+def retry_git_operation(operation, operation_name, max_attempts=3, initial_delay=1.0):
+    """Retry git operations with exponential backoff."""
+    last_exception = None
+    for attempt in range(max_attempts):
+        try:
+            return operation()
+        except Exception as e:
+            last_exception = e
+            if attempt < max_attempts - 1:
+                sleep_time = initial_delay * (2**attempt)
+                log_warning(
+                    f"{operation_name} failed (attempt {attempt + 1}/{max_attempts}), "
+                    f"retrying in {sleep_time:.1f}s",
+                    error=str(e),
+                )
+                time.sleep(sleep_time)
+    # If we get here, all attempts failed
+    assert last_exception is not None, (
+        "last_exception should be set after all attempts failed"
+    )
+    raise last_exception
+
+
+def categorize_error(error_message: str) -> str:
+    """Categorize git error for stats tracking."""
+    if "shallow update not allowed" in error_message:
+        return "shallow"
+    elif "Could not read from remote repository" in error_message:
+        return "clone"
+    elif "Connection timed out" in error_message or "timeout" in error_message.lower():
+        return "timeout"
+    elif "Repository not found" in error_message:
+        return "clone"
+    else:
+        return "other"
 
 
 def log_json(level, message, **extra):
@@ -309,7 +350,7 @@ async def create_archive_repo_async(
         "name": archive_name,
         "description": f"Archive branches for {owner}/{repo} (mirror companion)",
         "private": False,
-        "auto_init": True,
+        "auto_init": False,
     }
 
     async with session.post(
@@ -461,6 +502,15 @@ def create_archive_branch(
     owner: str, repo: str, branch_name: str, sha: Optional[str]
 ) -> bool:
     """Create an archive branch by pushing from mirror to archive repo via git (synchronous - git ops are CPU/IO bound)"""
+    start_time = time.time()
+    log_info(
+        "Starting archive branch creation",
+        owner=owner,
+        repo=repo,
+        branch=branch_name,
+        sha=sha[:8] if sha else None,
+    )
+
     if DRY_RUN:
         log_info(
             "[DRY RUN] Would create archive branch",
@@ -482,13 +532,21 @@ def create_archive_branch(
 
     try:
         with tempfile.TemporaryDirectory() as tmpdir:
-            # Clone with --depth 1 for shallow clone (much faster)
-            clone_result = subprocess.run(
-                ["git", "clone", "--depth", "1", auth_mirror_url, tmpdir],
-                capture_output=True,
-                text=True,
-                timeout=300,
+            # Clone with --depth 1 for shallow clone (much faster) with retries
+            clone_start = time.time()
+
+            def clone_op():
+                return subprocess.run(
+                    ["git", "clone", "--depth", "1", auth_mirror_url, tmpdir],
+                    capture_output=True,
+                    text=True,
+                    timeout=300,
+                )
+
+            clone_result = retry_git_operation(
+                clone_op, "Clone mirror", max_attempts=3, initial_delay=1.0
             )
+            clone_duration = time.time() - clone_start
 
             if clone_result.returncode != 0:
                 log_error(
@@ -496,15 +554,29 @@ def create_archive_branch(
                     owner=owner,
                     repo=repo,
                     error=clone_result.stderr,
+                    duration_seconds=clone_duration,
                 )
                 return False
-
-            # Add archive repo as remote
-            remote_result = subprocess.run(
-                ["git", "-C", tmpdir, "remote", "add", "archive", auth_archive_url],
-                capture_output=True,
-                text=True,
+            log_info(
+                "Clone completed",
+                duration_seconds=clone_duration,
+                returncode=clone_result.returncode,
             )
+
+            # Add archive repo as remote with retries
+            remote_start = time.time()
+
+            def add_remote_op():
+                return subprocess.run(
+                    ["git", "-C", tmpdir, "remote", "add", "archive", auth_archive_url],
+                    capture_output=True,
+                    text=True,
+                )
+
+            remote_result = retry_git_operation(
+                add_remote_op, "Add remote", max_attempts=2, initial_delay=1.0
+            )
+            remote_duration = time.time() - remote_start
 
             if remote_result.returncode != 0:
                 log_error(
@@ -512,30 +584,59 @@ def create_archive_branch(
                     owner=owner,
                     repo=repo,
                     error=remote_result.stderr,
+                    duration_seconds=remote_duration,
+                )
+                return False
+            log_info(
+                "Add remote completed",
+                duration_seconds=remote_duration,
+                returncode=remote_result.returncode,
+            )
+
+            # Check per-repo timeout
+            elapsed = time.time() - start_time
+            if elapsed > MAX_REPO_PROCESSING_TIME:
+                log_error(
+                    "Repo processing timeout before push",
+                    owner=owner,
+                    repo=repo,
+                    elapsed_seconds=elapsed,
+                    max_seconds=MAX_REPO_PROCESSING_TIME,
                 )
                 return False
 
-            # Push to archive repo with the archive branch name
-            push_result = subprocess.run(
-                [
-                    "git",
-                    "-C",
-                    tmpdir,
-                    "push",
-                    "archive",
-                    f"HEAD:refs/heads/{branch_name}",
-                ],
-                capture_output=True,
-                text=True,
-                timeout=60,
+            # Push to archive repo with the archive branch name with retries and --force
+            push_start = time.time()
+
+            def push_op():
+                return subprocess.run(
+                    [
+                        "git",
+                        "-C",
+                        tmpdir,
+                        "push",
+                        "--force",
+                        "archive",
+                        f"HEAD:refs/heads/{branch_name}",
+                    ],
+                    capture_output=True,
+                    text=True,
+                    timeout=60,
+                )
+
+            push_result = retry_git_operation(
+                push_op, "Push archive branch", max_attempts=3, initial_delay=2.0
             )
+            push_duration = time.time() - push_start
 
             if push_result.returncode == 0:
+                total_duration = time.time() - start_time
                 log_success(
                     "Created archive branch",
                     branch=branch_name,
                     sha=sha[:8] if sha else None,
                     archive=archive_name,
+                    duration_seconds=total_duration,
                 )
                 return True
             else:
@@ -543,6 +644,7 @@ def create_archive_branch(
                     "Failed to push archive branch",
                     branch=branch_name,
                     error=push_result.stderr,
+                    duration_seconds=push_duration,
                 )
                 return False
 
@@ -552,6 +654,7 @@ def create_archive_branch(
             branch=branch_name,
             owner=owner,
             repo=repo,
+            elapsed_seconds=time.time() - start_time,
         )
         return False
     except Exception as e:
@@ -561,6 +664,7 @@ def create_archive_branch(
             owner=owner,
             repo=repo,
             error=str(e),
+            elapsed_seconds=time.time() - start_time,
         )
         return False
 
@@ -760,11 +864,22 @@ async def process_batch(
                 else:
                     stats["failed"] += 1
                     mark_repo_failed(owner, repo, progress)
+                    # Categorize error
+                    error_type = categorize_error(message)
+                    if error_type == "shallow":
+                        stats["shallow_failures"] += 1
+                    elif error_type == "clone":
+                        stats["clone_failures"] += 1
+                    elif error_type == "timeout":
+                        stats["timeout_failures"] += 1
+                    else:
+                        stats["other_failures"] += 1
                     log_error(
                         "Failed to process repository",
                         owner=owner,
                         repo=repo,
                         error=message,
+                        error_type=error_type,
                     )
 
             except ValueError:
@@ -781,6 +896,7 @@ async def process_batch(
 
 
 async def main_async():
+    job_start_time = time.time()
     log_info(
         "Starting GitHub Stars Archiver (Optimized)",
         gitea_url=GITEA_URL,
@@ -841,6 +957,13 @@ async def main_async():
             "archived": 0,
             "skipped": 0,
             "failed": 0,
+            "shallow_failures": 0,
+            "clone_failures": 0,
+            "timeout_failures": 0,
+            "other_failures": 0,
+            "clone_retries": 0,
+            "push_retries": 0,
+            "successful_retries": 0,
         }
 
         # Process repos in batches
@@ -861,14 +984,36 @@ async def main_async():
     # Shutdown executor
     executor.shutdown(wait=True)
 
+    # Calculate success rate
+    total_processed = stats["processed"] + stats["skipped"]
+    success_rate = stats["archived"] / max(1, total_processed) * 100
+    duration = time.time() - job_start_time
+    repos_per_minute = stats["processed"] / max(1, duration / 60)
+
     log_info(
-        "Complete",
-        processed=stats["processed"],
-        mirrors_created=stats["created"],
-        archives_created=stats["archived"],
-        skipped=stats["skipped"],
-        failed=stats["failed"],
-        total_completed=len(progress.get("completed", [])),
+        "Job complete",
+        summary={
+            "processed": stats["processed"],
+            "mirrors_created": stats["created"],
+            "archives_created": stats["archived"],
+            "skipped": stats["skipped"],
+            "failed": stats["failed"],
+            "total_completed": len(progress.get("completed", [])),
+            "success_rate_percent": round(success_rate, 2),
+            "duration_seconds": round(duration, 1),
+            "repos_per_minute": round(repos_per_minute, 2),
+            "failure_breakdown": {
+                "shallow_push": stats.get("shallow_failures", 0),
+                "clone_failures": stats.get("clone_failures", 0),
+                "timeout_failures": stats.get("timeout_failures", 0),
+                "other_failures": stats.get("other_failures", 0),
+            },
+            "retry_stats": {
+                "clone_retries": stats.get("clone_retries", 0),
+                "push_retries": stats.get("push_retries", 0),
+                "successful_retries": stats.get("successful_retries", 0),
+            },
+        },
     )
 
     if stats["failed"] > 0:
