@@ -26,6 +26,10 @@ kind: Deployment
 metadata:
   name: system-upgrade-controller
   namespace: system-upgrade
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "8080"
+    prometheus.io/path: "/metrics"
 spec:
   selector:
     matchLabels:
@@ -60,7 +64,7 @@ spec:
           effect: 'NoExecute'
       containers:
         - name: system-upgrade-controller
-          image: rancher/system-upgrade-controller:v0.14.0
+          image: rancher/system-upgrade-controller:v0.19.0
           imagePullPolicy: IfNotPresent
           securityContext:
             runAsNonRoot: true
