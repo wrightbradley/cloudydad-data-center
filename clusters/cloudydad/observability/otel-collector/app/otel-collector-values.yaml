@@ -444,6 +444,12 @@ defaultCRConfig:
     # See https://opentelemetry.io/docs/kubernetes/collector/components/#kubernetes-cluster-receiver for details on the receiver.
     clusterMetrics:
       enabled: false
+    # Configures the collector to collect logs and metrics from pods with specific annotations.
+    annotationDiscovery:
+      logs:
+        enabled: false
+      metrics:
+        enabled: false
 
 # Collectors is a map of collector configurations of the form:
 # collectors:
@@ -478,6 +484,8 @@ collectors:
         maxRecombineLogSize: 102400
       annotationDiscovery:
         logs:
+          enabled: false
+        metrics:
           enabled: false
       kubeletMetrics:
         enabled: false
@@ -556,6 +564,12 @@ collectors:
       annotationDiscovery:
         logs:
           enabled: false
+        metrics:
+          enabled: false
+      kubeletMetrics:
+        enabled: false
+      hostMetrics:
+        enabled: false
       kubernetesAttributes:
         enabled: true
       kubernetesEvents:
