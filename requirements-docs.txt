@@ -83,7 +83,7 @@ plantuml-markdown==3.11.1
     # via mkdocs-techdocs-core
 platformdirs==4.3.7
     # via mkdocs-get-deps
-pygments==2.19.1
+pygments==2.20.0
     # via
     #   mkdocs-material
     #   mkdocs-techdocs-core
