@@ -20,7 +20,7 @@ storageClasses:
   - name: truenas-iscsi-csi
     defaultClass: false
     reclaimPolicy: Delete
-    volumeBindingMode: Immediate
+    volumeBindingMode: WaitForFirstConsumer
     allowVolumeExpansion: true
     parameters:
       # for block-based storage can be ext3, ext4, xfs
