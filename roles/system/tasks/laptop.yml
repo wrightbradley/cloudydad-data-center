@@ -1,6 +1,6 @@
 ---
 - name: Ensure HandleLidSwitch is set to ignore
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /etc/systemd/logind.conf
     regexp: '^#HandleLidSwitch='
     line: 'HandleLidSwitch=ignore'
@@ -8,7 +8,7 @@
     backrefs: yes
 
 - name: Ensure HandleLidSwitchDocked is set to ignore
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /etc/systemd/logind.conf
     regexp: '^#HandleLidSwitchDocked='
     line: 'HandleLidSwitchDocked=ignore'
@@ -16,7 +16,7 @@
     backrefs: yes
 
 - name: Ensure HandleLidSwitchExternalPower is set to ignore
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /etc/systemd/logind.conf
     regexp: '^#HandleLidSwitchExternalPower='
     line: 'HandleLidSwitchExternalPower=ignore'
@@ -24,4 +24,54 @@
     backrefs: yes
 
 - name: Ensure the logind service is reloaded
-  command: systemctl restart systemd-logind
+  ansible.builtin.command: systemctl restart systemd-logind
+
+- name: Mitigate boot cascade from slow/unclean non-root mounts
+  when: ansible_mounts is defined
+  block:
+    - name: Add x-systemd.device-timeout=180s to /var fstab entry
+      ansible.builtin.replace:
+        path: /etc/fstab
+        regexp: '^(\S+\s+/var\s+\S+\s+)(?!.*x-systemd\.device-timeout)([^ \t]+)(\s+\d+\s+\d+\s*)$'
+        replace: '\1\2,x-systemd.device-timeout=180s\3'
+
+    - name: Add nofail to non-root fstab entries (except /var)
+      ansible.builtin.replace:
+        path: /etc/fstab
+        regexp: '^(\S+\s+{{ item.mount }}\s+\S+\s+)(?!.*nofail)([^ \t]+)(\s+\d+\s+\d+\s*)$'
+        replace: '\1\2,nofail\3'
+      loop: "{{ ansible_mounts | rejectattr('mount', 'equalto', '/') | rejectattr('mount', 'equalto', '/var') | list }}"
+      loop_control:
+        label: "{{ item.mount }}"
+      when:
+        - item.mount != '/'
+        - item.mount != '/var'
+        - item.device is defined
+        - not item.mount is search('/var/lib/kubelet')
+
+    - name: Ensure mount point directories exist
+      ansible.builtin.file:
+        path: "{{ item.mount }}"
+        state: directory
+        owner: root
+        group: root
+        mode: '0755'
+      loop: "{{ ansible_mounts | rejectattr('mount', 'equalto', '/') | list }}"
+      loop_control:
+        label: "{{ item.mount }}"
+      when:
+        - item.mount != '/'
+        - item.mount is not search('/run/k3s')
+        - item.mount is not search('/var/lib/kubelet')
+
+    - name: Deploy systemd-fsck timeout drop-in (5min)
+      ansible.builtin.copy:
+        src: etc/systemd/system/systemd-fsck@.service.d/timeout.conf
+        dest: /etc/systemd/system/systemd-fsck@.service.d/timeout.conf
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Reload systemd to pick up fstab and drop-in changes
+      ansible.builtin.systemd:
+        daemon_reload: true
