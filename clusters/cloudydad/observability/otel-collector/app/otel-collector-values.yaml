@@ -444,13 +444,6 @@ defaultCRConfig:
     # See https://opentelemetry.io/docs/kubernetes/collector/components/#kubernetes-cluster-receiver for details on the receiver.
     clusterMetrics:
       enabled: false
-    # Configures the collector to collect logs and metrics from pods with specific annotations.
-    annotationDiscovery:
-      logs:
-        enabled: false
-      metrics:
-        enabled: false
-
 # Collectors is a map of collector configurations of the form:
 # collectors:
 #   collectorName:
@@ -465,6 +458,17 @@ collectors:
     suffix: daemon
     mode: daemonset
     enabled: true
+    image:
+      repository: otel/opentelemetry-collector-k8s
+      pullPolicy: IfNotPresent
+      tag: ""
+      digest: ""
+    clusterRoleBinding:
+      enabled: true
+      clusterRoleName: ""
+    targetAllocator: {}
+    managementState: managed
+    upgradeStrategy: automatic
     resources:
       limits:
         cpu: 1
@@ -551,6 +555,17 @@ collectors:
     replicas: 1
     mode: deployment
     enabled: true
+    image:
+      repository: otel/opentelemetry-collector-k8s
+      pullPolicy: IfNotPresent
+      tag: ""
+      digest: ""
+    clusterRoleBinding:
+      enabled: true
+      clusterRoleName: ""
+    targetAllocator: {}
+    managementState: managed
+    upgradeStrategy: automatic
     resources:
       limits:
         cpu: 1
