@@ -1,0 +1,29 @@
+---
+# Gitea Application - Git Forge
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: gitea
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "6"
+spec:
+  project: default
+  source:
+    repoURL: https://dl.gitea.io/charts
+    chart: gitea
+    targetRevision: 12.5.0
+    helm:
+      valuesFiles:
+        - clusters/cloudydad/apps/gitea/app/gitea-values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: gitea
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

@@ -1,0 +1,29 @@
+---
+# Ollama Application - LLM Inference
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: ollama
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "6"
+spec:
+  project: default
+  source:
+    repoURL: https://charts.ollama.ai
+    chart: ollama
+    targetRevision: 0.1.0
+    helm:
+      valuesFiles:
+        - clusters/cloudydad/apps/ollama/app/ollama-values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: ollama
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

@@ -1,0 +1,29 @@
+---
+# Forgejo Application - Git Forge (Gitea successor)
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: forgejo
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "6"
+spec:
+  project: default
+  source:
+    repoURL: https://forgejo.org/forgejo-helm
+    chart: forgejo
+    targetRevision: 11.0.0
+    helm:
+      valuesFiles:
+        - clusters/cloudydad/apps/forgejo/app/forgejo-values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: forgejo
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

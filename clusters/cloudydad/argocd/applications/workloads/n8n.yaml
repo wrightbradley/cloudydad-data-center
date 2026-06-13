@@ -1,0 +1,29 @@
+---
+# n8n Application - Workflow Automation
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: n8n
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "6"
+spec:
+  project: default
+  source:
+    repoURL: https://n8n.io/charts
+    chart: n8n
+    targetRevision: 0.25.0
+    helm:
+      valuesFiles:
+        - clusters/cloudydad/apps/n8n/app/n8n-values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: n8n
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
