@@ -1,0 +1,67 @@
+---
+# Cilium Application - CNI + BGP Load Balancing
+# This replaces Flannel + MetalLB
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cilium
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  project: default
+  source:
+    repoURL: https://helm.cilium.io
+    chart: cilium
+    targetRevision: 1.17.2
+    helm:
+      valuesFiles:
+        - clusters/cloudydad/infrastructure/network/cilium/app/cilium-values.yaml
+      valuesObject:
+        # BGP Configuration
+        bgp:
+          enabled: true
+          announce:
+            loadbalancerIP: true
+            podCIDR: true
+        bgpControlPlane:
+          enabled: true
+        # Disable L2 announcements (using BGP instead)
+        l2announcements:
+          enabled: false
+        # Enable kube-proxy replacement
+        kubeProxyReplacement: true
+        # Hubble observability
+        hubble:
+          enabled: true
+          relay:
+            enabled: true
+          ui:
+            enabled: true
+        # Cluster configuration
+        cluster:
+          name: cloudydad
+          id: 1
+        # Enable strict mode for kube-proxy replacement
+        # Requires K3s to be configured with --disable-kube-proxy
+        # or kube-proxy removal after Cilium is ready
+        k8sServiceHost: "127.0.0.1"
+        k8sServicePort: "6444"
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kube-system
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - Replace=true
+  ignoreDifferences:
+    - group: apps
+      kind: DaemonSet
+      name: cilium
+      jsonPointers:
+        - /spec/template/spec/initContainers

@@ -1,0 +1,57 @@
+---
+# Cilium BGP Cluster Configuration
+# Defines the BGP peering with OpnSense router
+apiVersion: cilium.io/v2alpha1
+kind: CiliumBGPClusterConfig
+metadata:
+  name: opnsense
+  namespace: kube-system
+spec:
+  nodeSelector:
+    matchLabels:
+      kubernetes.io/os: linux
+  bgpInstances:
+    - name: "opnsense"
+      localASN: 64522
+      peers:
+        - name: "opnsense-router"
+          peerASN: 64512
+          peerAddress: 172.18.1.1
+          peerConfigRef:
+            name: "opnsense-peer"
+---
+# Cilium BGP Peer Configuration
+apiVersion: cilium.io/v2alpha1
+kind: CiliumBGPPeerConfig
+metadata:
+  name: opnsense-peer
+  namespace: kube-system
+spec:
+  families:
+    - afi: ipv4
+      safi: unicast
+  ebgpMultihop:
+    enabled: true
+    ttl: 2
+  gracefulRestart:
+    enabled: true
+    restartTimeSeconds: 120
+  timers:
+    connectRetryTimeSeconds: 120
+    holdTimeSeconds: 90
+    keepAliveTimeSeconds: 30
+---
+# Cilium LoadBalancer IP Pool
+# Defines the IP range for LoadBalancer services
+apiVersion: cilium.io/v2alpha1
+kind: CiliumLoadBalancerIPPool
+metadata:
+  name: cloudydad-pool
+  namespace: kube-system
+spec:
+  cidrs:
+    - cidr: 172.18.252.0/22
+  disabled: false
+  serviceSelector:
+    matchExpressions:
+      - {key: somekey, operator: NotIn, values: ['never-used-value']}
