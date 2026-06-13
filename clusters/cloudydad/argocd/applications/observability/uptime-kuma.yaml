@@ -1,0 +1,29 @@
+---
+# Uptime Kuma Application - Uptime Monitoring
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: uptime-kuma
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "7"
+spec:
+  project: default
+  source:
+    repoURL: https://helm.irsigler.cloud
+    chart: uptime-kuma
+    targetRevision: 2.21.0
+    helm:
+      valuesFiles:
+        - clusters/cloudydad/observability/uptime-kuma/app/uptime-kuma-values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: uptime-kuma
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
