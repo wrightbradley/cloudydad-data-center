@@ -1,0 +1,22 @@
+---
+# ArgoCD Repository Secret for GitHub access
+# IMPORTANT: Apply this manually with kubectl after creating the secret:
+# kubectl create secret generic repo-cloudydad-data-center \
+#   -n argocd \
+#   --from-file=sshPrivateKey=~/.ssh/id_ed25519 \
+#   --from-literal=type=git \
+#   --from-literal=url=ssh://git@github.com/wrightbradley/cloudydad-data-center
+# Then label it:
+# kubectl label secret repo-cloudydad-data-center -n argocd argocd.argoproj.io/secret-type=repository
+apiVersion: v1
+kind: Secret
+metadata:
+  name: repo-cloudydad-data-center
+  namespace: argocd
+  labels:
+    argocd.argoproj.io/secret-type: repository
+stringData:
+  type: git
+  url: ssh://git@github.com/wrightbradley/cloudydad-data-center
+  # sshPrivateKey is added manually via kubectl create secret
+  # Do NOT commit the actual SSH key to this repository
