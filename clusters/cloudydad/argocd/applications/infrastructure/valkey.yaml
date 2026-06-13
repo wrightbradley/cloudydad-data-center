@@ -1,0 +1,29 @@
+---
+# Valkey Application - Redis Alternative
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: valkey
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
+spec:
+  project: default
+  source:
+    repoURL: https://charts.bitnami.com/bitnami
+    chart: valkey
+    targetRevision: 2.0.0
+    helm:
+      valuesFiles:
+        - clusters/cloudydad/infrastructure/database/valkey/app/valkey-values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: valkey
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
