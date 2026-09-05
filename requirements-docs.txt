@@ -69,7 +69,7 @@ mkdocs-minify-plugin==0.8.0
     # via -r requirements-docs.in
 mkdocs-monorepo-plugin==1.1.0
     # via mkdocs-techdocs-core
-mkdocs-redirects==1.2.2
+mkdocs-redirects==1.2.3
     # via mkdocs-techdocs-core
 mkdocs-techdocs-core==1.5.4
     # via -r requirements-docs.in
